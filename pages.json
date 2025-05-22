@@ -1,0 +1,87 @@
+{
+  "pages": [
+    {
+      "path": "pages/login",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/community/index",
+      "style": {
+        "navigationBarTitleText": "社区",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/message/index",
+      "style": {
+        "navigationBarTitleText": "消息"
+      }
+    },
+    {
+      "path": "pages/recruit/index",
+      "style": {
+        "navigationBarTitleText": "招聘"
+      }
+    },
+    {
+      "path": "pages/me/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "iconPath": "/static/images/tabbar/home.png",
+        "selectedIconPath": "/static/images/tabbar/home-active.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/community/index",
+        "iconPath": "/static/images/tabbar/community.png",
+        "selectedIconPath": "/static/images/tabbar/community-active.png",
+        "text": "社区"
+      },
+      {
+        "pagePath": "pages/message/index",
+        "iconPath": "/static/images/tabbar/service.png",
+        "selectedIconPath": "/static/images/tabbar/service-active.png",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/recruit/index",
+        "iconPath": "/static/images/tabbar/recruit.png",
+        "selectedIconPath": "/static/images/tabbar/recruit-active.png",
+        "text": "招聘"
+      },
+      {
+        "pagePath": "pages/me/index",
+        "iconPath": "/static/images/tabbar/me.png",
+        "selectedIconPath": "/static/images/tabbar/me-active.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "uniIdRouter": {}
+}
