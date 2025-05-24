@@ -8,6 +8,19 @@
       }
     },
     {
+      "path": "pages/agreement/user",
+      "style": {
+        "navigationBarTitleText": "用户协议"
+      }
+    },
+    {
+      "path": "pages/agreement/privacy",
+      "style": {
+        "navigationBarTitleText": "隐私政策"
+      }
+    },
+
+    {
       "path": "pages/home/index",
       "style": {
         "navigationBarTitleText": "首页",

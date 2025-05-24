@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 
-import user from './modules/user';
+import user from "./modules/user";
 
 // 根级别的 state
 const state = {
@@ -28,7 +28,7 @@ const actions = {
   // 初始化应用
   init_app({ dispatch }) {
     console.log("初始化应用");
-    // 可以在这里执行一些全局初始化操作
+
     return Promise.resolve();
   },
 };
@@ -40,7 +40,7 @@ const store = createStore({
   mutations,
   actions,
   modules: {
-    user
+    user,
   },
 });
 

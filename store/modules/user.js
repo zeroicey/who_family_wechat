@@ -1,7 +1,8 @@
-import { wechatLogin } from "../../api/user";
+import { wechatLogin, getAvatarUrl } from "../../api/user";
 
 const state = {
-  userInfo: {},
+  userInfo: uni.getStorageSync("userInfo") || {},
+  avatarUrl: uni.getStorageSync("avatarUrl") || "",
   token: uni.getStorageSync("token") || "",
   isLogin: !!uni.getStorageSync("token"),
   loginLoading: false,
@@ -24,6 +25,12 @@ const getters = {
   getUserGrade: (state) => (state.userInfo ? state.userInfo.grade : ""),
   // 登录加载状态
   loginLoading: (state) => state.loginLoading,
+
+  // 获取是否登录
+  isLogin: (state) => state.isLogin,
+
+  // 获取头像
+  getUserAvatarUrl: (state) => state.avatarUrl,
 };
 
 const mutations = {
@@ -31,6 +38,12 @@ const mutations = {
   set_user_info(state, userInfo) {
     state.userInfo = userInfo;
     uni.setStorageSync("userInfo", userInfo);
+  },
+
+  // 设置用户头像
+  set_user_avatar(state, avatarUrl) {
+    state.avatarUrl = avatarUrl;
+    uni.setStorageSync("avatarUrl", avatarUrl);
   },
 
   // 设置token
@@ -63,8 +76,15 @@ const actions = {
       commit("set_login_loading", true);
 
       // 调用API登录接口
-      const res = await wechatLogin();
-      console.log("[用户模块] 微信登录返回", res);
+      const loginRes = await wechatLogin();
+      const { token, userInfo } = loginRes.data;
+      commit("set_token", token);
+      commit("set_user_info", userInfo);
+
+      const avatarRes = await getAvatarUrl(userInfo.avaterId);
+      commit("set_user_avatar", avatarRes.data.data);
+
+      console.log("[用户模块] 微信登录成功");
     } catch (error) {
       console.error("[用户模块] 微信登录异常", error);
       return Promise.reject(error);
