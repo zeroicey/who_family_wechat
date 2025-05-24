@@ -10,24 +10,25 @@
                 </view>
             </view>
         </view>
-        
+
         <!-- 基本信息表单 -->
         <view class="form-group">
             <view class="form-item">
                 <text class="label">昵称</text>
-                <input class="input" v-model="userProfile.nickname" placeholder="请输入昵称" />
+                <input class="input" v-model="userInfo.name" placeholder="请输入昵称" />
             </view>
-            
+
             <view class="form-item">
                 <text class="label">性别</text>
-                <picker class="picker" mode="selector" :value="userProfile.gender" :range="genderOptions" @change="onGenderChange">
+                <picker class="picker" mode="selector" :value="userProfile.gender" :range="genderOptions"
+                    @change="onGenderChange">
                     <view class="picker-text">
                         <text>{{ genderOptions[userProfile.gender] }}</text>
                         <text class="arrow">&#xe605;</text>
                     </view>
                 </picker>
             </view>
-            
+
             <view class="form-item">
                 <text class="label">手机号</text>
                 <view class="phone-wrapper">
@@ -38,18 +39,13 @@
                 </view>
             </view>
         </view>
-        
+
         <!-- 个人简介 -->
         <view class="form-group">
             <view class="form-item">
                 <text class="label">个人简介</text>
-                <textarea 
-                  class="textarea" 
-                  v-model="userProfile.bio" 
-                  placeholder="请输入个人简介" 
-                  :maxlength="100"
-                  auto-height
-                ></textarea>
+                <textarea class="textarea" v-model="userProfile.bio" placeholder="请输入个人简介" :maxlength="100"
+                    auto-height></textarea>
                 <text class="word-count">{{ userProfile.bio.length }}/100</text>
             </view>
         </view>
@@ -73,18 +69,14 @@ const genderOptions = ['男', '女', '保密'];
 const userProfile = reactive({
     avatar: '',
     nickname: '',
-    gender: 2,
+    gender: 1,
     phone: '',
     bio: ''
 });
 
 // 计算头像URL，处理默认头像情况
-const avatarUrl = computed(() => {
-    if (!userProfile.avatar) {
-        return '/static/images/avatar.png';
-    }
-    return userProfile.avatar;
-});
+const userInfo = computed(() => store.getters["user/getUserInfo"]);
+const avatarUrl = computed(() => store.getters["user/getUserAvatarUrl"]);
 
 // 确保Vuex中有用户数据
 const initUserStore = () => {
@@ -105,7 +97,7 @@ const fetchUserInfo = () => {
         userProfile.gender = userInfo.gender !== undefined ? userInfo.gender : 2;
         userProfile.phone = userInfo.phone || '';
         userProfile.bio = userInfo.bio || '';
-        
+
         console.log('初始化表单数据完成:', userProfile);
     }
 };
@@ -118,7 +110,7 @@ const chooseAvatar = () => {
         sourceType: ['album', 'camera'],
         success: (res) => {
             const tempFilePath = res.tempFilePaths[0];
-            
+
             // 裁剪头像
             uni.navigateTo({
                 url: `/pages/me/profile/crop?src=${encodeURIComponent(tempFilePath)}`,
@@ -162,7 +154,7 @@ const saveProfile = () => {
         });
         return;
     }
-    
+
     console.log('准备保存用户数据:', userProfile);
 
     uni.showLoading({
@@ -216,27 +208,27 @@ onMounted(() => {
         background-color: #fff;
         margin-bottom: 3vw;
         border-radius: 3vw;
-        
+
         .section-title {
             font-size: 3.8vw;
             color: #333;
             font-weight: 500;
             margin-bottom: 4vw;
         }
-        
+
         .avatar-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
-            
+
             .avatar {
                 width: 25vw;
                 height: 25vw;
                 border-radius: 50%;
                 background-color: #f0f0f0;
             }
-            
+
             .upload-icon {
                 position: absolute;
                 bottom: 0;
@@ -248,7 +240,7 @@ onMounted(() => {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                
+
                 .icon-text {
                     color: #fff;
                     font-size: 3vw;
@@ -256,78 +248,78 @@ onMounted(() => {
             }
         }
     }
-    
+
     .form-group {
         background-color: #fff;
         border-radius: 3vw;
         overflow: hidden;
         margin-bottom: 3vw;
-        
+
         .form-item {
             position: relative;
             padding: 4vw;
             display: flex;
             align-items: center;
             border-bottom: 1px solid #f5f5f5;
-            
+
             &:last-child {
                 border-bottom: none;
             }
-            
+
             .label {
                 width: 20vw;
                 font-size: 3.8vw;
                 color: #333;
                 font-weight: 500;
             }
-            
+
             .input {
                 flex: 1;
                 height: 8vw;
                 font-size: 3.5vw;
                 color: #333;
             }
-            
+
             .picker {
                 flex: 1;
-                
+
                 .picker-text {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     font-size: 3.5vw;
                     color: #333;
-                    
+
                     .arrow {
                         font-size: 3vw;
                         color: #ccc;
                     }
                 }
             }
-            
+
             .phone-wrapper {
                 flex: 1;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                
+
                 .phone-text {
                     font-size: 3.5vw;
                     color: #333;
                 }
-                
+
                 .change-btn {
                     padding: 1vw 3vw;
                     background-color: #f5f5f5;
                     border-radius: 3vw;
-                    
+
                     .btn-text {
                         font-size: 3vw;
                         color: #666;
                     }
                 }
             }
-            
+
             .textarea {
                 flex: 1;
                 width: 100%;
@@ -336,7 +328,7 @@ onMounted(() => {
                 color: #333;
                 line-height: 1.6;
             }
-            
+
             .word-count {
                 position: absolute;
                 right: 4vw;
