@@ -15,7 +15,8 @@
         <view class="form-group">
             <view class="form-item">
                 <text class="label">昵称</text>
-                <input class="input" v-model="userInfo.name" placeholder="请输入昵称" />
+                <input class="input" v-model="userProfile.name" placeholder="请输入昵称" />
+                <image class="form-item-icon" src="/static/images/profile/name.png"></image>
             </view>
 
             <view class="form-item">
@@ -23,20 +24,42 @@
                 <picker class="picker" mode="selector" :value="userProfile.gender" :range="genderOptions"
                     @change="onGenderChange">
                     <view class="picker-text">
-                        <text>{{ genderOptions[userProfile.gender] }}</text>
-                        <text class="arrow">&#xe605;</text>
+                        <text>{{ userProfile.gender }}</text>
                     </view>
                 </picker>
+                <image class="form-item-icon" src="/static/images/profile/gender.png"></image>
             </view>
 
             <view class="form-item">
                 <text class="label">手机号</text>
                 <view class="phone-wrapper">
-                    <text class="phone-text">{{ maskPhone(userProfile.phone) }}</text>
+                    <text class="phone-text">{{ maskPhone(userProfile.phone) || '未绑定' }}</text>
                     <view class="change-btn" @click="navigateToChangePhone">
                         <text class="btn-text">更换</text>
                     </view>
                 </view>
+                <image class="form-item-icon" src="/static/images/profile/phone.png"></image>
+            </view>
+        </view>
+
+        <!-- 学校信息表单组 -->
+        <view class="form-group">
+            <view class="form-item">
+                <text class="label">学校</text>
+                <input class="input" v-model="userProfile.school" placeholder="请输入学校名称" />
+                <image class="form-item-icon" src="/static/images/profile/school.png"></image>
+            </view>
+
+            <view class="form-item">
+                <text class="label">专业</text>
+                <input class="input" v-model="userProfile.major" placeholder="请输入专业名称" />
+                <image class="form-item-icon" src="/static/images/profile/major.png"></image>
+            </view>
+
+            <view class="form-item">
+                <text class="label">年级</text>
+                <input class="input" v-model="userProfile.grade" placeholder="请输入年级" />
+                <image class="form-item-icon" src="/static/images/profile/grade.png"></image>
             </view>
         </view>
 
@@ -47,6 +70,7 @@
                 <textarea class="textarea" v-model="userProfile.bio" placeholder="请输入个人简介" :maxlength="100"
                     auto-height></textarea>
                 <text class="word-count">{{ userProfile.bio.length }}/100</text>
+                <image class="form-item-icon" src="/static/images/profile/bio.png"></image>
             </view>
         </view>
 
@@ -57,50 +81,24 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue';
+import { reactive, computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 
-// 性别选项
-const genderOptions = ['男', '女', '保密'];
-
-// 用户资料
-const userProfile = reactive({
-    avatar: '',
-    nickname: '',
-    gender: 1,
-    phone: '',
-    bio: ''
-});
-
-// 计算头像URL，处理默认头像情况
 const userInfo = computed(() => store.getters["user/getUserInfo"]);
 const avatarUrl = computed(() => store.getters["user/getUserAvatarUrl"]);
 
-// 确保Vuex中有用户数据
-const initUserStore = () => {
-    if (!store.state.user.userInfo) {
-        const { userInfo: mockUserInfo } = require('@/mock/user');
-        console.log('从mock初始化用户数据:', mockUserInfo);
-        store.commit('user/SET_USER_INFO', mockUserInfo);
-    }
-};
+// 性别选项
+const genderOptions = ['男', '女'];
 
-// 获取用户信息
-const fetchUserInfo = () => {
-    const userInfo = store.state.user.userInfo;
-    if (userInfo) {
-        console.log('从Vuex读取用户信息:', userInfo);
-        userProfile.avatar = userInfo.avatar || '/static/images/avatar.png';
-        userProfile.nickname = userInfo.name || '';
-        userProfile.gender = userInfo.gender !== undefined ? userInfo.gender : 2;
-        userProfile.phone = userInfo.phone || '';
-        userProfile.bio = userInfo.bio || '';
+// 用户资料
+const userProfile = reactive({
+    ...userInfo.value,
+    phone: userInfo.value.phone || '',
+    bio: userInfo.value.bio || ''
+});
 
-        console.log('初始化表单数据完成:', userProfile);
-    }
-};
 
 // 选择头像
 const chooseAvatar = () => {
@@ -116,13 +114,12 @@ const chooseAvatar = () => {
 
 // 性别选择变化
 const onGenderChange = (e) => {
-    userProfile.gender = parseInt(e.detail.value);
-    console.log('性别已更新:', userProfile.gender);
+    userProfile.gender = e.detail.value;
 };
 
 // 手机号脱敏显示
 const maskPhone = (phone) => {
-    if (!phone || phone.length !== 11) return phone;
+    if (!phone || phone.length < 11) return phone;
     return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
 };
 
@@ -135,53 +132,11 @@ const navigateToChangePhone = () => {
 
 // 保存用户资料
 const saveProfile = () => {
-    if (!userProfile.nickname.trim()) {
-        uni.showToast({
-            title: '请输入昵称',
-            icon: 'none'
-        });
-        return;
-    }
-
-    console.log('准备保存用户数据:', userProfile);
-
     uni.showLoading({
         title: '保存中...'
     });
-
-    // 构造更新后的用户数据
-    const updatedUserInfo = {
-        ...store.state.user.userInfo,
-        avatar: userProfile.avatar,
-        name: userProfile.nickname,
-        gender: userProfile.gender,
-        phone: userProfile.phone,
-        bio: userProfile.bio
-    };
-
-    setTimeout(() => {
-        // 保存到Vuex
-        store.commit('user/SET_USER_INFO', updatedUserInfo);
-        console.log('保存成功，更新后的用户信息:', updatedUserInfo);
-
-        uni.hideLoading();
-        uni.showToast({
-            title: '保存成功',
-            icon: 'success',
-            success: () => {
-                setTimeout(() => {
-                    uni.navigateBack();
-                }, 1500);
-            }
-        });
-    }, 1000);
 };
 
-onMounted(() => {
-    console.log('页面挂载，初始化用户数据');
-    initUserStore();
-    fetchUserInfo();
-});
 </script>
 
 <style lang="scss" scoped>
@@ -268,6 +223,12 @@ onMounted(() => {
                 color: #333;
             }
 
+            .form-item-icon {
+                width: 5vw;
+                height: 5vw;
+                margin-left: 2vw;
+            }
+
             .picker {
                 flex: 1;
 
@@ -277,11 +238,6 @@ onMounted(() => {
                     align-items: center;
                     font-size: 3.5vw;
                     color: #333;
-
-                    .arrow {
-                        font-size: 3vw;
-                        color: #ccc;
-                    }
                 }
             }
 

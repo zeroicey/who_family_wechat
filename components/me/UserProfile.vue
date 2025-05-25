@@ -50,7 +50,6 @@ const avatarUrl = computed(() => store.getters["user/getUserAvatarUrl"]);
 
 // 点击跳转到个人资料设置页面
 const navigateToEdit = () => {
-  console.log(avatarUrl)
   uni.navigateTo({
     url: "/pages/me/profile/index",
   });
