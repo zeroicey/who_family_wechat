@@ -1,35 +1,20 @@
 <template>
   <view class="order-item" @tap="$emit('view-detail', order.id)">
     <!-- 订单头部 -->
-    <OrderHeader 
-      :order-number="order.orderNumber" 
-      :create-time="order.createTime" 
-      :status="order.status" 
-    />
+    <OrderHeader :order-number="order.orderNumber" :create-time="order.createTime" :status="order.status" />
 
     <!-- 订单内容 -->
-    <OrderContent 
-      :product-name="order.productName"
-      :product-desc="order.productDesc"
-      :product-image="order.productImage"
-      :price="order.price"
-      :quantity="order.quantity"
-    />
+    <OrderContent :product-name="order.productName" :product-desc="order.productDesc"
+      :product-image="order.productImage" :price="order.price" :quantity="order.quantity" />
 
     <!-- 订单底部 -->
-    <OrderFooter 
-      :status="order.status"
-      :quantity="order.quantity"
-      :total-price="order.totalPrice"
-      @pay="$emit('pay', order.id)"
-      @confirm="$emit('confirm', order.id)"
-      @view-logistics="$emit('view-logistics', order.id)"
-    />
+    <OrderFooter :status="order.status" :quantity="order.quantity" :total-price="order.totalPrice"
+      @pay="$emit('pay', order.id)" @confirm="$emit('confirm', order.id)"
+      @view-logistics="$emit('view-logistics', order.id)" />
   </view>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
 // 导入拆分后的子组件
 import OrderHeader from './OrderHeader.vue';
 import OrderContent from './OrderContent.vue';

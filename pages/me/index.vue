@@ -11,16 +11,22 @@
 
     <!-- 版本信息 -->
     <view class="version-info">
-      <text>版本 1.0.0</text>
+      <text>版本 {{ appVersion }}</text>
     </view>
   </view>
 </template>
 
 <script setup>
-// 引入组件
+
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import UserProfile from '@/components/me/UserProfile.vue';
 import QuickNav from '@/components/me/QuickNav.vue';
 import ServiceCard from '@/components/me/ServiceCard.vue';
+
+const store = useStore();
+
+const appVersion = computed(() => store.getters['appVersion']);
 </script>
 
 <style lang="scss" scoped>

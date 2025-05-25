@@ -1,12 +1,7 @@
 <template>
   <view class="order-tab-bar">
-    <view 
-      v-for="(tab, index) in tabs" 
-      :key="index" 
-      class="tab-item" 
-      :class="{ 'active': activeTab === tab.value }"
-      @tap="changeTab(tab.value)"
-    >
+    <view v-for="(tab, index) in tabs" :key="index" class="tab-item" :class="{ 'active': activeTab === tab.value }"
+      @tap="changeTab(tab.value)">
       <text class="tab-text">{{ tab.label }}</text>
       <view class="tab-indicator" v-if="activeTab === tab.value"></view>
     </view>
@@ -14,8 +9,6 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-
 const props = defineProps({
   activeTab: {
     type: String,
@@ -44,7 +37,7 @@ const changeTab = (tab) => {
   width: 100%;
   background-color: #fff;
   border-bottom: 1px solid #f0f0f0;
-  
+
   .tab-item {
     flex: 1;
     display: flex;
@@ -53,13 +46,13 @@ const changeTab = (tab) => {
     align-items: center;
     height: 12vw;
     position: relative;
-    
+
     .tab-text {
       font-size: 3.5vw;
       color: #666;
       line-height: 12vw;
     }
-    
+
     .tab-indicator {
       position: absolute;
       bottom: 0;
@@ -68,7 +61,7 @@ const changeTab = (tab) => {
       background-color: #07c160;
       border-radius: 0.3vw;
     }
-    
+
     &.active {
       .tab-text {
         color: #07c160;

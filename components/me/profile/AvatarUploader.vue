@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref, computed, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps({
   avatar: {
@@ -50,10 +50,10 @@ const chooseAvatar = () => {
     success: (res) => {
       // 模拟上传头像，实际开发中需要调用上传API
       const tempFilePath = res.tempFilePaths[0];
-      
+
       // 裁剪头像前清除可能存在的上一次结果
       uni.removeStorageSync('croppedAvatar');
-      
+
       // 裁剪头像
       uni.navigateTo({
         url: `/pages/me/profile/crop?src=${encodeURIComponent(tempFilePath)}`,

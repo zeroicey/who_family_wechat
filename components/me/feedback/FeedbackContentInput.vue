@@ -2,14 +2,8 @@
   <view class="feedback-content-input">
     <text class="section-title">反馈内容</text>
     <view class="textarea-container">
-      <textarea 
-        class="content-textarea" 
-        :value="modelValue"
-        @input="updateContent"
-        placeholder="请详细描述您遇到的问题或建议..."
-        :maxlength="maxLength"
-        auto-height
-      ></textarea>
+      <textarea class="content-textarea" :value="modelValue" @input="updateContent" placeholder="请详细描述您遇到的问题或建议..."
+        :maxlength="maxLength" auto-height></textarea>
       <view class="word-counter" :class="{ 'near-limit': isNearLimit }">
         <text class="counter-text">{{ modelValue.length }}/{{ maxLength }}</text>
       </view>
@@ -18,7 +12,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
   modelValue: {
@@ -46,7 +40,7 @@ const isNearLimit = computed(() => {
 <style lang="scss" scoped>
 .feedback-content-input {
   margin-bottom: 5vw;
-  
+
   .section-title {
     font-size: 4vw;
     color: #333;
@@ -54,7 +48,7 @@ const isNearLimit = computed(() => {
     margin-bottom: 3vw;
     position: relative;
     padding-left: 3vw;
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -67,14 +61,14 @@ const isNearLimit = computed(() => {
       border-radius: 0.5vw;
     }
   }
-  
+
   .textarea-container {
     position: relative;
     background-color: #f8f8f8;
     border-radius: 3vw;
     padding: 4vw;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-    
+
     .content-textarea {
       width: 100%;
       min-height: 30vw;
@@ -84,17 +78,17 @@ const isNearLimit = computed(() => {
       background-color: transparent;
       padding-bottom: 8vw;
     }
-    
+
     .word-counter {
       position: absolute;
       right: 4vw;
       bottom: 4vw;
-      
+
       .counter-text {
         font-size: 3.2vw;
         color: #999;
       }
-      
+
       &.near-limit {
         .counter-text {
           color: #ff6b00;

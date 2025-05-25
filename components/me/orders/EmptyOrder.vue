@@ -7,8 +7,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
 const props = defineProps({
   type: {
     type: String,
@@ -43,19 +41,19 @@ const navigateToHome = () => {
   align-items: center;
   justify-content: center;
   padding: 15vw 0;
-  
+
   .empty-icon {
     width: 25vw;
     height: 25vw;
     margin-bottom: 3vw;
   }
-  
+
   .empty-text {
     font-size: 3.5vw;
     color: #999;
     margin-bottom: 5vw;
   }
-  
+
   .action-btn {
     width: 30vw;
     height: 8vw;

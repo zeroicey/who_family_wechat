@@ -7,14 +7,13 @@
     <view class="action-buttons">
       <button v-if="status === 'unpaid'" class="btn pay-btn" @tap.stop="$emit('pay')">去付款</button>
       <button v-if="status === 'delivered'" class="btn confirm-btn" @tap.stop="$emit('confirm')">确认收货</button>
-      <button v-if="['delivered', 'undelivered'].includes(status)" class="btn normal-btn" @tap.stop="$emit('view-logistics')">查看物流</button>
+      <button v-if="['delivered', 'undelivered'].includes(status)" class="btn normal-btn"
+        @tap.stop="$emit('view-logistics')">查看物流</button>
     </view>
   </view>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-
 const emit = defineEmits(['pay', 'confirm', 'view-logistics']);
 
 const props = defineProps({

@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, toRefs } from 'vue';
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();

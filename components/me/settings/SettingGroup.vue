@@ -8,8 +8,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
 const props = defineProps({
   title: {
     type: String,
@@ -21,13 +19,13 @@ const props = defineProps({
 <style lang="scss" scoped>
 .setting-group {
   margin-bottom: 3vw;
-  
+
   .group-title {
     padding: 3vw 4vw 2vw;
     font-size: 3.2vw;
     color: #999;
   }
-  
+
   .group-content {
     background-color: #fff;
     border-radius: 4px;

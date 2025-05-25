@@ -2,19 +2,14 @@
   <view class="contact-input">
     <text class="section-title">联系方式 <text class="optional">(选填)</text></text>
     <view class="input-container">
-      <input 
-        class="contact-field"
-        :value="modelValue"
-        @input="updateContact"
-        placeholder="请留下您的手机号或邮箱，方便我们反馈"
-        type="text"
-      />
+      <input class="contact-field" :value="modelValue" @input="updateContact" placeholder="请留下您的手机号或邮箱，方便我们反馈"
+        type="text" />
     </view>
   </view>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineEmits } from 'vue';
 
 const props = defineProps({
   modelValue: {
@@ -33,7 +28,7 @@ const updateContact = (e) => {
 <style lang="scss" scoped>
 .contact-input {
   margin-bottom: 5vw;
-  
+
   .section-title {
     font-size: 4vw;
     color: #333;
@@ -41,13 +36,13 @@ const updateContact = (e) => {
     margin-bottom: 3vw;
     position: relative;
     padding-left: 3vw;
-    
+
     .optional {
       font-size: 3.2vw;
       color: #999;
       font-weight: 400;
     }
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -60,13 +55,13 @@ const updateContact = (e) => {
       border-radius: 0.5vw;
     }
   }
-  
+
   .input-container {
     background-color: #f8f8f8;
     border-radius: 3vw;
     padding: 0 4vw;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-    
+
     .contact-field {
       width: 100%;
       height: 11vw;

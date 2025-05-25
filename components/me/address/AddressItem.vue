@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps({
   address: {
@@ -60,33 +60,33 @@ const editAddress = () => {
   background-color: #fff;
   padding: 4vw;
   margin-bottom: 2vw;
-  
+
   .content {
     display: flex;
     justify-content: space-between;
-    
+
     .info-wrapper {
       flex: 1;
       padding-right: 3vw;
-      
+
       .user-info {
         display: flex;
         align-items: center;
         margin-bottom: 2vw;
-        
+
         .name {
           font-size: 4vw;
           font-weight: 500;
           color: #333;
           margin-right: 3vw;
         }
-        
+
         .phone {
           font-size: 3.5vw;
           color: #666;
           margin-right: 3vw;
         }
-        
+
         .default-tag {
           padding: 0.5vw 1.5vw;
           background-color: #f0f9eb;
@@ -96,7 +96,7 @@ const editAddress = () => {
           color: #07c160;
         }
       }
-      
+
       .address-info {
         .address-text {
           font-size: 3.5vw;
@@ -105,19 +105,19 @@ const editAddress = () => {
         }
       }
     }
-    
+
     .action-wrapper {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      
+
       .edit-btn {
         width: 8vw;
         height: 8vw;
         display: flex;
         justify-content: center;
         align-items: center;
-        
+
         .edit-icon {
           font-size: 5vw;
           color: #999;

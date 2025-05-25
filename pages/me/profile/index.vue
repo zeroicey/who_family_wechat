@@ -110,18 +110,6 @@ const chooseAvatar = () => {
         sourceType: ['album', 'camera'],
         success: (res) => {
             const tempFilePath = res.tempFilePaths[0];
-
-            // 裁剪头像
-            uni.navigateTo({
-                url: `/pages/me/profile/crop?src=${encodeURIComponent(tempFilePath)}`,
-                events: {
-                    // 接收裁剪后的头像
-                    cropSuccess: (avatar) => {
-                        userProfile.avatar = avatar;
-                        console.log('头像已更新:', avatar);
-                    }
-                }
-            });
         }
     });
 };

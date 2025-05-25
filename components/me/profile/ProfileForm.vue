@@ -5,7 +5,7 @@
         <text class="label">昵称</text>
         <input class="input" v-model="formData.nickname" placeholder="请输入昵称" />
       </view>
-      
+
       <view class="form-item">
         <text class="label">性别</text>
         <picker class="picker" mode="selector" :value="formData.gender" :range="genderOptions" @change="onGenderChange">
@@ -15,7 +15,7 @@
           </view>
         </picker>
       </view>
-      
+
       <view class="form-item">
         <text class="label">手机号</text>
         <view class="phone-wrapper">
@@ -26,35 +26,29 @@
         </view>
       </view>
     </view>
-    
+
     <!-- 学校信息表单组 -->
     <view class="form-group">
       <view class="form-item">
         <text class="label">学校</text>
         <input class="input" v-model="formData.school" placeholder="请输入学校名称" />
       </view>
-      
+
       <view class="form-item">
         <text class="label">专业</text>
         <input class="input" v-model="formData.major" placeholder="请输入专业名称" />
       </view>
-      
+
       <view class="form-item">
         <text class="label">年级</text>
         <input class="input" v-model="formData.grade" placeholder="请输入年级" />
       </view>
     </view>
-    
+
     <view class="form-group">
       <view class="form-item">
         <text class="label">个人简介</text>
-        <textarea 
-          class="textarea" 
-          v-model="formData.bio" 
-          placeholder="请输入个人简介" 
-          :maxlength="100"
-          auto-height
-        ></textarea>
+        <textarea class="textarea" v-model="formData.bio" placeholder="请输入个人简介" :maxlength="100" auto-height></textarea>
         <text class="word-count">{{ formData.bio.length }}/100</text>
       </view>
     </view>
@@ -62,7 +56,7 @@
 </template>
 
 <script setup>
-import { reactive, defineProps, defineEmits, computed, watch } from 'vue';
+import { reactive, watch } from 'vue';
 
 const props = defineProps({
   userInfo: {
@@ -147,72 +141,72 @@ watch(() => formData.grade, updateFormData);
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 3vw;
-    
+
     .form-item {
       position: relative;
       padding: 4vw;
       display: flex;
       align-items: center;
       border-bottom: 1px solid #f5f5f5;
-      
+
       &:last-child {
         border-bottom: none;
       }
-      
+
       .label {
         width: 20vw;
         font-size: 3.8vw;
         color: #333;
         font-weight: 500;
       }
-      
+
       .input {
         flex: 1;
         height: 8vw;
         font-size: 3.5vw;
         color: #333;
       }
-      
+
       .picker {
         flex: 1;
-        
+
         .picker-text {
           display: flex;
           justify-content: space-between;
           align-items: center;
           font-size: 3.5vw;
           color: #333;
-          
+
           .arrow {
             font-size: 3vw;
             color: #ccc;
           }
         }
       }
-      
+
       .phone-wrapper {
         flex: 1;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
+
         .phone-text {
           font-size: 3.5vw;
           color: #333;
         }
-        
+
         .change-btn {
           padding: 1vw 3vw;
           background-color: #f5f5f5;
           border-radius: 3vw;
-          
+
           .btn-text {
             font-size: 3vw;
             color: #666;
           }
         }
       }
-      
+
       .textarea {
         flex: 1;
         width: 100%;
@@ -221,7 +215,7 @@ watch(() => formData.grade, updateFormData);
         color: #333;
         line-height: 1.6;
       }
-      
+
       .word-count {
         position: absolute;
         right: 4vw;

@@ -1,20 +1,14 @@
 <template>
   <view class="loading-container">
     <view class="loading-spinner">
-      <view 
-        class="loading-circle" 
-        v-for="(item, index) in 12" 
-        :key="index" 
-        :style="{animationDelay: (index * 0.1) + 's'}"
-      ></view>
+      <view class="loading-circle" v-for="(item, index) in 12" :key="index"
+        :style="{ animationDelay: (index * 0.1) + 's' }"></view>
     </view>
     <view class="loading-text">{{ loadingText }}</view>
   </view>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
 const props = defineProps({
   loadingText: {
     type: String,
@@ -37,13 +31,13 @@ const props = defineProps({
   margin-top: 5vw;
   box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.05);
   z-index: 2;
-  
+
   .loading-spinner {
     position: relative;
     width: 15vw;
     height: 15vw;
   }
-  
+
   .loading-circle {
     position: absolute;
     top: 0;
@@ -54,7 +48,7 @@ const props = defineProps({
     border-radius: 1vw;
     transform-origin: 0 7.5vw;
     animation: loading 1.2s infinite linear;
-    
+
     @for $i from 1 through 12 {
       &:nth-child(#{$i}) {
         transform: rotate(#{$i * 30}deg);
@@ -62,7 +56,7 @@ const props = defineProps({
       }
     }
   }
-  
+
   .loading-text {
     font-size: 4vw;
     color: #666;
@@ -74,6 +68,7 @@ const props = defineProps({
   0% {
     opacity: 1;
   }
+
   100% {
     opacity: 0.2;
   }
