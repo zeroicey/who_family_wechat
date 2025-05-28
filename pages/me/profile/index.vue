@@ -86,8 +86,8 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-const userInfo = computed(() => store.getters["user/getUserInfo"]);
-const avatarUrl = computed(() => store.getters["user/getUserAvatarUrl"]);
+const userInfo = computed(() => store.getters["user/get_user_info"]);
+const avatarUrl = computed(() => store.getters["user/get_user_avatar_url"]);
 
 // 性别选项
 const genderOptions = ['男', '女'];

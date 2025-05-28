@@ -10,27 +10,15 @@ const state = {
 
 const getters = {
   // 获取用户信息
-  getUserInfo: (state) => state.userInfo,
+  get_user_info: (state) => state.userInfo,
   // 判断用户是否登录
-  isLoggedIn: (state) => state.isLogin,
-  // 获取用户头像
-  getUserAvatar: (state) => (state.userInfo ? state.userInfo.avatar : ""),
-  // 获取用户名称
-  getUserName: (state) => (state.userInfo ? state.userInfo.name : ""),
-  // 获取用户学校
-  getUserSchool: (state) => (state.userInfo ? state.userInfo.school : ""),
-  // 获取用户专业
-  getUserMajor: (state) => (state.userInfo ? state.userInfo.major : ""),
-  // 获取用户年级
-  getUserGrade: (state) => (state.userInfo ? state.userInfo.grade : ""),
+  is_logged_in: (state) => state.isLogin,
   // 登录加载状态
-  loginLoading: (state) => state.loginLoading,
-
+  login_loading: (state) => state.loginLoading,
   // 获取是否登录
-  isLogin: (state) => state.isLogin,
-
+  is_login: (state) => state.isLogin,
   // 获取头像
-  getUserAvatarUrl: (state) => state.avatarUrl,
+  get_user_avatar_url: (state) => state.avatarUrl,
 };
 
 const mutations = {
@@ -70,7 +58,7 @@ const mutations = {
 
 const actions = {
   // 微信登录
-  async wechatLogin({ commit }) {
+  async wechat_login({ commit }) {
     try {
       console.log("[用户模块] 开始微信登录");
       commit("set_login_loading", true);

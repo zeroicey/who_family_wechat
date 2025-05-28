@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 
 import user from "./modules/user";
+import community from "./modules/community";
 
 // 根级别的 state
 const state = {
@@ -41,6 +42,7 @@ const store = createStore({
   actions,
   modules: {
     user,
+    community,
   },
 });
 

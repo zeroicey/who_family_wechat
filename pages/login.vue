@@ -42,7 +42,7 @@ const store = useStore()
 const isLoading = ref(true);
 
 // 登录加载状态
-const loginLoading = computed(() => store.getters['user/loginLoading']);
+const loginLoading = computed(() => store.getters['user/login_loading']);
 
 // 页面加载时模拟加载过程
 onMounted(() => {
@@ -55,7 +55,7 @@ onMounted(() => {
 // 处理微信登录
 const handleWechatLogin = async () => {
     try {
-        await store.dispatch('user/wechatLogin');
+        await store.dispatch('user/wechat_login');
 
         // 登录成功提示
         uni.showToast({

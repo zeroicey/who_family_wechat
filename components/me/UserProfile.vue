@@ -13,7 +13,7 @@
           <view class="user-bio" v-else>这个用户很懒，还没有填写简介哦~</view>
         </view>
         <view class="edit-icon">
-          <text class="iconfont">&#xe612;</text>
+          <image class="edit-icon-img" src="/static/images/profile/name.png" mode="aspectFit"></image>
         </view>
       </view>
 
@@ -21,17 +21,17 @@
       <view class="school-info-section" v-if="userInfo.school || userInfo.major || userInfo.grade || true">
         <view class="section-divider"></view>
         <view class="school-info-row">
-          <text class="info-icon">&#xe645;</text>
+          <image class="info-icon" src="/static/images/profile/school.png" mode="aspectFit"></image>
           <text class="info-label">学校:</text>
           <text class="info-value">{{ userInfo.school || "未填写" }}</text>
         </view>
         <view class="school-info-row">
-          <text class="info-icon">&#xe604;</text>
+          <image class="info-icon" src="/static/images/profile/major.png" mode="aspectFit"></image>
           <text class="info-label">专业:</text>
           <text class="info-value">{{ userInfo.major || "未填写" }}</text>
         </view>
         <view class="school-info-row">
-          <text class="info-icon">&#xe624;</text>
+          <image class="info-icon" src="/static/images/profile/grade.png" mode="aspectFit"></image>
           <text class="info-label">年级:</text>
           <text class="info-value">{{ userInfo.grade || "未填写" }}</text>
         </view>
@@ -45,8 +45,8 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
-const userInfo = computed(() => store.getters["user/getUserInfo"]);
-const avatarUrl = computed(() => store.getters["user/getUserAvatarUrl"]);
+const userInfo = computed(() => store.getters["user/get_user_info"]);
+const avatarUrl = computed(() => store.getters["user/get_user_avatar_url"]);
 
 // 点击跳转到个人资料设置页面
 const navigateToEdit = () => {
@@ -145,13 +145,14 @@ const navigateToEdit = () => {
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #07c160;
-        background-color: rgba(7, 193, 96, 0.08);
         border-radius: 50%;
         transition: all 0.2s ease;
 
-        .iconfont {
-          font-size: 5vw;
+        .edit-icon-img {
+          width: 5vw;
+          /* Adjust as needed */
+          height: 5vw;
+          /* Adjust as needed */
         }
       }
     }
@@ -182,18 +183,18 @@ const navigateToEdit = () => {
         }
 
         .info-icon {
-          font-family: "iconfont";
-          font-size: 4vw;
-          color: #fff;
+          font-family: "iconfont"; // This line can be removed if iconfont is no longer used elsewhere for this class
+          font-size: 4vw; // This might need adjustment or removal if image size is controlled by width/height
+          color: #fff; // This is likely irrelevant for images
           margin-right: 3vw;
           width: 6vw;
           height: 6vw;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #07c160, #39e28c);
+          border-radius: 50%; // May or may not be desired for images
+          // background: linear-gradient(135deg, #07c160, #39e28c); // Background for text icons, remove for images
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 2px 4px rgba(7, 193, 96, 0.2);
+          // box-shadow: 0 2px 4px rgba(7, 193, 96, 0.2); // Shadow for text icons, adjust or remove for images
         }
 
         .info-label {

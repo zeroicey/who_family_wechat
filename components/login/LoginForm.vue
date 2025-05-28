@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineEmits, computed } from 'vue';
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 // 移除了showAppDownload属性
@@ -33,7 +33,7 @@ const emit = defineEmits(['wechatLogin', 'agreement', 'privacy']);
 const store = useStore();
 
 // 获取登录加载状态
-const loading = computed(() => store.getters['user/loginLoading']);
+const loading = computed(() => store.getters['user/login_loading']);
 
 // 处理微信登录
 const handleWechatLogin = () => {
