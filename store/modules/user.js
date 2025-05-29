@@ -69,7 +69,7 @@ const actions = {
       commit("set_token", token);
       commit("set_user_info", userInfo);
 
-      console.log("[用户模块] 微信登录成功，获取用户信息", userInfo);
+      // console.log("[用户模块] 微信登录成功，获取用户信息", userInfo);
 
       const avatarRes = await getAvatarUrl(userInfo.avaterId, userInfo.name);
       commit("set_user_avatar", avatarRes.data.data);

@@ -1,89 +1,316 @@
 <template>
-    <view>
-        <view>Hello, this is the community page.</view>
-        <button hover-class="button-hover" @click="handleClick">
-            click me
-        </button>
-        <view v-if="posts && posts.length > 0" class="posts-container">
-            <view v-for="post in posts" :key="post.cid" class="post-item">
-                <view class="post-header">
-                    <text class="username">{{ post.username }}</text>
-                    <text class="create-time">{{ post.createTime }}</text>
-                </view>
-                <text class="title">{{ post.title }}</text>
-                <text class="content">{{ post.content }}</text>
-                <!-- Images can be displayed here if you have a component or logic to handle imgIdList -->
-                <view class="post-footer">
-                    <text>Likes: {{ post.likeCount }}</text>
-                    <text>Comments: {{ post.commentCount }}</text>
-                    <text>Views: {{ post.viewCount }}</text>
-                </view>
-            </view>
+  <view class="community-container">
+    <!-- 分类导航 -->
+    <scroll-view class="category-scroll" scroll-x show-scrollbar="false">
+      <view class="category-list">
+        <view
+          v-for="(category, index) in categories"
+          :key="index"
+          class="category-item"
+          :class="{ active: currentCategory === category.value }"
+          @click="changeCategory(category.value)"
+        >
+          <text>{{ category.label }}</text>
         </view>
-        <view v-else>
-            <text>No posts to display.</text>
-        </view>
+        <!-- 添加占位元素，确保右侧有足够空间 -->
+        <view class="category-spacer"></view>
+      </view>
+    </scroll-view>
+
+    <!-- 下拉刷新区域 -->
+    <scroll-view
+      class="posts-scroll"
+      scroll-y
+      refresher-enabled
+      :refresher-triggered="refreshing"
+      @refresherrefresh="onRefresh"
+      @scrolltolower="loadMore"
+    >
+      <!-- 帖子列表 -->
+      <view v-if="posts && posts.length > 0" class="posts-container">
+        <post-card
+          v-for="post in posts"
+          :key="post.id"
+          :post="post"
+          @click="viewPostDetail(post.id)"
+        />
+      </view>
+
+      <!-- 空状态 -->
+      <view v-else class="empty-state">
+        <view class="empty-icon"></view>
+        <text class="empty-text">暂无内容</text>
+        <view class="refresh-btn" @click="handleClick">刷新试试</view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view v-if="posts && posts.length > 0" class="load-more">
+        <text v-if="loading">加载中...</text>
+        <text v-else-if="noMoreData">没有更多了</text>
+        <text v-else>上拉加载更多</text>
+      </view>
+    </scroll-view>
+
+    <!-- 悬浮发布按钮 -->
+    <view class="float-btn" @click="onPublish">
+      <view class="publish-icon">+</view>
     </view>
+  </view>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
+import PostCard from "@/components/community/PostCard.vue";
 
 const store = useStore();
 
-const posts = computed(() => store.getters['community/getPosts']);
+// 获取帖子数据
+const posts = computed(() => store.getters["community/getPosts"]);
 
+// 分类数据
+const categories = [
+  { label: "全部", value: "all" },
+  { label: "热门", value: "hot" },
+  { label: "生活", value: "life" },
+  { label: "学习", value: "study" },
+  { label: "情感", value: "emotion" },
+  { label: "娱乐", value: "entertainment" },
+  { label: "运动", value: "sports" },
+  { label: "美食", value: "food" },
+];
+
+// 当前选中的分类
+const currentCategory = ref("all");
+
+// 下拉刷新与加载更多状态
+const refreshing = ref(false);
+const loading = ref(false);
+const noMoreData = ref(false);
+
+// 刷新帖子
 const handleClick = async () => {
-    await store.dispatch('community/get_first_posts');
-}
+  await store.dispatch("community/get_first_posts");
+};
 
+// 切换分类
+const changeCategory = (category) => {
+  currentCategory.value = category;
+  // 可以在这里根据分类筛选数据
+  handleClick();
+};
+
+// 下拉刷新
+const onRefresh = async () => {
+  refreshing.value = true;
+  await handleClick();
+  setTimeout(() => {
+    refreshing.value = false;
+  }, 1000);
+};
+
+// 加载更多
+const loadMore = async () => {
+  if (loading.value || noMoreData.value) return;
+
+  loading.value = true;
+  // 这里可以调用加载更多的接口
+  // await store.dispatch('community/load_more_posts');
+
+  // 模拟加载
+  setTimeout(() => {
+    loading.value = false;
+
+    // 判断是否还有更多数据
+    if (posts.value.length > 20) {
+      noMoreData.value = true;
+    }
+  }, 1000);
+};
+
+// 回到顶部
+const scrollToTop = () => {
+  // 实现回到顶部的逻辑
+  uni.pageScrollTo({
+    scrollTop: 0,
+    duration: 300,
+  });
+};
+
+// 查看帖子详情
+const viewPostDetail = (id) => {
+  uni.navigateTo({
+    url: `/pages/community/detail?id=${id}`,
+  });
+};
+
+// 发布新帖子
+const onPublish = () => {
+  uni.navigateTo({
+    url: "/pages/community/publish",
+  });
+};
 </script>
 
 <style scoped>
+/* 整体容器 */
+.community-container {
+  background-color: #f8f8f8;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 顶部导航 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  width: 24px;
+  height: 24px;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+
+.publish-btn {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+/* 分类导航 */
+.category-scroll {
+  background-color: #ffffff;
+  white-space: nowrap;
+  padding: 0 8px;
+  margin-top: 10px;
+}
+
+.category-list {
+  display: flex;
+  padding: 12px 8px;
+  width: 100%;
+}
+
+.category-item {
+  padding: 6px 16px;
+  margin: 0 6px;
+  font-size: 14px;
+  color: #666;
+  border-radius: 16px;
+  background-color: #f5f5f5;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.category-spacer {
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.category-item.active {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  color: white;
+  font-weight: 500;
+}
+
+/* 帖子列表 */
+.posts-scroll {
+  height: calc(100vh - 60px); /* 视口高度减去分类导航的高度 */
+}
+
 .posts-container {
-    margin-top: 20px;
+  padding: 8px;
 }
 
-.post-item {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 10px;
-    /* Added margin for better separation */
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 100px;
 }
 
-.post-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    color: #666;
-    font-size: 0.9em;
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  margin-bottom: 16px;
 }
 
-.username {
-    font-weight: bold;
+.empty-text {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 16px;
 }
 
-.title {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-    /* Ensure title takes full width */
+.refresh-btn {
+  padding: 8px 20px;
+  background-color: #f5f5f5;
+  color: #666;
+  border-radius: 20px;
+  font-size: 14px;
 }
 
-.content {
-    margin-bottom: 10px;
-    display: block;
-    /* Ensure content takes full width */
-    color: #333;
-    line-height: 1.4;
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 16px 0;
+  color: #999;
+  font-size: 13px;
 }
 
-.post-footer {
-    display: flex;
-    justify-content: space-around;
-    font-size: 0.9em;
-    color: #888;
+/* 悬浮发布按钮 */
+.float-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  z-index: 99;
+}
+
+.publish-icon {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 28px;
+  height: 28px;
+  text-align: center;
+  margin-top: -2px; /* 微调位置使其完美居中 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
