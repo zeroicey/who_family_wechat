@@ -11,7 +11,7 @@
           <text class="post-title">{{ post.title }}</text>
         </view>
       </view>
-      <text class="post-time">{{ formatTime(post.createTime) }}</text>
+      <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
     </view>
     
     <!-- 内容区域 -->
@@ -64,6 +64,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { formatRelativeTime } from '@/utils/timeFormat.js';
 
 // 定义props
 const props = defineProps({
@@ -94,45 +95,8 @@ const imageLayoutClass = computed(() => {
   return 'image-grid';
 });
 
-// 格式化时间
-const formatTime = (timeString) => {
-  if (!timeString) return '';
-  
-  try {
-    const date = new Date(timeString);
-    const now = new Date();
-    const diff = now - date;
-    
-    // 一分钟内
-    if (diff < 60 * 1000) {
-      return '刚刚';
-    }
-    
-    // 一小时内
-    if (diff < 60 * 60 * 1000) {
-      return `${Math.floor(diff / (60 * 1000))}分钟前`;
-    }
-    
-    // 一天内
-    if (diff < 24 * 60 * 60 * 1000) {
-      return `${Math.floor(diff / (60 * 60 * 1000))}小时前`;
-    }
-    
-    // 一周内
-    if (diff < 7 * 24 * 60 * 60 * 1000) {
-      return `${Math.floor(diff / (24 * 60 * 60 * 1000))}天前`;
-    }
-    
-    // 超过一周
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-    
-  } catch (e) {
-    return timeString;
-  }
-};
+// 使用工具函数格式化时间
+const formatTime = formatRelativeTime;
 </script>
 
 <style scoped>
