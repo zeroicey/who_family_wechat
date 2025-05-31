@@ -1,10 +1,10 @@
 <template>
-  <view class="post-card">
+  <view class="post-card" @click="$emit('click')">
     <!-- 用户信息区域 -->
     <view class="post-header">
       <view class="user-info">
         <view class="avatar">
-          <text class="avatar-text">{{ post.username.charAt(0) }}</text>
+          <image :src="avatarUrl" class="avatar-image" />
         </view>
         <view class="user-details">
           <text class="username">{{ post.username }}</text>
@@ -13,25 +13,29 @@
       </view>
       <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
     </view>
-    
+
     <!-- 内容区域 -->
     <view class="post-content">
       <text class="content-text">{{ post.content }}</text>
     </view>
-    
+
     <!-- 图片区域 -->
-    <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
-      <view 
-        v-for="(img, index) in images" 
-        :key="index" 
+    <view
+      v-if="images.length > 0"
+      class="image-container"
+      :class="imageLayoutClass"
+    >
+      <view
+        v-for="(img, index) in images"
+        :key="index"
         class="image-item"
-        :class="{'image-item-single': images.length === 1}"
+        :class="{ 'image-item-single': images.length === 1 }"
       >
         <!-- 使用空白div占位 -->
         <view class="image-placeholder"></view>
       </view>
     </view>
-    
+
     <!-- 底部操作区域 -->
     <view class="post-footer">
       <view class="action-item">
@@ -63,15 +67,24 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { formatRelativeTime } from '@/utils/timeFormat.js';
+import { computed } from "vue";
+import { formatRelativeTime } from "@/utils/timeFormat.js";
+import { getRandomAvatarUrl } from "@/utils/randomData.js"; // 引入获取随机头像的函数
 
 // 定义props
 const props = defineProps({
   post: {
     type: Object,
-    required: true
+    required: true,
+  },
+});
+
+// 计算头像URL
+const avatarUrl = computed(() => {
+  if (props.post.avaterId === 1) {
+    return getRandomAvatarUrl(props.post.username);
   }
+  return ""; // 默认返回空字符串或一个占位符图片URL
 });
 
 // 处理图片列表
@@ -88,15 +101,12 @@ const images = computed(() => {
 // 根据图片数量确定布局样式
 const imageLayoutClass = computed(() => {
   const count = images.value.length;
-  if (count === 0) return '';
-  if (count === 1) return 'image-single';
-  if (count === 2) return 'image-double';
-  if (count === 3) return 'image-triple';
-  return 'image-grid';
+  if (count === 0) return "";
+  if (count === 1) return "image-single";
+  if (count === 2) return "image-double";
+  if (count === 3) return "image-triple";
+  return "image-grid";
 });
-
-// 使用工具函数格式化时间
-const formatTime = formatRelativeTime;
 </script>
 
 <style scoped>
@@ -132,6 +142,13 @@ const formatTime = formatRelativeTime;
   justify-content: center;
   align-items: center;
   margin-right: 10px;
+  overflow: hidden; /* 新增，确保图片不超出圆形边界 */
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 确保图片覆盖整个区域 */
 }
 
 .avatar-text {
