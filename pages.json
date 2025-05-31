@@ -33,6 +33,12 @@
       }
     },
     {
+      "path": "pages/community/detail",
+      "style": {
+        "navigationBarTitleText": "动态详情"
+      }
+    },
+    {
       "path": "pages/message/index",
       "style": {
         "navigationBarTitleText": "消息"

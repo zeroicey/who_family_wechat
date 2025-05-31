@@ -1,3 +1,4 @@
+import { getRandomAvatarUrl } from "../utils/randomData";
 import request from "./request";
 
 export const wechatLogin = async () => {
@@ -48,11 +49,12 @@ export const getRandomName = async () => {
 };
 
 export const getAvatarUrl = async (id, name) => {
-  if (id == 1)
+  if (id == 1) {
     return {
       data: {
-        data: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}`,
+        data: getRandomAvatarUrl(name),
       },
     };
+  }
   return request.get(`/user/avater?id=${id}`);
 };

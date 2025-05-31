@@ -66,7 +66,7 @@ import PostCard from "@/components/community/PostCard.vue";
 const store = useStore();
 
 // 获取帖子数据
-const posts = computed(() => store.getters["community/getPosts"]);
+const posts = computed(() => store.getters["community/get_posts"]);
 
 // 分类数据
 const categories = [
@@ -90,8 +90,9 @@ const noMoreData = ref(false);
 
 // 组件挂载后检查帖子是否为空
 onMounted(async () => {
+  noMoreData.value = false;
   if (!posts.value || posts.value.length === 0) {
-    await store.dispatch("community/get_first_posts");
+    await store.dispatch("community/fetch_first_posts");
   }
 });
 
@@ -104,8 +105,9 @@ const changeCategory = (category) => {
 
 // 下拉刷新
 const onRefresh = async () => {
+  noMoreData.value = false;
   refreshing.value = true;
-  await store.dispatch("community/get_first_posts");
+  await store.dispatch("community/fetch_first_posts");
   setTimeout(() => {
     refreshing.value = false;
   }, 1000);
@@ -117,7 +119,7 @@ const loadMore = async () => {
 
   loading.value = true;
   // 这里可以调用加载更多的接口
-  // await store.dispatch('community/load_more_posts');
+  await store.dispatch("community/fetch_more_posts");
 
   // 模拟加载
   setTimeout(() => {
@@ -141,6 +143,7 @@ const scrollToTop = () => {
 
 // 查看帖子详情
 const viewPostDetail = (id) => {
+  console.log("Viewing post detail:", id);
   uni.navigateTo({
     url: `/pages/community/detail?id=${id}`,
   });
