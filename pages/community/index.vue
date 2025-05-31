@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue"; // 引入 onMounted
 import { useStore } from "vuex";
 import PostCard from "@/components/community/PostCard.vue";
 
@@ -88,10 +88,12 @@ const refreshing = ref(false);
 const loading = ref(false);
 const noMoreData = ref(false);
 
-// 刷新帖子
-const handleClick = async () => {
-  await store.dispatch("community/get_first_posts");
-};
+// 组件挂载后检查帖子是否为空
+onMounted(async () => {
+  if (!posts.value || posts.value.length === 0) {
+    await store.dispatch("community/get_first_posts");
+  }
+});
 
 // 切换分类
 const changeCategory = (category) => {
@@ -103,7 +105,7 @@ const changeCategory = (category) => {
 // 下拉刷新
 const onRefresh = async () => {
   refreshing.value = true;
-  await handleClick();
+  await store.dispatch("community/get_first_posts");
   setTimeout(() => {
     refreshing.value = false;
   }, 1000);

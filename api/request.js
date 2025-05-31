@@ -3,15 +3,7 @@
  */
 
 // 导入配置
-import {
-  BASE_URL,
-  DEV_BASE_URL,
-  TIMEOUT,
-  API_CODE,
-  METHOD,
-  CURRENT_ENV,
-  ENV,
-} from "./config";
+import { BASE_URL, DEV_BASE_URL, TIMEOUT, CURRENT_ENV, ENV } from "./config";
 
 /**
  * 请求拦截器
@@ -36,7 +28,7 @@ const responseInterceptor = (response) => {
   } else if (response.statusCode === 401) {
     // token过期，跳转到登录页
     uni.navigateTo({
-      url: "/pages/login/login",
+      url: "/pages/login",
     });
     return Promise.reject("登录已过期，请重新登录");
   } else {

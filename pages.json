@@ -1,6 +1,13 @@
 {
   "pages": [
     {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
       "path": "pages/login",
       "style": {
         "navigationBarTitleText": "登录",
@@ -19,19 +26,10 @@
         "navigationBarTitleText": "隐私政策"
       }
     },
-
-    {
-      "path": "pages/home/index",
-      "style": {
-        "navigationBarTitleText": "首页",
-        "enablePullDownRefresh": true
-      }
-    },
     {
       "path": "pages/community/index",
       "style": {
-        "navigationBarTitleText": "社区",
-        "enablePullDownRefresh": true
+        "navigationBarTitleText": "社区"
       }
     },
     {
