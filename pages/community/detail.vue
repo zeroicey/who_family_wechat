@@ -37,26 +37,13 @@ import PostImagesGrid from "@/components/community/detail/PostImagesGrid.vue";
 import PostStatsBar from "@/components/community/detail/PostStatsBar.vue";
 import CommentSection from "@/components/community/detail/CommentSection.vue";
 
+import { useStore } from "vuex";
+
+const store = useStore();
+
 const post = ref(null);
 const comments = ref([]);
 const postId = ref(null);
-
-// 模拟帖子数据 (实际应从API获取)
-const mockPostData = {
-  id: 3,
-  uid: 9,
-  username: "root",
-  avatarId: 28, // 注意：您提供的是 avaterId，通常是 avatarId
-  title: "校园达人",
-  content:
-    "今天在图书馆学习了一天，感觉效率超高！分享一下我的学习方法：番茄工作法 + 思维导图，真的很有效！大家有什么好的学习方法也可以分享一下~",
-  imgIdList: "[5,6,7,8]",
-  type: "life",
-  createTime: "2025-05-26 06:30:57",
-  likeCount: 1,
-  commentCount: 4,
-  viewCount: 0,
-};
 
 // 模拟评论数据 (实际应从API获取)
 const mockCommentsData = [
@@ -64,7 +51,7 @@ const mockCommentsData = [
     id: 2,
     uid: 9,
     username: "评论用户A",
-    avatarId: 27,
+    avatarId: 1,
     content: "这个方法听起来不错，我试试！",
     createTime: "2025-05-26 09:25:58",
     replyCount: 0,
@@ -84,13 +71,14 @@ onLoad(async (options) => {
   postId.value = options.id; // 从页面参数获取帖子ID
   if (postId.value) {
     // fetchPostDetail(postId.value);
-    // fetchComments(postId.value);
-    // 模拟加载
-    post.value = mockPostData;
+
+    post.value = await store.dispatch(
+      "community/fetch_post_by_id",
+      postId.value
+    );
     comments.value = mockCommentsData;
   } else {
     uni.showToast({ title: "帖子ID无效", icon: "none" });
-    // uni.navigateBack();
   }
 });
 </script>

@@ -7,3 +7,11 @@ export const fetchPosts = async () => {
 export const fetchMorePosts = async (lastPostId) => {
   return request.get(`/community/recommend-post?lastPostId=${lastPostId}`);
 };
+
+export const fetchPostById = async (postId) => {
+  return request.get(`/community/post?id=${postId}`);
+};
+
+export const fetchFirstCommentsByPostId = async (postId) => {
+  return request.get(`//community/post-comment?id=${postId}`);
+};

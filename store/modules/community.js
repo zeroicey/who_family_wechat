@@ -1,4 +1,9 @@
-import { fetchMorePosts, fetchPosts } from "../../api/community";
+import {
+  fetchMorePosts,
+  fetchPosts,
+  fetchPostById,
+  fetchFirstCommentsByPostId,
+} from "../../api/community";
 
 const state = {
   posts: [],
@@ -35,7 +40,7 @@ const actions = {
 
       commit("set_posts", postsRes.data);
 
-      console.log("[社区模块] 获取帖子成功", postsRes.data);
+      // console.log("[社区模块] 获取帖子成功", postsRes.data);
       console.log("[社区模块] 获取帖子成功");
     } catch (error) {
       console.error("[社区模块] 获取帖子失败", error);
@@ -65,6 +70,36 @@ const actions = {
       return Promise.reject(error);
     } finally {
       commit("set_posts_loading", false);
+    }
+  },
+
+  async fetch_post_by_id({ commit }, postId) {
+    try {
+      console.log("[社区模块] 开始获取帖子详情");
+      // 调用API获取帖子详情
+      const postRes = await fetchPostById(postId);
+
+      console.log("[社区模块] 获取帖子详情成功", postRes.data);
+      console.log("[社区模块] 获取帖子详情成功");
+      return postRes.data;
+    } catch (error) {
+      console.error("[社区模块] 获取帖子详情失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async fetch_first_comments_by_post_id({ commit }, postId) {
+    try {
+      console.log("[社区模块] 开始获取帖子评论");
+      // 调用API获取帖子评论
+      const commentsRes = await fetchFirstCommentsByPostId(postId);
+
+      console.log("[社区模块] 获取帖子评论成功", commentsRes.data);
+      console.log("[社区模块] 获取帖子评论成功");
+      return commentsRes.data;
+    } catch (error) {
+      console.error("[社区模块] 获取帖子评论失败", error);
+      return Promise.reject(error);
     }
   },
 };

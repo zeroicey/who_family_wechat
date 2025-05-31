@@ -1,8 +1,7 @@
 <template>
   <view class="post-author-info-card">
     <view class="author-avatar">
-      <image v-if="post.avatarId === 1 && avatarUrl" :src="avatarUrl" class="avatar-image" />
-      <text v-else class="avatar-text">{{ post.username.charAt(0) }}</text>
+      <image :src="avatarUrl" class="avatar-image" />
     </view>
     <view class="author-details">
       <text class="username">{{ post.username }}</text>
@@ -14,15 +13,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { formatRelativeTime } from '@/utils/timeFormat.js';
-import { getRandomAvatarUrl } from '@/utils/randomData.js'; // 假设您有此工具函数
+import { computed } from "vue";
+import { formatRelativeTime } from "@/utils/timeFormat.js";
+import { getRandomAvatarUrl } from "@/utils/randomData.js"; // 假设您有此工具函数
 
 const props = defineProps({
   post: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const formattedTime = computed(() => {
@@ -30,9 +29,8 @@ const formattedTime = computed(() => {
 });
 
 const avatarUrl = computed(() => {
-  if (props.post.avatarId === 1) {
-    const seed = props.post.username || 'defaultUser';
-    return getRandomAvatarUrl(seed);
+  if (props.post.avaterId === 1) {
+    return getRandomAvatarUrl(props.post.username);
   }
   return null;
 });
