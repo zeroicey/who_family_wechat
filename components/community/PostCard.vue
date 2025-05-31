@@ -38,30 +38,17 @@
 
     <!-- 底部操作区域 -->
     <view class="post-footer">
-      <view class="action-item">
-        <view class="icon-view">
-          <view class="icon-placeholder view-icon"></view>
-        </view>
-        <text class="action-text">{{ post.viewCount || 0 }}</text>
-      </view>
-      <view class="action-item">
-        <view class="icon-like">
-          <view class="icon-placeholder like-icon"></view>
-        </view>
-        <text class="action-text">{{ post.likeCount || 0 }}</text>
-      </view>
-      <view class="action-item">
-        <view class="icon-comment">
-          <view class="icon-placeholder comment-icon"></view>
-        </view>
-        <text class="action-text">{{ post.commentCount || 0 }}</text>
-      </view>
-      <view class="action-item share">
-        <view class="icon-share">
-          <view class="icon-placeholder share-icon"></view>
-        </view>
-        <text class="action-text">分享</text>
-      </view>
+      <!-- 查看 -->
+      <image class="action-icon" src="/static/images/community/view.png" />
+      <text class="action-text">{{ post.viewCount || 0 }}</text>
+
+      <!-- 点赞 -->
+      <image class="action-icon" src="/static/images/community/like.png" />
+      <text class="action-text">{{ post.likeCount || 0 }}</text>
+
+      <!-- 评论 -->
+      <image class="action-icon" src="/static/images/community/comment.png" />
+      <text class="action-text">{{ post.commentCount || 0 }}</text>
     </view>
   </view>
 </template>
@@ -249,43 +236,29 @@ const imageLayoutClass = computed(() => {
 /* 底部操作区域样式 */
 .post-footer {
   display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
+  justify-content: space-around; /* 使所有项均匀分布 */
+  align-items: center; /* 垂直居中对齐所有项 */
   padding-top: 12px;
-  border-top: 1px solid #f5f5f5;
+  border-top: 1px solid #f0f0f0;
 }
 
-.action-item {
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-}
+/* 不再需要 .action-item 的特定布局，因为元素直接在 .post-footer 中 */
+/* 如果之前有 .action-item 的样式，可以移除或注释掉 */
 
-.icon-placeholder {
-  width: 20px;
-  height: 20px;
-  margin-right: 4px;
-  border-radius: 50%;
-}
-
-.view-icon {
-  background-color: #e0e0e0;
-}
-
-.like-icon {
-  background-color: #ffcdd2;
-}
-
-.comment-icon {
-  background-color: #c8e6c9;
-}
-
-.share-icon {
-  background-color: #bbdefb;
+.action-icon {
+  width: 16px; /* 调整图标大小 */
+  height: 16px; /* 调整图标大小 */
+  margin-right: 4px; /* 图标和其右侧数字的间距 */
 }
 
 .action-text {
-  font-size: 14px;
-  color: #666;
+  font-size: 16px;
+  color: #888;
+  margin-right: 10px; /* 数字和其右侧下一个图标的间距，最后一个可以不需要 */
+}
+
+/* 确保最后一个 action-text 没有右边距，避免不必要的空白 */
+.post-footer .action-text:last-of-type {
+  margin-right: 0;
 }
 </style>

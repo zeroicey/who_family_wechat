@@ -45,28 +45,6 @@ const post = ref(null);
 const comments = ref([]);
 const postId = ref(null);
 
-// 模拟评论数据 (实际应从API获取)
-const mockCommentsData = [
-  {
-    id: 2,
-    uid: 9,
-    username: "评论用户A",
-    avatarId: 1,
-    content: "这个方法听起来不错，我试试！",
-    createTime: "2025-05-26 09:25:58",
-    replyCount: 0,
-  },
-  {
-    id: 1,
-    uid: 9,
-    username: "评论用户B",
-    avatarId: 1, // 使用随机头像
-    content: "感谢分享，已收藏。",
-    createTime: "2025-05-26 08:25:12",
-    replyCount: 2,
-  },
-];
-
 onLoad(async (options) => {
   postId.value = options.id; // 从页面参数获取帖子ID
   if (postId.value) {
@@ -76,7 +54,10 @@ onLoad(async (options) => {
       "community/fetch_post_by_id",
       postId.value
     );
-    comments.value = mockCommentsData;
+    comments.value = await store.dispatch(
+      "community/fetch_first_comments_by_post_id",
+      postId.value
+    );
   } else {
     uni.showToast({ title: "帖子ID无效", icon: "none" });
   }

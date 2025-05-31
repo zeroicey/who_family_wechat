@@ -13,5 +13,5 @@ export const fetchPostById = async (postId) => {
 };
 
 export const fetchFirstCommentsByPostId = async (postId) => {
-  return request.get(`//community/post-comment?id=${postId}`);
+  return request.get(`/community/post-comment?id=${postId}`);
 };

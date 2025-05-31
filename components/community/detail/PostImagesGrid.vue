@@ -1,5 +1,9 @@
 <template>
-  <view v-if="imageUrls.length > 0" class="post-images-grid-container" :class="gridClass">
+  <view
+    v-if="imageUrls.length > 0"
+    class="post-images-grid-container"
+    :class="gridClass"
+  >
     <view
       v-for="(url, index) in imageUrls"
       :key="index"
@@ -12,45 +16,42 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from "vue";
 
 const props = defineProps({
   imageIdListJson: {
     type: String,
-    default: '[]'
-  }
+    default: "[]",
+  },
 });
-
-// 模拟图片URL基础路径，实际项目中应替换为真实图片服务器地址或完整URL
-const IMAGE_BASE_URL = '/static/images/mock/'; // 假设的图片基础路径
 
 const imageUrls = computed(() => {
   try {
     const ids = JSON.parse(props.imageIdListJson);
     if (Array.isArray(ids)) {
       // 限制最多4张图片
-      return ids.slice(0, 4).map(id => `${IMAGE_BASE_URL}${id}.jpg`); // 假设图片名为 id.jpg
+      return ids.slice(0, 4).map((id) => `${id}.jpg`); // 假设图片名为 id.jpg
     }
     return [];
   } catch (e) {
-    console.error('Error parsing imageIdListJson:', e);
+    console.error("Error parsing imageIdListJson:", e);
     return [];
   }
 });
 
 const gridClass = computed(() => {
   const count = imageUrls.value.length;
-  if (count === 1) return 'single-image';
-  if (count === 2) return 'two-images';
-  if (count === 3) return 'three-images';
-  if (count === 4) return 'four-images';
-  return '';
+  if (count === 1) return "single-image";
+  if (count === 2) return "two-images";
+  if (count === 3) return "three-images";
+  if (count === 4) return "four-images";
+  return "";
 });
 
 const previewImage = (currentIndex) => {
   uni.previewImage({
     urls: imageUrls.value,
-    current: currentIndex
+    current: currentIndex,
   });
 };
 </script>
