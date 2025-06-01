@@ -3,16 +3,16 @@ import {
   fetchPosts,
   fetchPostById,
   fetchFirstCommentsByPostId,
-} from "../../api/community";
+  publishPost,
+  publishPreparePost,
+} from "@/api/community";
 
 const state = {
   posts: [],
-  postsLoading: false,
 };
 
 const getters = {
   get_posts: (state) => state.posts,
-  get_posts_loading: (state) => state.postsLoading,
 };
 
 const mutations = {
@@ -23,17 +23,12 @@ const mutations = {
   add_posts(state, posts) {
     state.posts = [...state.posts, ...posts];
   },
-
-  set_posts_loading(state, loading) {
-    state.postsLoading = loading;
-  },
 };
 
 const actions = {
   async fetch_first_posts({ commit }) {
     try {
       console.log("[社区模块] 开始获取帖子");
-      commit("set_posts_loading", true);
 
       // 调用API获取帖子列表
       const postsRes = await fetchPosts();
@@ -45,15 +40,12 @@ const actions = {
     } catch (error) {
       console.error("[社区模块] 获取帖子失败", error);
       return Promise.reject(error);
-    } finally {
-      commit("set_posts_loading", false);
     }
   },
 
   async fetch_more_posts({ commit, state }) {
     try {
       console.log("[社区模块] 开始获取更多帖子");
-      commit("set_posts_loading", true);
 
       // 调用API获取帖子列表
       if (state.posts.length > 0) {
@@ -68,8 +60,6 @@ const actions = {
     } catch (error) {
       console.error("[社区模块] 获取更多帖子失败", error);
       return Promise.reject(error);
-    } finally {
-      commit("set_posts_loading", false);
     }
   },
 
@@ -99,6 +89,27 @@ const actions = {
       return commentsRes.data;
     } catch (error) {
       console.error("[社区模块] 获取帖子评论失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async publish_post_only_text({ commit }, post) {
+    try {
+      console.log("[社区模块] 开始预发布帖子");
+      // 调用预发布帖子API
+      const preparePostRes = await publishPreparePost(post);
+
+      console.log("[社区模块] 预发布帖子成功", preparePostRes.data);
+      console.log("[社区模块] 预发布帖子成功");
+
+      console.log("[社区模块] 开始发布帖子");
+      const postRes = await publishPost(preparePostRes.data.communityId);
+
+      console.log("[社区模块] 发布帖子成功", postRes.data);
+      console.log("[社区模块] 发布帖子成功");
+      return postRes.data;
+    } catch (error) {
+      console.error("[社区模块] 发布帖子失败", error);
       return Promise.reject(error);
     }
   },

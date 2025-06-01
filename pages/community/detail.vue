@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
 import PostAuthorInfo from "@/components/community/detail/PostAuthorInfo.vue";
 import PostContentDisplay from "@/components/community/detail/PostContentDisplay.vue";

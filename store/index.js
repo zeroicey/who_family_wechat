@@ -1,7 +1,7 @@
 import { createStore } from "vuex";
 
-import user from "./modules/user";
-import community from "./modules/community";
+import user from "@/store/modules/user";
+import community from "@/store/modules/community";
 
 // 根级别的 state
 const state = {

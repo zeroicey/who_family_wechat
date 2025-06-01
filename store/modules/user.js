@@ -1,4 +1,4 @@
-import { wechatLogin, getAvatarUrl } from "../../api/user";
+import { wechatLogin, getAvatarUrl } from "@/api/user";
 
 const state = {
   userInfo: uni.getStorageSync("userInfo") || {},

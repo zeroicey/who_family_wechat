@@ -1,4 +1,4 @@
-import { getRandomAvatarUrl } from "../utils/randomData";
+import { getRandomAvatarUrl } from "@/utils/randomData";
 import request from "./request";
 
 export const wechatLogin = async () => {
