@@ -69,18 +69,6 @@ const store = useStore();
 const posts = computed(() => store.getters["community/get_posts"]);
 const types = computed(() => store.getters["community/get_post_types"]);
 
-// 分类数据
-const categories = [
-  { label: "全部", value: "all" },
-  { label: "热门", value: "hot" },
-  { label: "生活", value: "life" },
-  { label: "学习", value: "study" },
-  { label: "情感", value: "emotion" },
-  { label: "娱乐", value: "entertainment" },
-  { label: "运动", value: "sports" },
-  { label: "美食", value: "food" },
-];
-
 // 当前选中的分类
 const currentType = ref("");
 

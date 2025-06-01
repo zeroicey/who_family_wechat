@@ -9,6 +9,7 @@ import {
   markImageUploaded,
   uploadImage,
 } from "@/api/community";
+import { getAvatarUrl } from "@/api/user";
 
 const state = {
   posts: [],
@@ -171,6 +172,21 @@ const actions = {
       console.log("[社区模块] 获取帖子类型成功");
     } catch (error) {
       console.error("[社区模块] 获取帖子类型失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async fetch_post_user_avatar({ commit }, { avatarId, name }) {
+    try {
+      console.log("[社区模块] 开始获取用户头像");
+      // 调用API获取用户头像
+      const avatarRes = await getAvatarUrl(avatarId, name);
+
+      // console.log("[社区模块] 获取用户头像成功", avatarRes.data.data);
+      console.log("[社区模块] 获取用户头像成功");
+      return avatarRes.data.data;
+    } catch (error) {
+      console.error("[社区模块] 获取用户头像失败", error);
       return Promise.reject(error);
     }
   },

@@ -1,4 +1,9 @@
-import { wechatLogin, getAvatarUrl, updateUserInfo } from "@/api/user";
+import {
+  wechatLogin,
+  getAvatarUrl,
+  updateUserInfo,
+  updateUserAvatar,
+} from "@/api/user";
 
 const state = {
   userInfo: uni.getStorageSync("userInfo") || {},
@@ -99,6 +104,24 @@ const actions = {
       console.log("[用户模块] 更新用户信息成功");
     } catch (error) {
       console.error("[用户模块] 更新用户信息异常", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async update_user_avatar({ commit }, avatarBase64) {
+    try {
+      console.log("[用户模块] 更新用户头像");
+
+      const res = await updateUserAvatar(avatarBase64);
+
+      if (res.code !== 200) {
+        console.error("[用户模块] 更新用户头像失败", res);
+        return Promise.reject(res);
+      }
+
+      console.log("[用户模块] 更新用户头像成功");
+    } catch (error) {
+      console.error("[用户模块] 更新用户头像异常", error);
       return Promise.reject(error);
     }
   },

@@ -4,7 +4,8 @@
     <view class="post-header">
       <view class="user-info">
         <view class="avatar">
-          <image :src="avatarUrl" class="avatar-image" />
+          <!-- 修改 src 绑定到 fetchedAvatarUrl -->
+          <image :src="fetchedAvatarUrl" class="avatar-image" />
         </view>
         <view class="user-details">
           <text class="username">{{ post.username }}</text>
@@ -54,9 +55,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted, watch } from "vue"; // 引入 ref, onMounted, watch
 import { formatRelativeTime } from "@/utils/timeFormat.js";
-import { getRandomAvatarUrl } from "@/utils/randomData.js"; // 引入获取随机头像的函数
+import { useStore } from "vuex";
+
+const store = useStore();
 
 // 定义props
 const props = defineProps({
@@ -66,13 +69,34 @@ const props = defineProps({
   },
 });
 
-// 计算头像URL
-const avatarUrl = computed(() => {
-  if (props.post.avaterId === 1) {
-    return getRandomAvatarUrl(props.post.username);
+// 创建一个 ref 来存储头像 URL
+const fetchedAvatarUrl = ref(''); // 初始可以设置一个默认头像或空字符串
+
+// 异步获取头像的函数
+const fetchAvatar = async () => {
+  if (props.post && props.post.avaterId && props.post.username) {
+    try {
+      const url = await store.dispatch("community/fetch_post_user_avatar", {
+        avatarId: props.post.avaterId,
+        name: props.post.username,
+      });
+      fetchedAvatarUrl.value = url; // 更新 ref
+    } catch (error) {
+      console.error("Failed to fetch avatar:", error);
+      // fetchedAvatarUrl.value = '/static/images/default-avatar.png'; // 加载失败可以设置一个默认头像
+    }
   }
-  return ""; // 默认返回空字符串或一个占位符图片URL
+};
+
+// 组件挂载时获取头像
+onMounted(() => {
+  fetchAvatar();
 });
+
+// 监听 post prop 的变化，如果 avaterId 或 username 变了，重新获取头像
+watch(() => [props.post.avaterId, props.post.username], () => {
+  fetchAvatar();
+}, { deep: true }); // deep: true 可能不是必需的，取决于 post 对象的结构和更新方式
 
 // 处理图片列表
 const images = computed(() => {

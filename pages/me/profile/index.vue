@@ -156,6 +156,17 @@ const chooseAvatar = () => {
     sourceType: ["album", "camera"],
     success: (res) => {
       const tempFilePath = res.tempFilePaths[0];
+      uni.getFileSystemManager().readFile({
+        filePath: tempFilePath,
+        encoding: "base64",
+        success: (res) => {
+          const base64Data = res.data;
+          store.dispatch("user/update_user_avatar", base64Data);
+        },
+        fail: (err) => {
+          console.error("读取文件失败:", err);
+        },
+      });
     },
   });
 };

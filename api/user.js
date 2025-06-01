@@ -62,3 +62,9 @@ export const getAvatarUrl = async (id, name) => {
   }
   return request.get(`/user/avater?id=${id}`);
 };
+
+export const updateUserAvatar = async (avatarBase64) => {
+  return request.put("/user/avatar", {
+    avatar: "data:image/png;base64," + avatarBase64,
+  });
+};

@@ -1,7 +1,8 @@
 <template>
   <view class="post-author-info-card">
     <view class="author-avatar">
-      <image :src="avatarUrl" class="avatar-image" />
+      <!-- 修改 src 绑定到 fetchedAvatarUrl -->
+      <image :src="fetchedAvatarUrl" class="avatar-image" />
     </view>
     <view class="author-details">
       <text class="username">{{ post.username }}</text>
@@ -13,9 +14,12 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted, watch } from "vue"; // 引入 ref, onMounted, watch
 import { formatRelativeTime } from "@/utils/timeFormat.js";
-import { getRandomAvatarUrl } from "@/utils/randomData.js"; // 假设您有此工具函数
+// import { getRandomAvatarUrl } from "@/utils/randomData.js"; // 如果不再使用随机头像，可以移除
+import { useStore } from "vuex"; // 引入 useStore
+
+const store = useStore(); // 初始化 store
 
 const props = defineProps({
   post: {
@@ -28,12 +32,36 @@ const formattedTime = computed(() => {
   return formatRelativeTime(props.post.createTime);
 });
 
-const avatarUrl = computed(() => {
-  if (props.post.avaterId === 1) {
-    return getRandomAvatarUrl(props.post.username);
+// 创建一个 ref 来存储头像 URL
+const fetchedAvatarUrl = ref(''); // 初始可以设置一个默认头像或空字符串
+
+// 异步获取头像的函数
+const fetchAvatar = async () => {
+  // 确保 post 对象和必要的属性存在
+  if (props.post && props.post.avaterId && props.post.username) { 
+    try {
+      const url = await store.dispatch("community/fetch_post_user_avatar", {
+        avatarId: props.post.avaterId,
+        name: props.post.username,
+      });
+      fetchedAvatarUrl.value = url; // 更新 ref
+    } catch (error) {
+      console.error("Failed to fetch avatar in PostAuthorInfo:", error);
+      // fetchedAvatarUrl.value = '/static/images/default-avatar.png'; // 加载失败可以设置一个默认头像
+    }
   }
-  return null;
+};
+
+// 组件挂载时获取头像
+onMounted(() => {
+  fetchAvatar();
 });
+
+// 监听 post prop 的变化，如果 avaterId 或 username 变了，重新获取头像
+watch(() => [props.post.avaterId, props.post.username], () => {
+  fetchAvatar();
+}, { deep: true }); // deep: true 确保内部属性变化也能触发
+
 </script>
 
 <style lang="scss" scoped>
