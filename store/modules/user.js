@@ -1,4 +1,4 @@
-import { wechatLogin, getAvatarUrl } from "@/api/user";
+import { wechatLogin, getAvatarUrl, updateUserInfo } from "@/api/user";
 
 const state = {
   userInfo: uni.getStorageSync("userInfo") || {},
@@ -78,6 +78,28 @@ const actions = {
       return Promise.reject(error);
     } finally {
       commit("set_login_loading", false);
+    }
+  },
+
+  async update_user_info({ commit }, userInfo) {
+    try {
+      console.log("[用户模块] 更新用户信息");
+
+      const res = await updateUserInfo(userInfo);
+
+      if (res.code !== 200) {
+        console.error("[用户模块] 更新用户信息失败", res);
+        return Promise.reject(res);
+      }
+      commit("set_user_info", userInfo);
+
+      const avatarRes = await getAvatarUrl(userInfo.avaterId, userInfo.name);
+      commit("set_user_avatar", avatarRes.data.data);
+
+      console.log("[用户模块] 更新用户信息成功");
+    } catch (error) {
+      console.error("[用户模块] 更新用户信息异常", error);
+      return Promise.reject(error);
     }
   },
 };

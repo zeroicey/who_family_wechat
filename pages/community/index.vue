@@ -1,19 +1,19 @@
 <template>
   <view class="community-container">
     <!-- 分类导航 -->
-    <scroll-view class="category-scroll" scroll-x show-scrollbar="false">
-      <view class="category-list">
+    <scroll-view class="type-scroll" scroll-x show-scrollbar="false">
+      <view class="type-list">
         <view
-          v-for="(category, index) in categories"
+          v-for="(type, index) in types"
           :key="index"
-          class="category-item"
-          :class="{ active: currentCategory === category.value }"
-          @click="changeCategory(category.value)"
+          class="type-item"
+          :class="{ active: currentType === type }"
+          @click="changeCategory(type.value)"
         >
-          <text>{{ category.label }}</text>
+          <text>{{ type }}</text>
         </view>
         <!-- 添加占位元素，确保右侧有足够空间 -->
-        <view class="category-spacer"></view>
+        <view class="type-spacer"></view>
       </view>
     </scroll-view>
 
@@ -67,6 +67,7 @@ const store = useStore();
 
 // 获取帖子数据
 const posts = computed(() => store.getters["community/get_posts"]);
+const types = computed(() => store.getters["community/get_post_types"]);
 
 // 分类数据
 const categories = [
@@ -81,7 +82,7 @@ const categories = [
 ];
 
 // 当前选中的分类
-const currentCategory = ref("all");
+const currentType = ref("");
 
 // 下拉刷新与加载更多状态
 const refreshing = ref(false);
@@ -92,13 +93,15 @@ const noMoreData = ref(false);
 onMounted(async () => {
   noMoreData.value = false;
   if (!posts.value || posts.value.length === 0) {
+    await store.dispatch("community/fetch_post_types");
     await store.dispatch("community/fetch_first_posts");
+    currentType.value = types.value[0];
   }
 });
 
 // 切换分类
-const changeCategory = (category) => {
-  currentCategory.value = category;
+const changeCategory = (type) => {
+  currentType.value = type;
   // 可以在这里根据分类筛选数据
   handleClick();
 };
@@ -207,20 +210,20 @@ const onPublish = () => {
 }
 
 /* 分类导航 */
-.category-scroll {
+.type-scroll {
   background-color: #ffffff;
   white-space: nowrap;
   padding: 0 8px;
   margin-top: 10px;
 }
 
-.category-list {
+.type-list {
   display: flex;
   padding: 12px 8px;
   width: 100%;
 }
 
-.category-item {
+.type-item {
   padding: 6px 16px;
   margin: 0 6px;
   font-size: 14px;
@@ -231,12 +234,12 @@ const onPublish = () => {
   flex-shrink: 0;
 }
 
-.category-spacer {
+.type-spacer {
   width: 20px;
   flex-shrink: 0;
 }
 
-.category-item.active {
+.type-item.active {
   background: linear-gradient(135deg, #6e8efb, #a777e3);
   color: white;
   font-weight: 500;

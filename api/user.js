@@ -18,6 +18,10 @@ export const wechatLogin = async () => {
   });
 };
 
+export const updateUserInfo = async (userInfo) => {
+  return request.put("/user/userInfo", userInfo);
+};
+
 export const getRandomName = async () => {
   // GET https://api.mir6.com/api/sjname
   return new Promise((resolve, reject) => {

@@ -1,18 +1,23 @@
 import {
+  fetchPostTypes,
   fetchMorePosts,
   fetchPosts,
   fetchPostById,
   fetchFirstCommentsByPostId,
   publishPost,
   publishPreparePost,
+  markImageUploaded,
+  uploadImage,
 } from "@/api/community";
 
 const state = {
   posts: [],
+  postTypes: [],
 };
 
 const getters = {
   get_posts: (state) => state.posts,
+  get_post_types: (state) => state.postTypes,
 };
 
 const mutations = {
@@ -22,6 +27,10 @@ const mutations = {
 
   add_posts(state, posts) {
     state.posts = [...state.posts, ...posts];
+  },
+
+  set_post_types(state, postTypes) {
+    state.postTypes = postTypes;
   },
 };
 
@@ -110,6 +119,58 @@ const actions = {
       return postRes.data;
     } catch (error) {
       console.error("[社区模块] 发布帖子失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async publish_post_with_image({ commit }, { postData: post, imagePaths }) {
+    try {
+      console.log("[社区模块] 开始预发布帖子");
+      // 调用预发布帖子API
+      const preparePostRes = await publishPreparePost(post);
+
+      console.log("[社区模块] 预发布帖子成功", preparePostRes.data);
+      console.log("[社区模块] 预发布帖子成功");
+
+      console.log("[社区模块] 开始上传图片");
+
+      for (let i = 0; i < preparePostRes.data.communityImageList.length; i++) {
+        // 上传图片
+        await uploadImage(
+          preparePostRes.data.communityImageList[i].url,
+          imagePaths[i]
+        );
+
+        // 标记图片上传成功
+        await markImageUploaded(preparePostRes.data.communityImageList[i].id);
+      }
+
+      console.log("[社区模块] 上传图片成功");
+
+      console.log("[社区模块] 开始发布帖子");
+      const postRes = await publishPost(preparePostRes.data.communityId);
+
+      console.log("[社区模块] 发布帖子成功", postRes.data);
+      console.log("[社区模块] 发布帖子成功");
+      return postRes.data;
+    } catch (error) {
+      console.error("[社区模块] 发布帖子失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async fetch_post_types({ commit }) {
+    try {
+      console.log("[社区模块] 开始获取帖子类型");
+      // 调用API获取帖子类型
+      const postTypesRes = await fetchPostTypes();
+
+      commit("set_post_types", postTypesRes.data);
+
+      // console.log("[社区模块] 获取帖子类型成功", postTypesRes.data);
+      console.log("[社区模块] 获取帖子类型成功");
+    } catch (error) {
+      console.error("[社区模块] 获取帖子类型失败", error);
       return Promise.reject(error);
     }
   },

@@ -65,13 +65,13 @@
 
 <script setup>
 import { useStore } from "vuex";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const store = useStore();
 
 const title = ref("");
 const content = ref("");
-const typeArray = ref(["日常分享", "求助问答", "活动召集", "好物推荐"]);
+const typeArray = computed(() => store.getters["community/get_post_types"]);
 const typeIndex = ref(0);
 const imageList = ref([]); // 存储本地图片路径或上传后的URL
 
@@ -92,6 +92,7 @@ const chooseImage = () => {
     sizeType: ["original", "compressed"],
     sourceType: ["album", "camera"],
     success: (res) => {
+      console.log("选择的图片路径:", res.tempFilePaths);
       imageList.value = [...imageList.value, ...res.tempFilePaths];
     },
   });
@@ -122,27 +123,9 @@ const submitPost = async () => {
     title: "发布中...",
   });
 
-  const uploadedImageUrls = [];
+  const imagePaths = [];
   for (const imagePath of imageList.value) {
-    // 模拟图片上传，实际项目中你需要将图片上传到服务器并获取URL
-    // 这里我们假设上传成功并直接使用本地路径作为示例
-    // 在实际应用中，你需要替换为真实的上传逻辑
-    // const uploadResult = await uni.uploadFile({
-    //   url: 'YOUR_UPLOAD_API_ENDPOINT',
-    //   filePath: imagePath,
-    //   name: 'file',
-    //   // formData: { 'user': 'test' }, // 其他需要传递的参数
-    // });
-    // if (uploadResult.statusCode === 200) {
-    //   const data = JSON.parse(uploadResult.data);
-    //   uploadedImageUrls.push(data.url); // 假设服务器返回的图片URL在data.url中
-    // } else {
-    //   uni.hideLoading();
-    //   uni.showToast({ title: '图片上传失败', icon: 'none' });
-    //   return; // 如果一张图片上传失败，则停止后续操作
-    // }
-    await new Promise((resolve) => setTimeout(resolve, 500)); // 模拟上传耗时
-    uploadedImageUrls.push(imagePath); // 暂时用本地路径替代URL
+    imagePaths.push(imagePath); // 暂时用本地路径替代URL
   }
 
   const postData = {
@@ -150,25 +133,19 @@ const submitPost = async () => {
     content: content.value,
     type: typeArray.value[typeIndex.value],
     // images: uploadedImageUrls, // 如果你的后端需要图片URL列表
-    imgCount: uploadedImageUrls.length,
+    imgCount: imagePaths.length,
   };
 
-  postData.type = "life"; // 这行看起来是硬编码，如果类型选择器工作正常，可以考虑移除或根据逻辑调整
-
   console.log("提交的动态数据:", postData);
+  console.log("上传的图片路径:", imagePaths);
 
   try {
-    if (uploadedImageUrls.length === 0) {
+    if (imagePaths.length === 0) {
       await store.dispatch("community/publish_post_only_text", postData);
     } else {
-      // 如果有图片，你需要一个处理带图片帖子的action，例如:
-      // await store.dispatch("community/publish_post_with_images", { ...postData, images: uploadedImageUrls });
-      // 这里暂时也调用纯文本发布的action作为示例，你需要根据实际情况修改
-      console.log("模拟带图片发布，实际应调用含图片上传的action");
-      // 假设后端会处理图片，我们先将图片信息传递过去
-      await store.dispatch("community/publish_post_only_text", {
-        ...postData,
-        images: uploadedImageUrls,
+      await store.dispatch("community/publish_post_with_image", {
+        postData,
+        imagePaths,
       });
     }
 
