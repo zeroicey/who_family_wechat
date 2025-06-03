@@ -32,8 +32,11 @@
         class="image-item"
         :class="{ 'image-item-single': images.length === 1 }"
       >
-        <!-- 使用空白div占位 -->
-        <view class="image-placeholder"></view>
+        <image
+          :src="post.imgList[index]"
+          mode="aspectFill"
+          class="post-image"
+        />
       </view>
     </view>
 
@@ -217,6 +220,16 @@ const imageLayoutClass = computed(() => {
   padding-bottom: calc(33.33% - 4px);
   margin: 2px;
   overflow: hidden;
+  border-radius: 8px;
+}
+
+.post-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 8px;
 }
 
