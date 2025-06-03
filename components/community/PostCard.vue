@@ -35,7 +35,10 @@
       <text class="action-text">{{ post.viewCount || 0 }}</text>
 
       <!-- 点赞 -->
-      <image class="action-icon" src="/static/images/community/like.png" />
+      <image 
+        class="action-icon" 
+        :src="post.isLike === 1 ? '/static/images/community/liked.png' : '/static/images/community/like.png'"
+      />
       <text class="action-text">{{ post.likeCount || 0 }}</text>
 
       <!-- 评论 -->
