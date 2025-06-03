@@ -14,11 +14,13 @@ import { getAvatarUrl } from "@/api/user";
 const state = {
   posts: [],
   postTypes: [],
+  postAvatars: {},
 };
 
 const getters = {
   get_posts: (state) => state.posts,
   get_post_types: (state) => state.postTypes,
+  get_post_avatars: (state) => state.postAvatars,
 };
 
 const mutations = {
@@ -32,6 +34,13 @@ const mutations = {
 
   set_post_types(state, postTypes) {
     state.postTypes = postTypes;
+  },
+
+  set_post_avatar(state, { avatarId, avatarUrl }) {
+    state.postAvatars = {
+      ...state.postAvatars,
+      [avatarId]: avatarUrl,
+    };
   },
 };
 
@@ -176,15 +185,25 @@ const actions = {
     }
   },
 
-  async fetch_post_user_avatar({ commit }, { avatarId, name }) {
+  async fetch_post_user_avatar({ commit, state }, { avatarId, name }) {
     try {
+      // 检查缓存中是否存在头像
+      if (state.postAvatars[avatarId]) {
+        console.log("[社区模块] 从缓存获取用户头像成功");
+        return state.postAvatars[avatarId];
+      }
+
       console.log("[社区模块] 开始获取用户头像");
       // 调用API获取用户头像
       const avatarRes = await getAvatarUrl(avatarId, name);
 
-      // console.log("[社区模块] 获取用户头像成功", avatarRes.data.data);
+      const avatarUrl = avatarRes.data.data;
+      // 将获取到的头像存入缓存
+      commit("set_post_avatar", { avatarId, avatarUrl });
+
+      // console.log("[社区模块] 获取用户头像成功", avatarUrl);
       console.log("[社区模块] 获取用户头像成功");
-      return avatarRes.data.data;
+      return avatarUrl;
     } catch (error) {
       console.error("[社区模块] 获取用户头像失败", error);
       return Promise.reject(error);
