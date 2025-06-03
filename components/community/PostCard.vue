@@ -31,19 +31,24 @@
     <!-- 底部操作区域 -->
     <view class="post-footer">
       <!-- 查看 -->
-      <image class="action-icon" src="/static/images/community/view.png" />
-      <text class="action-text">{{ post.viewCount || 0 }}</text>
+      <view class="action-group">
+
+        <image class="action-icon" src="/static/images/community/view.png" />
+        <text class="action-text">{{ post.viewCount || 0 }}</text>
+      </view>
 
       <!-- 点赞 -->
-      <image 
-        class="action-icon" 
-        :src="post.isLike === 1 ? '/static/images/community/liked.png' : '/static/images/community/like.png'"
-      />
-      <text class="action-text">{{ post.likeCount || 0 }}</text>
+      <view class="action-group">
+        <image class="action-icon"
+          :src="post.isLike === 1 ? '/static/images/community/liked.png' : '/static/images/community/like.png'" />
+        <text class="action-text">{{ post.likeCount || 0 }}</text>
+      </view>
 
       <!-- 评论 -->
-      <image class="action-icon" src="/static/images/community/comment.png" />
-      <text class="action-text">{{ post.commentCount || 0 }}</text>
+      <view class="action-group">
+        <image class="action-icon" src="/static/images/community/comment.png" />
+        <text class="action-text">{{ post.commentCount || 0 }}</text>
+      </view>
     </view>
   </view>
 </template>
@@ -273,6 +278,12 @@ const imageLayoutClass = computed(() => {
   border-top: 1px solid #f0f0f0;
 }
 
+.action-group {
+  display: flex;
+  align-items: center;
+  /* 垂直居中对齐图标和文本 */
+}
+
 /* 不再需要 .action-item 的特定布局，因为元素直接在 .post-footer 中 */
 /* 如果之前有 .action-item 的样式，可以移除或注释掉 */
 
@@ -281,15 +292,13 @@ const imageLayoutClass = computed(() => {
   /* 调整图标大小 */
   height: 16px;
   /* 调整图标大小 */
-  margin-right: 4px;
+  margin-right: 10px;
   /* 图标和其右侧数字的间距 */
 }
 
 .action-text {
   font-size: 16px;
   color: #888;
-  margin-right: 10px;
-  /* 数字和其右侧下一个图标的间距，最后一个可以不需要 */
 }
 
 /* 确保最后一个 action-text 没有右边距，避免不必要的空白 */

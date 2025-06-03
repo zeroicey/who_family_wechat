@@ -1,16 +1,23 @@
 <template>
   <view class="post-stats-bar">
     <!-- 查看数 -->
-    <image class="stats-icon" src="/static/images/community/view.png" />
-    <text class="stats-text">{{ post.viewCount || 0 }}</text>
+    <view class="stats-group">
+      <image class="stats-icon" src="/static/images/community/view.png" />
+      <text class="stats-text">{{ post.viewCount || 0 }}</text>
+    </view>
 
     <!-- 点赞数 -->
-    <image class="stats-icon" src="/static/images/community/like.png" />
-    <text class="stats-text">{{ post.likeCount || 0 }}</text>
+    <view class="stats-group">
+      <image class="stats-icon"
+        :src="post.isLike === 1 ? '/static/images/community/liked.png' : '/static/images/community/like.png'" />
+      <text class="stats-text">{{ post.likeCount || 0 }}</text>
+    </view>
 
     <!-- 评论数 -->
-    <image class="stats-icon" src="/static/images/community/comment.png" />
-    <text class="stats-text">{{ post.commentCount || 0 }}</text>
+    <view class="stats-group">
+      <image class="stats-icon" src="/static/images/community/comment.png" />
+      <text class="stats-text">{{ post.commentCount || 0 }}</text>
+    </view>
   </view>
 </template>
 
@@ -45,7 +52,8 @@ const handleLike = () => {
 /* 帖子统计栏样式 */
 .post-stats-bar {
   display: flex;
-  justify-content: space-around; /* 使项目均匀分布 */
+  justify-content: space-around;
+  /* 使项目均匀分布 */
   align-items: center;
   padding: 20rpx;
   background-color: #ffffff;
@@ -54,16 +62,23 @@ const handleLike = () => {
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
 }
 
+.stats-group {
+  display: flex;
+  align-items: center;
+}
+
 .stats-icon {
-  width: 16px; /* 图标大小 */
-  height: 16px; /* 图标大小 */
-  margin-right: 4px; /* 图标和其右侧数字的间距 */
+  width: 16px;
+  /* 图标大小 */
+  height: 16px;
+  /* 图标大小 */
+  margin-right: 10px;
+  /* 图标和其右侧数字的间距 */
 }
 
 .stats-text {
   font-size: 16px;
   color: #888;
-  margin-right: 10px; /* 数字和其右侧下一个图标的间距 */
 }
 
 /* 确保最后一个 stats-text 没有右边距，避免不必要的空白 */
