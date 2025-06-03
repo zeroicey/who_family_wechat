@@ -54,7 +54,7 @@ const actions = {
 
       commit("set_posts", postsRes.data);
 
-      // console.log("[社区模块] 获取帖子成功", postsRes.data);
+      console.log("[社区模块] 获取帖子成功", postsRes.data);
       console.log("[社区模块] 获取帖子成功");
     } catch (error) {
       console.error("[社区模块] 获取帖子失败", error);

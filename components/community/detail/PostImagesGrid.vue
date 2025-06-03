@@ -1,15 +1,6 @@
 <template>
-  <view
-    v-if="imageUrls.length > 0"
-    class="post-images-grid-container"
-    :class="gridClass"
-  >
-    <view
-      v-for="(url, index) in imageUrls"
-      :key="index"
-      class="image-item"
-      @tap="previewImage(index)"
-    >
+  <view v-if="imageUrls.length > 0" class="post-images-grid-container" :class="gridClass">
+    <view v-for="(url, index) in imageUrls" :key="index" class="image-item" @tap="previewImage(index)">
       <image :src="url" mode="aspectFill" class="grid-image" />
     </view>
   </view>
@@ -19,24 +10,18 @@
 import { computed } from "vue";
 
 const props = defineProps({
-  imageIdListJson: {
-    type: String,
-    default: "[]",
+  imageList: {
+    type: Array,
+    default: () => [],
   },
 });
 
 const imageUrls = computed(() => {
-  try {
-    const ids = JSON.parse(props.imageIdListJson);
-    if (Array.isArray(ids)) {
-      // 限制最多4张图片
-      return ids.slice(0, 4).map((id) => `${id}.jpg`); // 假设图片名为 id.jpg
-    }
-    return [];
-  } catch (e) {
-    console.error("Error parsing imageIdListJson:", e);
-    return [];
+  if (Array.isArray(props.imageList)) {
+    // 限制最多4张图片
+    return props.imageList.slice(0, 4);
   }
+  return [];
 });
 
 const gridClass = computed(() => {
@@ -82,6 +67,7 @@ const previewImage = (currentIndex) => {
 
   &.single-image {
     grid-template-columns: 1fr;
+
     .image-item {
       aspect-ratio: 16 / 9; // 单图时可以更宽
     }

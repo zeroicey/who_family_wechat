@@ -29,16 +29,23 @@ export const fetchPostTypes = async () => {
 };
 
 export const uploadImage = async (requestUrl, imagePath) => {
-  uni.uploadFile({
-    url: requestUrl,
-    fileType: "image",
+  uni.getFileSystemManager().readFile({
     filePath: imagePath,
-    name: "file",
-    success: ({ data, statusCode }) => {
-      console.log("图片上传成功", data, statusCode);
-    },
-    fail: (error) => {
-      console.log("图片上传失败", error);
+    success: (res) => {
+      uni.request({
+        url: requestUrl,
+        method: "PUT",
+        data: res.data,
+        header: {
+          "Content-Type": "application/octet-stream",
+        },
+        success: ({ data, statusCode, header }) => {
+          console.log("图片上传成功", data, statusCode, header);
+        },
+        fail: (error) => {
+          console.log("图片上传失败", error);
+        },
+      });
     },
   });
 };

@@ -21,22 +21,10 @@
     </view>
 
     <!-- 图片区域 -->
-    <view
-      v-if="images.length > 0"
-      class="image-container"
-      :class="imageLayoutClass"
-    >
-      <view
-        v-for="(img, index) in images"
-        :key="index"
-        class="image-item"
-        :class="{ 'image-item-single': images.length === 1 }"
-      >
-        <image
-          :src="post.imgList[index]"
-          mode="aspectFill"
-          class="post-image"
-        />
+    <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
+      <view v-for="(img, index) in images" :key="index" class="image-item"
+        :class="{ 'image-item-single': images.length === 1 }">
+        <image :src="post.imgList[index]" mode="aspectFill" class="post-image" />
       </view>
     </view>
 
@@ -105,8 +93,7 @@ watch(() => [props.post.avaterId, props.post.username], () => {
 const images = computed(() => {
   if (!props.post.imgIdList) return [];
   try {
-    const imgIds = JSON.parse(props.post.imgIdList);
-    return Array.isArray(imgIds) ? imgIds : [];
+    return props.post.imgIdList;
   } catch (e) {
     return [];
   }
@@ -156,13 +143,15 @@ const imageLayoutClass = computed(() => {
   justify-content: center;
   align-items: center;
   margin-right: 10px;
-  overflow: hidden; /* 新增，确保图片不超出圆形边界 */
+  overflow: hidden;
+  /* 新增，确保图片不超出圆形边界 */
 }
 
 .avatar-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 确保图片覆盖整个区域 */
+  object-fit: cover;
+  /* 确保图片覆盖整个区域 */
 }
 
 .avatar-text {
@@ -273,8 +262,10 @@ const imageLayoutClass = computed(() => {
 /* 底部操作区域样式 */
 .post-footer {
   display: flex;
-  justify-content: space-around; /* 使所有项均匀分布 */
-  align-items: center; /* 垂直居中对齐所有项 */
+  justify-content: space-around;
+  /* 使所有项均匀分布 */
+  align-items: center;
+  /* 垂直居中对齐所有项 */
   padding-top: 12px;
   border-top: 1px solid #f0f0f0;
 }
@@ -283,15 +274,19 @@ const imageLayoutClass = computed(() => {
 /* 如果之前有 .action-item 的样式，可以移除或注释掉 */
 
 .action-icon {
-  width: 16px; /* 调整图标大小 */
-  height: 16px; /* 调整图标大小 */
-  margin-right: 4px; /* 图标和其右侧数字的间距 */
+  width: 16px;
+  /* 调整图标大小 */
+  height: 16px;
+  /* 调整图标大小 */
+  margin-right: 4px;
+  /* 图标和其右侧数字的间距 */
 }
 
 .action-text {
   font-size: 16px;
   color: #888;
-  margin-right: 10px; /* 数字和其右侧下一个图标的间距，最后一个可以不需要 */
+  margin-right: 10px;
+  /* 数字和其右侧下一个图标的间距，最后一个可以不需要 */
 }
 
 /* 确保最后一个 action-text 没有右边距，避免不必要的空白 */

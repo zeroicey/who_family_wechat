@@ -8,7 +8,7 @@
       <post-content-display v-if="post" :post="post" />
 
       <!-- 帖子图片 -->
-      <post-images-grid v-if="post" :image-id-list-json="post.imgIdList" />
+      <post-images-grid v-if="post" :image-list="post.imgList" />
 
       <!-- 帖子统计信息 -->
       <post-stats-bar v-if="post" :post="post" />
@@ -74,13 +74,17 @@ onLoad(async (options) => {
 
 .scroll-view-content {
   flex: 1;
-  padding-bottom: 120rpx; /* 为底部评论输入栏预留空间 (如果添加的话) */
+  padding-bottom: 120rpx;
+  /* 为底部评论输入栏预留空间 (如果添加的话) */
 }
 
 .divider {
-  height: 1px; /* 改为1px细线 */
-  background-color: #e0e0e0; /* 更柔和的分割线颜色 */
-  margin: 30rpx 24rpx; /* 上下间距调整，左右与卡片内容对齐 */
+  height: 1px;
+  /* 改为1px细线 */
+  background-color: #e0e0e0;
+  /* 更柔和的分割线颜色 */
+  margin: 30rpx 24rpx;
+  /* 上下间距调整，左右与卡片内容对齐 */
 }
 
 /* 底部评论输入栏样式 (可选) */
