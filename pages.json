@@ -45,12 +45,6 @@
       }
     },
     {
-      "path": "pages/message/index",
-      "style": {
-        "navigationBarTitleText": "消息"
-      }
-    },
-    {
       "path": "pages/recruit/index",
       "style": {
         "navigationBarTitleText": "招聘"
@@ -97,12 +91,6 @@
         "iconPath": "/static/images/tabbar/community.png",
         "selectedIconPath": "/static/images/tabbar/community-active.png",
         "text": "社区"
-      },
-      {
-        "pagePath": "pages/message/index",
-        "iconPath": "/static/images/tabbar/service.png",
-        "selectedIconPath": "/static/images/tabbar/service-active.png",
-        "text": "消息"
       },
       {
         "pagePath": "pages/recruit/index",

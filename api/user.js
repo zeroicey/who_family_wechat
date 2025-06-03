@@ -9,6 +9,7 @@ export const wechatLogin = async () => {
   const random_name = await getRandomName();
 
   const code = res.code;
+  console.log("code", code);
   return request.post("/login/wechat-login", {
     code,
     userInfo: {

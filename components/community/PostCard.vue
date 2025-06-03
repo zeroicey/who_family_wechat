@@ -1,5 +1,5 @@
 <template>
-  <view class="post-card" @click="$emit('click')">
+  <view class="post-card">
     <!-- 用户信息区域 -->
     <view class="post-header">
       <view class="user-info">
@@ -15,19 +15,21 @@
       <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
     </view>
 
-    <!-- 内容区域 -->
-    <view class="post-content">
-      <text class="content-text">{{ post.content }}</text>
-    </view>
-
-    <!-- 图片区域 -->
-    <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
-      <view v-for="(img, index) in images" :key="index" class="image-item"
-        :class="{ 'image-item-single': images.length === 1 }">
-        <image :src="post.imgList[index]" mode="aspectFill" class="post-image" />
+    <view @click="$emit('click')">
+      <!-- 内容区域 -->
+      <view class="post-content">
+        <text class="content-text">{{ post.content }}</text>
       </view>
-    </view>
 
+      <!-- 图片区域 -->
+      <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
+        <view v-for="(img, index) in images" :key="index" class="image-item"
+          :class="{ 'image-item-single': images.length === 1 }">
+          <image :src="post.imgList[index]" mode="aspectFill" class="post-image" />
+        </view>
+      </view>
+
+    </view>
     <!-- 底部操作区域 -->
     <view class="post-footer">
       <!-- 查看 -->
@@ -38,7 +40,7 @@
       </view>
 
       <!-- 点赞 -->
-      <view class="action-group">
+      <view class="action-group" @click="handleLikeClick">
         <image class="action-icon"
           :src="post.isLike === 1 ? '/static/images/community/liked.png' : '/static/images/community/like.png'" />
         <text class="action-text">{{ post.likeCount || 0 }}</text>
@@ -85,6 +87,17 @@ const fetchAvatar = async () => {
       // fetchedAvatarUrl.value = '/static/images/default-avatar.png'; // 加载失败可以设置一个默认头像
     }
   }
+};
+
+const handleLikeClick = () => {
+  // 处理点赞逻辑
+  if (props.post.isLike === 1) {
+    // 已经点赞，取消点赞
+    store.dispatch("community/unlike_post", props.post.id);
+    return;
+  }
+  // 未点赞，执行点赞操作
+  store.dispatch("community/like_post", props.post.id);
 };
 
 // 组件挂载时获取头像

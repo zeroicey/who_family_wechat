@@ -7,7 +7,7 @@
     </view>
 
     <!-- 点赞数 -->
-    <view class="stats-group">
+    <view class="stats-group" @click="handleLikeClick">
       <image class="stats-icon"
         :src="post.isLike === 1 ? '/static/images/community/liked.png' : '/static/images/community/like.png'" />
       <text class="stats-text">{{ post.likeCount || 0 }}</text>
@@ -22,7 +22,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+
+import { useStore } from "vuex";
+const store = useStore();
 
 const props = defineProps({
   post: {
@@ -31,21 +33,20 @@ const props = defineProps({
   },
 });
 
-const isLiked = ref(false); // 实际应从用户状态或API获取
-const localLikeCount = ref(props.post.likeCount || 0);
-
-const likeCountDisplay = computed(() => localLikeCount.value);
-
-const handleLike = () => {
-  // 实际应调用API更新点赞状态
-  if (isLiked.value) {
-    localLikeCount.value--;
-  } else {
-    localLikeCount.value++;
+const handleLikeClick = () => {
+  // 处理点赞逻辑
+  if (props.post.isLike === 1) {
+    // 已经点赞，取消点赞
+    store.dispatch("community/unlike_post", props.post.id);
+    props.post.isLike = 0; // 更新本地状态
+    props.post.likeCount--; // 更新本地状态
+    return;
   }
-  isLiked.value = !isLiked.value;
-  // uni.showToast({ title: isLiked.value ? '已点赞' : '取消点赞', icon: 'none' });
-};
+  // 未点赞，执行点赞操作
+  store.dispatch("community/like_post", props.post.id);
+  props.post.isLike = 1; // 更新本地状态
+  props.post.likeCount++; // 更新本地状态
+}
 </script>
 
 <style lang="scss" scoped>

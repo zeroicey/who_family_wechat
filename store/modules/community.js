@@ -8,6 +8,8 @@ import {
   publishPreparePost,
   markImageUploaded,
   uploadImage,
+  likePost,
+  unlikePost,
 } from "@/api/community";
 import { getAvatarUrl } from "@/api/user";
 
@@ -42,6 +44,22 @@ const mutations = {
       [avatarId]: avatarUrl,
     };
   },
+
+  like_post(state, postId) {
+    const post = state.posts.find((post) => post.id === postId);
+    if (post) {
+      post.likeCount++;
+      post.isLike = 1;
+    }
+  },
+
+  unlike_post(state, postId) {
+    const post = state.posts.find((post) => post.id === postId);
+    if (post) {
+      post.likeCount--;
+      post.isLike = 0;
+    }
+  },
 };
 
 const actions = {
@@ -54,7 +72,7 @@ const actions = {
 
       commit("set_posts", postsRes.data);
 
-      console.log("[社区模块] 获取帖子成功", postsRes.data);
+      // console.log("[社区模块] 获取帖子成功", postsRes.data);
       console.log("[社区模块] 获取帖子成功");
     } catch (error) {
       console.error("[社区模块] 获取帖子失败", error);
@@ -88,7 +106,7 @@ const actions = {
       // 调用API获取帖子详情
       const postRes = await fetchPostById(postId);
 
-      console.log("[社区模块] 获取帖子详情成功", postRes.data);
+      // console.log("[社区模块] 获取帖子详情成功", postRes.data);
       console.log("[社区模块] 获取帖子详情成功");
       return postRes.data;
     } catch (error) {
@@ -206,6 +224,35 @@ const actions = {
       return avatarUrl;
     } catch (error) {
       console.error("[社区模块] 获取用户头像失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async like_post({ commit }, postId) {
+    try {
+      console.log("[社区模块] 开始点赞帖子");
+      // 调用API点赞帖子
+      await likePost(postId);
+
+      commit("like_post", postId);
+
+      console.log("[社区模块] 点赞帖子成功");
+    } catch (error) {
+      console.error("[社区模块] 点赞帖子失败", error);
+      return Promise.reject(error);
+    }
+  },
+  async unlike_post({ commit }, postId) {
+    try {
+      console.log("[社区模块] 开始取消点赞帖子");
+      // 调用API取消点赞帖子
+      await unlikePost(postId);
+
+      commit("unlike_post", postId);
+
+      console.log("[社区模块] 取消点赞帖子成功");
+    } catch (error) {
+      console.error("[社区模块] 取消点赞帖子失败", error);
       return Promise.reject(error);
     }
   },

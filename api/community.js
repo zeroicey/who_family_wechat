@@ -53,3 +53,11 @@ export const uploadImage = async (requestUrl, imagePath) => {
 export const markImageUploaded = async (imageId) => {
   return request.post("/community/img-uploaded", { id: imageId });
 };
+
+export const likePost = async (postId) => {
+  return request.post("/community/like-post", { id: postId, like: true });
+};
+
+export const unlikePost = async (postId) => {
+  return request.post("/community/like-post", { id: postId, like: false });
+};

@@ -3,13 +3,8 @@
     <!-- 分类导航 -->
     <scroll-view class="type-scroll" scroll-x show-scrollbar="false">
       <view class="type-list">
-        <view
-          v-for="(type, index) in types"
-          :key="index"
-          class="type-item"
-          :class="{ active: currentType === type }"
-          @click="changeCategory(type.value)"
-        >
+        <view v-for="(type, index) in types" :key="index" class="type-item" :class="{ active: currentType === type }"
+          @click="changeCategory(type.value)">
           <text>{{ type }}</text>
         </view>
         <!-- 添加占位元素，确保右侧有足够空间 -->
@@ -18,22 +13,11 @@
     </scroll-view>
 
     <!-- 下拉刷新区域 -->
-    <scroll-view
-      class="posts-scroll"
-      scroll-y
-      refresher-enabled
-      :refresher-triggered="refreshing"
-      @refresherrefresh="onRefresh"
-      @scrolltolower="loadMore"
-    >
+    <scroll-view class="posts-scroll" scroll-y refresher-enabled :refresher-triggered="refreshing"
+      @refresherrefresh="onRefresh" @scrolltolower="loadMore">
       <!-- 帖子列表 -->
       <view v-if="posts && posts.length > 0" class="posts-container">
-        <post-card
-          v-for="post in posts"
-          :key="post.id"
-          :post="post"
-          @click="viewPostDetail(post.id)"
-        />
+        <post-card v-for="post in posts" :key="post.id" :post="post" @click="viewPostDetail(post.id)" />
       </view>
 
       <!-- 空状态 -->
@@ -235,7 +219,8 @@ const onPublish = () => {
 
 /* 帖子列表 */
 .posts-scroll {
-  height: calc(100vh - 60px); /* 视口高度减去分类导航的高度 */
+  height: calc(100vh - 60px);
+  /* 视口高度减去分类导航的高度 */
 }
 
 .posts-container {
@@ -304,7 +289,8 @@ const onPublish = () => {
   line-height: 28px;
   height: 28px;
   text-align: center;
-  margin-top: -2px; /* 微调位置使其完美居中 */
+  margin-top: -2px;
+  /* 微调位置使其完美居中 */
   display: flex;
   align-items: center;
   justify-content: center;
