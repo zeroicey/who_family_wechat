@@ -9,7 +9,7 @@
         </view>
         <view class="user-details">
           <text class="username">{{ post.username }}</text>
-          <text class="post-title">{{ post.title }}</text>
+          <text @click="$emit('click')" class="post-title">{{ post.title }}</text>
         </view>
       </view>
       <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
