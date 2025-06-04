@@ -51,6 +51,11 @@
         <image class="action-icon" src="/static/images/community/comment.png" />
         <text class="action-text">{{ post.commentCount || 0 }}</text>
       </view>
+
+      <!-- 删除 -->
+      <view class="action-group" v-if="isInMe">
+        <image class="action-icon" src="/static/images/community/trash.png" />
+      </view>
     </view>
   </view>
 </template>
@@ -68,6 +73,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  isInMe: {
+    type: Boolean,
+    required: true,
+  }
 });
 
 // 创建一个 ref 来存储头像 URL
