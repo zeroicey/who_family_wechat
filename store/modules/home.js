@@ -19,8 +19,6 @@ const state = {
     size: 5,
     loading: false,
   },
-  // 服务列表
-  serviceList: [],
   // 社团活动列表
   clubList: [],
   // 工具列表
@@ -143,9 +141,6 @@ const actions = {
       await Promise.all([
         dispatch("fetchBanners"),
         dispatch("fetchModules"),
-        dispatch("fetchCommunityPosts"),
-        dispatch("fetchActivities"),
-        dispatch("fetchServiceList"),
         dispatch("fetchClubList"),
         dispatch("fetchToolList"),
       ]);
@@ -269,21 +264,6 @@ const actions = {
     return Promise.resolve({
       hasMore: state.activities.list.length < state.activities.total,
     });
-  },
-
-  // 获取服务列表数据
-  async fetchServiceList({ commit }) {
-    try {
-      const res = await getServiceList();
-      if (res.code === 200) {
-        commit("SET_SERVICE_LIST", res.data);
-        return Promise.resolve(res.data);
-      } else {
-        return Promise.reject(res.message || "获取服务列表失败");
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
   },
 
   // 获取社团活动列表数据

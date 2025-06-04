@@ -50,10 +50,6 @@ const refreshHomeData = async () => {
             title: '加载中...',
             mask: true
         });
-
-        // 调用Vuex获取首页所有数据
-        await store.dispatch('home/getHomeData');
-
         console.log('首页数据刷新成功');
     } catch (error) {
         console.error('刷新首页数据失败', error);
