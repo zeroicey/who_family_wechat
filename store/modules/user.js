@@ -98,9 +98,6 @@ const actions = {
       }
       commit("set_user_info", userInfo);
 
-      const avatarRes = await getAvatarUrl(userInfo.avaterId, userInfo.name);
-      commit("set_user_avatar", avatarRes.data.data);
-
       console.log("[用户模块] 更新用户信息成功");
     } catch (error) {
       console.error("[用户模块] 更新用户信息异常", error);
@@ -118,6 +115,14 @@ const actions = {
         console.error("[用户模块] 更新用户头像失败", res);
         return Promise.reject(res);
       }
+
+      const avatarUrl = await getAvatarUrl(res.data.avatarId);
+
+      commit("set_user_info", {
+        ...state.userInfo,
+        avaterId: res.data.avatarId,
+      });
+      commit("set_user_avatar", avatarUrl.data.data);
 
       console.log("[用户模块] 更新用户头像成功");
     } catch (error) {

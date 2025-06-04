@@ -15,34 +15,19 @@
     <view class="form-group">
       <view class="form-item">
         <text class="label">昵称</text>
-        <input
-          class="input"
-          v-model="userProfile.name"
-          placeholder="请输入昵称"
-        />
-        <image
-          class="form-item-icon"
-          src="/static/images/profile/name.png"
-        ></image>
+        <input class="input" v-model="userProfile.name" placeholder="请输入昵称" />
+        <image class="form-item-icon" src="/static/images/profile/name.png"></image>
       </view>
 
       <view class="form-item">
         <text class="label">性别</text>
-        <picker
-          class="picker"
-          mode="selector"
-          :value="userProfile.gender"
-          :range="genderOptions"
-          @change="onGenderChange"
-        >
+        <picker class="picker" mode="selector" :value="userProfile.gender" :range="genderOptions"
+          @change="onGenderChange">
           <view class="picker-text">
             <text>{{ userProfile.gender }}</text>
           </view>
         </picker>
-        <image
-          class="form-item-icon"
-          src="/static/images/profile/gender.png"
-        ></image>
+        <image class="form-item-icon" src="/static/images/profile/gender.png"></image>
       </view>
 
       <view class="form-item">
@@ -55,10 +40,7 @@
             <text class="btn-text">更换</text>
           </view>
         </view>
-        <image
-          class="form-item-icon"
-          src="/static/images/profile/phone.png"
-        ></image>
+        <image class="form-item-icon" src="/static/images/profile/phone.png"></image>
       </view>
     </view>
 
@@ -66,41 +48,20 @@
     <view class="form-group">
       <view class="form-item">
         <text class="label">学校</text>
-        <input
-          class="input"
-          v-model="userProfile.school"
-          placeholder="请输入学校名称"
-        />
-        <image
-          class="form-item-icon"
-          src="/static/images/profile/school.png"
-        ></image>
+        <input class="input" v-model="userProfile.school" placeholder="请输入学校名称" />
+        <image class="form-item-icon" src="/static/images/profile/school.png"></image>
       </view>
 
       <view class="form-item">
         <text class="label">专业</text>
-        <input
-          class="input"
-          v-model="userProfile.major"
-          placeholder="请输入专业名称"
-        />
-        <image
-          class="form-item-icon"
-          src="/static/images/profile/major.png"
-        ></image>
+        <input class="input" v-model="userProfile.major" placeholder="请输入专业名称" />
+        <image class="form-item-icon" src="/static/images/profile/major.png"></image>
       </view>
 
       <view class="form-item">
         <text class="label">年级</text>
-        <input
-          class="input"
-          v-model="userProfile.grade"
-          placeholder="请输入年级"
-        />
-        <image
-          class="form-item-icon"
-          src="/static/images/profile/grade.png"
-        ></image>
+        <input class="input" v-model="userProfile.grade" placeholder="请输入年级" />
+        <image class="form-item-icon" src="/static/images/profile/grade.png"></image>
       </view>
     </view>
 
@@ -108,18 +69,10 @@
     <view class="form-group">
       <view class="form-item">
         <text class="label">个人简介</text>
-        <textarea
-          class="textarea"
-          v-model="userProfile.bio"
-          placeholder="请输入个人简介"
-          :maxlength="100"
-          auto-height
-        ></textarea>
+        <textarea class="textarea" v-model="userProfile.bio" placeholder="请输入个人简介" :maxlength="100"
+          auto-height></textarea>
         <text class="word-count">{{ userProfile.bio.length }}/100</text>
-        <image
-          class="form-item-icon"
-          src="/static/images/profile/bio.png"
-        ></image>
+        <image class="form-item-icon" src="/static/images/profile/bio.png"></image>
       </view>
     </view>
 
@@ -162,6 +115,11 @@ const chooseAvatar = () => {
         success: (res) => {
           const base64Data = res.data;
           store.dispatch("user/update_user_avatar", base64Data);
+          uni.showToast({
+            title: '头像更新成功',
+            icon: 'success',
+            mask: true
+          })
         },
         fail: (err) => {
           console.error("读取文件失败:", err);
