@@ -3,9 +3,12 @@ import {
   getAvatarUrl,
   updateUserInfo,
   updateUserAvatar,
+  fetchPosts,
+  fetchMorePosts,
 } from "@/api/user";
 
 const state = {
+  posts: [],
   userInfo: uni.getStorageSync("userInfo") || {},
   avatarUrl: uni.getStorageSync("avatarUrl") || "",
   token: uni.getStorageSync("token") || "",
@@ -24,9 +27,18 @@ const getters = {
   is_login: (state) => state.isLogin,
   // 获取头像
   get_user_avatar_url: (state) => state.avatarUrl,
+
+  get_posts: (state) => state.posts,
 };
 
 const mutations = {
+  set_posts(state, posts) {
+    state.posts = posts;
+  },
+
+  add_posts(state, posts) {
+    state.posts = [...state.posts, ...posts];
+  },
   // 设置用户信息
   set_user_info(state, userInfo) {
     state.userInfo = userInfo;
@@ -129,6 +141,42 @@ const actions = {
       console.log("[用户模块] 更新用户头像成功");
     } catch (error) {
       console.error("[用户模块] 更新用户头像异常", error);
+      return Promise.reject(error);
+    }
+  },
+  async fetch_first_posts({ commit }) {
+    try {
+      console.log("[我的模块] 开始获取帖子");
+
+      // 调用API获取帖子列表
+      const postsRes = await fetchPosts();
+
+      commit("set_posts", postsRes.data);
+
+      // console.log("[社区模块] 获取帖子成功", postsRes.data);
+      console.log("[我的模块] 获取帖子成功");
+    } catch (error) {
+      console.error("[我的模块] 获取帖子失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async fetch_more_posts({ commit, state }) {
+    try {
+      console.log("[我的模块] 开始获取更多帖子");
+
+      // 调用API获取帖子列表
+      if (state.posts.length > 0) {
+        const postsRes = await fetchUserPosts(
+          state.posts[state.posts.length - 1].id
+        );
+        commit("add_posts", postsRes.data);
+      }
+
+      // console.log("[社区模块] 获取帖子成功", postsRes.data);
+      console.log("[我的模块] 获取更多帖子成功");
+    } catch (error) {
+      console.error("[我的模块] 获取更多帖子失败", error);
       return Promise.reject(error);
     }
   },

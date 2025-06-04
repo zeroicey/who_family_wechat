@@ -37,7 +37,7 @@ import PostCard from '@/components/community/PostCard.vue';
 const store = useStore();
 
 // 获取帖子数据
-const posts = computed(() => store.getters["community/get_posts"]);
+const posts = computed(() => store.getters["user/get_posts"]);
 
 // 下拉刷新与加载更多状态
 const refreshing = ref(false);
@@ -48,7 +48,7 @@ const noMoreData = ref(false);
 onMounted(async () => {
   noMoreData.value = false;
   if (!posts.value || posts.value.length === 0) {
-    await store.dispatch("community/fetch_first_posts");
+    await store.dispatch("user/fetch_first_posts");
   }
 });
 
@@ -56,7 +56,7 @@ onMounted(async () => {
 const onRefresh = async () => {
   noMoreData.value = false;
   refreshing.value = true;
-  await store.dispatch("community/fetch_first_posts");
+  await store.dispatch("user/fetch_first_posts");
   setTimeout(() => {
     refreshing.value = false;
   }, 1000);
@@ -67,7 +67,7 @@ const loadMore = async () => {
   if (loading.value || noMoreData.value) return;
 
   loading.value = true;
-  await store.dispatch("community/fetch_more_posts");
+  await store.dispatch("user/fetch_more_posts");
 
   // 模拟加载
   setTimeout(() => {

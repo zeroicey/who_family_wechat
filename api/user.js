@@ -1,6 +1,14 @@
 import { getRandomAvatarUrl } from "@/utils/randomData";
 import request from "./request";
 
+export const fetchPosts = async () => {
+  return request.get("/community/self-post");
+};
+
+export const fetchMorePosts = async (lastPostId) => {
+  return request.get(`/community/self-post?lastPostId=${lastPostId}`);
+};
+
 export const wechatLogin = async () => {
   const res = await uni.login({
     provider: "weixin", //使用微信登录
