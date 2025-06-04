@@ -3,12 +3,6 @@
     <!-- 用户信息头部 -->
     <UserProfile />
 
-    <!-- 快捷导航卡片 -->
-    <QuickNav />
-
-    <!-- 服务卡片 -->
-    <ServiceCard />
-
     <!-- 版本信息 -->
     <view class="version-info">
       <text>版本 {{ appVersion }}</text>
@@ -21,8 +15,6 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import UserProfile from '@/components/me/UserProfile.vue';
-import QuickNav from '@/components/me/QuickNav.vue';
-import ServiceCard from '@/components/me/ServiceCard.vue';
 
 const store = useStore();
 

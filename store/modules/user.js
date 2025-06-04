@@ -124,6 +124,8 @@ const actions = {
       });
       commit("set_user_avatar", avatarUrl.data.data);
 
+      commit("community/fetch_first_posts");
+
       console.log("[用户模块] 更新用户头像成功");
     } catch (error) {
       console.error("[用户模块] 更新用户头像异常", error);
