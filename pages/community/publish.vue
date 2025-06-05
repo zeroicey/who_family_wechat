@@ -39,6 +39,7 @@
 <script setup>
 import { useStore } from "vuex";
 import { ref, computed } from "vue";
+import { onLoad } from "@dcloudio/uni-app"; // 引入 onLoad
 
 const store = useStore();
 
@@ -48,11 +49,25 @@ const typeArray = computed(() => store.getters["community/get_post_types"]);
 const typeIndex = ref(0);
 const imageList = ref([]); // 存储本地图片路径或上传后的URL
 
+onLoad((options) => {
+  if (options && options.images) {
+    try {
+      const passedImages = JSON.parse(decodeURIComponent(options.images));
+      if (Array.isArray(passedImages)) {
+        imageList.value = passedImages.slice(0, 4); // 最多只取4张
+      }
+    } catch (error) {
+      console.error("Failed to parse images from query:", error);
+    }
+  }
+});
+
+
 const bindPickerChange = (e) => {
   typeIndex.value = e.detail.value;
 };
 
-const chooseImage = () => {
+const chooseImage = () => { // 此函数现在用于在发布页面补充图片
   if (imageList.value.length >= 4) {
     uni.showToast({
       title: "最多上传4张图片",
@@ -66,7 +81,10 @@ const chooseImage = () => {
     sourceType: ["album", "camera"],
     success: (res) => {
       console.log("选择的图片路径:", res.tempFilePaths);
-      imageList.value = [...imageList.value, ...res.tempFilePaths];
+      // 确保不超过4张
+      const newImages = res.tempFilePaths;
+      const remainingSlots = 4 - imageList.value.length;
+      imageList.value = [...imageList.value, ...newImages.slice(0, remainingSlots)];
     },
   });
 };

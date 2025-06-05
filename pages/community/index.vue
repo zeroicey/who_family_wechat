@@ -74,7 +74,11 @@ onMounted(async () => {
 const changeCategory = (type) => {
   currentType.value = type;
   // 可以在这里根据分类筛选数据
-  handleClick();
+  handleCategoryClick();
+};
+
+const handleCategoryClick = async () => {
+  console.log("handleCategoryClick");
 };
 
 // 下拉刷新
@@ -125,8 +129,32 @@ const viewPostDetail = (id) => {
 
 // 发布新帖子
 const onPublish = () => {
-  uni.navigateTo({
-    url: "/pages/community/publish",
+  uni.chooseImage({
+    count: 4, // 最多可以选择4张图片，与 publish.vue 保持一致
+    sizeType: ["original", "compressed"],
+    sourceType: ["album", "camera"],
+    success: (res) => {
+      const tempFilePaths = res.tempFilePaths;
+      let url = "/pages/community/publish";
+      if (tempFilePaths && tempFilePaths.length > 0) {
+        // 将数组转换为逗号分隔的字符串以便通过URL传递，或者考虑其他更健壮的传递方式如Vuex或event bus
+        // 为了简单起见，这里用逗号分隔的字符串，但需要注意URL长度限制
+        // 更推荐的方式是存到pinia/vuex或者uni.$emit, uni.$on
+        // 这里我们先用 query 参数，后续可以优化
+        const imageQuery = encodeURIComponent(JSON.stringify(tempFilePaths));
+        url = `/pages/community/publish?images=${imageQuery}`;
+      }
+      uni.navigateTo({
+        url: url,
+      });
+    },
+    fail: (err) => {
+      // 即使用户取消选择图片，也跳转到发布页面
+      console.log('Choose image failed or cancelled:', err);
+      uni.navigateTo({
+        url: "/pages/community/publish",
+      });
+    }
   });
 };
 </script>
