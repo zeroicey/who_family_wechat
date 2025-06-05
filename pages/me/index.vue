@@ -15,8 +15,7 @@
       <view v-else class="empty-state">
         <image class="empty-icon" src="/static/images/logo.png" mode="aspectFit"></image>
         <text class="empty-text">还没有发布任何动态哦~</text>
-        <view class="publish-btn" @click="navigateToPublish">
-          <image src="/static/images/profile/publish.png" class="publish-icon"></image>
+        <view class="publish-btn" @click="navigateToCommunity">
           <text>发布第一条动态</text>
         </view>
       </view>
@@ -102,9 +101,9 @@ const viewPostDetail = (id) => {
 };
 
 // 添加发布跳转方法
-const navigateToPublish = () => {
-  uni.navigateTo({
-    url: '/pages/community/publish'
+const navigateToCommunity = () => {
+  uni.switchTab({
+    url: '/pages/community/index'
   });
 };
 </script>
@@ -132,7 +131,7 @@ const navigateToPublish = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 120px;
+  padding-top: 80px;
 }
 
 .empty-icon {

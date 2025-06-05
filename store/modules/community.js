@@ -10,12 +10,12 @@ import {
   uploadImage,
   likePost,
   unlikePost,
-  deletePost,
 } from "@/api/community";
 import { getAvatarUrl } from "@/api/user";
 
 const state = {
   posts: [],
+  postClasses: [],
   postTypes: [],
   postAvatars: {},
 };
@@ -24,6 +24,7 @@ const getters = {
   get_posts: (state) => state.posts,
   get_post_types: (state) => state.postTypes,
   get_post_avatars: (state) => state.postAvatars,
+  get_post_classes: (state) => state.postClasses,
 };
 
 const mutations = {
@@ -37,6 +38,7 @@ const mutations = {
 
   set_post_types(state, postTypes) {
     state.postTypes = postTypes;
+    state.postClasses = ["所有", ...postTypes];
   },
 
   set_post_avatar(state, { avatarId, avatarUrl }) {

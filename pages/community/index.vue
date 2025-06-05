@@ -22,9 +22,8 @@
 
       <!-- 空状态 -->
       <view v-else class="empty-state">
-        <view class="empty-icon"></view>
-        <text class="empty-text">暂无内容</text>
-        <view class="refresh-btn" @click="handleClick">刷新试试</view>
+        <image class="empty-icon" src="/static/images/logo.png" mode="aspectFit"></image>
+        <text class="empty-text">还没有发布任何动态哦~</text>
       </view>
 
       <!-- 加载更多 -->
@@ -51,7 +50,7 @@ const store = useStore();
 
 // 获取帖子数据
 const posts = computed(() => store.getters["community/get_posts"]);
-const types = computed(() => store.getters["community/get_post_types"]);
+const types = computed(() => store.getters["community/get_post_classes"]);
 
 // 当前选中的分类
 const currentType = ref("");
@@ -66,9 +65,9 @@ onMounted(async () => {
   noMoreData.value = false;
   if (!posts.value || posts.value.length === 0) {
     await store.dispatch("community/fetch_first_posts");
-    currentType.value = types.value[0];
   }
   await store.dispatch("community/fetch_post_types");
+  currentType.value = types.value[0];
 });
 
 // 切换分类
@@ -233,21 +232,20 @@ const onPublish = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 100px;
+  padding-top: 80px;
 }
 
 .empty-icon {
-  width: 80px;
-  height: 80px;
-  background-color: #e0e0e0;
-  border-radius: 50%;
-  margin-bottom: 16px;
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  margin-bottom: 24px;
 }
 
 .empty-text {
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 16px;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 24px;
 }
 
 .refresh-btn {
