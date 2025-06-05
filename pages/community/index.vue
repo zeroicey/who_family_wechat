@@ -35,7 +35,7 @@
     </scroll-view>
 
     <!-- 悬浮发布按钮 -->
-    <view class="float-btn" @click="onPublish">
+    <view class="float-btn" @click="onPublish" @longpress="onPublishLongPress">
       <view class="publish-icon">+</view>
     </view>
   </view>
@@ -59,6 +59,8 @@ const currentType = ref("");
 const refreshing = ref(false);
 const loading = ref(false);
 const noMoreData = ref(false);
+const isLongPress = ref(false); // 用于区分长按和单击
+let longPressTimer = null; // 用于长按后的延迟重置isLongPress
 
 // 组件挂载后检查帖子是否为空
 onMounted(async () => {
@@ -127,8 +129,34 @@ const viewPostDetail = (id) => {
   });
 };
 
-// 发布新帖子
+// 发布新帖子 - 长按事件
+const onPublishLongPress = () => {
+  isLongPress.value = true;
+  uni.navigateTo({
+    url: "/pages/community/publish",
+  });
+  // 延迟重置长按标志，以避免立即触发单击事件
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+  }
+  longPressTimer = setTimeout(() => {
+    isLongPress.value = false;
+    longPressTimer = null;
+  }, 200); // 200ms 延迟，可以根据实际情况调整
+};
+
+// 发布新帖子 - 单击事件
 const onPublish = () => {
+  if (isLongPress.value) {
+    // 如果是长按触发的，则单击事件不执行
+    // isLongPress.value = false; // 在 longPress 事件中重置
+    return;
+  }
+  // 清除可能存在的长按延迟重置，以防单击过快
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+    longPressTimer = null;
+  }
   uni.chooseImage({
     count: 4, // 最多可以选择4张图片，与 publish.vue 保持一致
     sizeType: ["original", "compressed"],
