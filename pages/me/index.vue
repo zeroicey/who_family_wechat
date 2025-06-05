@@ -13,16 +13,29 @@
 
       <!-- 空状态 -->
       <view v-else class="empty-state">
-        <view class="empty-icon"></view>
-        <text class="empty-text">暂无内容</text>
-        <view class="refresh-btn" @click="handleClick">刷新试试</view>
+        <image class="empty-icon" src="/static/images/logo.png" mode="aspectFit"></image>
+        <text class="empty-text">还没有发布任何动态哦~</text>
+        <view class="publish-btn" @click="navigateToPublish">
+          <image src="/static/images/profile/publish.png" class="publish-icon"></image>
+          <text>发布第一条动态</text>
+        </view>
       </view>
 
       <!-- 加载更多 -->
-      <view v-if="posts && posts.length > 0" class="load-more">
-        <text v-if="loading">加载中...</text>
-        <text v-else-if="noMoreData">没有更多了</text>
-        <text v-else>上拉加载更多</text>
+      <view v-if="posts && posts.length >= 5" class="load-more">
+        <view class="loading-container" v-if="loading">
+          <view class="loading-spinner"></view>
+          <text>加载中...</text>
+        </view>
+        <view v-else-if="noMoreData" class="divider">
+          <view class="divider-line"></view>
+          <text>没有更多内容了</text>
+          <view class="divider-line"></view>
+        </view>
+        <view v-else class="pull-tip">
+          <text>上拉加载更多</text>
+          <view class="arrow-down"></view>
+        </view>
       </view>
     </scroll-view>
   </view>
@@ -50,6 +63,7 @@ onMounted(async () => {
   if (!posts.value || posts.value.length === 0) {
     await store.dispatch("user/fetch_first_posts");
   }
+  await store.dispatch("community/fetch_post_types");
 });
 
 // 下拉刷新
@@ -86,6 +100,13 @@ const viewPostDetail = (id) => {
     url: `/pages/community/detail?id=${id}`,
   });
 };
+
+// 添加发布跳转方法
+const navigateToPublish = () => {
+  uni.navigateTo({
+    url: '/pages/community/publish'
+  });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -111,36 +132,125 @@ const viewPostDetail = (id) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 100px;
+  padding-top: 120px;
 }
 
 .empty-icon {
-  width: 80px;
-  height: 80px;
-  background-color: #e0e0e0;
-  border-radius: 50%;
-  margin-bottom: 16px;
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  margin-bottom: 24px;
 }
 
 .empty-text {
-  font-size: 14px;
-  color: #999;
-  margin-bottom: 16px;
-}
-
-.refresh-btn {
-  padding: 8px 20px;
-  background-color: #f5f5f5;
+  font-size: 16px;
   color: #666;
-  border-radius: 20px;
-  font-size: 14px;
+  margin-bottom: 24px;
 }
 
-/* 加载更多 */
+.publish-btn {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #07c160, #39e28c);
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(7, 193, 96, 0.2);
+  transition: all 0.3s ease;
+}
+
+.publish-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(7, 193, 96, 0.15);
+}
+
+.publish-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.publish-btn text {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* 加载更多样式优化 */
 .load-more {
-  text-align: center;
   padding: 16px 0;
-  color: #999;
-  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e8e8e8;
+    border-top: 2px solid #07c160;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  text {
+    font-size: 14px;
+    color: #666;
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+  gap: 12px;
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+  }
+
+  text {
+    font-size: 14px;
+    color: #999;
+    white-space: nowrap;
+  }
+}
+
+.pull-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  text {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .arrow-down {
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid #666;
+    border-bottom: 2px solid #666;
+    transform: rotate(45deg);
+    margin-top: -4px;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

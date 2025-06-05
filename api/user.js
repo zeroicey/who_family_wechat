@@ -77,3 +77,7 @@ export const updateUserAvatar = async (avatarBase64) => {
     avatar: "data:image/png;base64," + avatarBase64,
   });
 };
+
+export const deletePost = async (postId) => {
+  return request.delete("/community/post", { id: postId });
+};

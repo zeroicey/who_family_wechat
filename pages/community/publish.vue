@@ -2,31 +2,17 @@
   <view class="publish-container">
     <view class="form-item">
       <text class="form-label">标题</text>
-      <input
-        class="form-input"
-        type="text"
-        v-model="title"
-        placeholder="请输入标题"
-      />
+      <input class="form-input" type="text" v-model="title" placeholder="请输入标题" />
     </view>
 
     <view class="form-item">
       <text class="form-label">内容</text>
-      <textarea
-        class="form-textarea"
-        v-model="content"
-        placeholder="分享新鲜事..."
-      />
+      <textarea class="form-textarea" v-model="content" placeholder="分享新鲜事..." />
     </view>
 
     <view class="form-item">
       <text class="form-label">类型</text>
-      <picker
-        class="form-picker"
-        @change="bindPickerChange"
-        :value="typeIndex"
-        :range="typeArray"
-      >
+      <picker class="form-picker" @change="bindPickerChange" :value="typeIndex" :range="typeArray">
         <view class="picker-display">{{ typeArray[typeIndex] }}</view>
       </picker>
     </view>
@@ -35,24 +21,11 @@
       <text class="form-label">图片上传 (最多4张)</text>
       <view class="image-uploader">
         <view class="image-preview-list">
-          <view
-            v-for="(image, index) in imageList"
-            :key="index"
-            class="image-preview-item"
-          >
-            <image
-              :src="image"
-              mode="aspectFill"
-              class="preview-image"
-              @click="previewImage(index)"
-            ></image>
+          <view v-for="(image, index) in imageList" :key="index" class="image-preview-item">
+            <image :src="image" mode="aspectFill" class="preview-image" @click="previewImage(index)"></image>
             <view class="delete-icon" @click="deleteImage(index)">×</view>
           </view>
-          <view
-            v-if="imageList.length < 4"
-            class="add-image-btn"
-            @click="chooseImage"
-          >
+          <view v-if="imageList.length < 4" class="add-image-btn" @click="chooseImage">
             <text class="add-icon">+</text>
           </view>
         </view>
@@ -163,6 +136,7 @@ const submitPost = async () => {
     typeIndex.value = 0;
 
     await store.dispatch("community/fetch_first_posts");
+    await store.dispatch("user/fetch_first_posts");
     // 延时一小段时间再跳转，让用户能看到提示
     setTimeout(() => {
       uni.switchTab({
@@ -218,6 +192,7 @@ const submitPost = async () => {
   border-radius: 12rpx; // 更大的圆角
   padding: 0 24rpx;
   box-sizing: border-box;
+
   &::placeholder {
     color: #c8c9cc;
   }
@@ -225,12 +200,14 @@ const submitPost = async () => {
 
 .form-textarea {
   width: 100%;
-  height: 300rpx; /* 增加内容表单的高度 */
+  height: 300rpx;
+  /* 增加内容表单的高度 */
   border: 1px solid #ebedf0;
   border-radius: 12rpx;
   padding: 24rpx;
   box-sizing: border-box;
   line-height: 1.6; // 增加行高，提升可读性
+
   &::placeholder {
     color: #c8c9cc;
   }
@@ -246,9 +223,11 @@ const submitPost = async () => {
   display: flex;
   align-items: center;
   position: relative; // 为箭头定位
+
   .picker-display {
     flex: 1;
   }
+
   // 可以添加一个向下的箭头图标
   &::after {
     content: "";
@@ -269,6 +248,7 @@ const submitPost = async () => {
     flex-wrap: wrap;
     gap: 20rpx; // 使用gap来控制间距
   }
+
   .image-preview-item,
   .add-image-btn {
     width: calc((100% - 60rpx) / 4); // 动态计算宽度，一行4个，考虑gap
@@ -288,6 +268,7 @@ const submitPost = async () => {
       height: 100%;
       object-fit: cover;
     }
+
     .delete-icon {
       position: absolute;
       top: 8rpx;
@@ -326,10 +307,8 @@ const submitPost = async () => {
       position: absolute; // 使用绝对定位
       top: 50%; // 定位到父容器的垂直中心
       left: 50%; // 定位到父容器的水平中心
-      transform: translate(
-        -50%,
-        -50%
-      ); // 将自身向左上角移动自身宽高的一半，实现精确居中
+      transform: translate(-50%,
+          -50%); // 将自身向左上角移动自身宽高的一半，实现精确居中
       // line-height: 1; // 在绝对定位下，line-height 的影响较小，可以保留或移除
     }
   }
@@ -346,6 +325,7 @@ const submitPost = async () => {
   padding: 0;
   margin-top: 60rpx;
   box-shadow: 0 4rpx 8rpx rgba(25, 137, 250, 0.2);
+
   &:active {
     background-color: #0d6efd;
   }

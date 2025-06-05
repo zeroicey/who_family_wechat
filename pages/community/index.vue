@@ -65,10 +65,10 @@ const noMoreData = ref(false);
 onMounted(async () => {
   noMoreData.value = false;
   if (!posts.value || posts.value.length === 0) {
-    await store.dispatch("community/fetch_post_types");
     await store.dispatch("community/fetch_first_posts");
     currentType.value = types.value[0];
   }
+  await store.dispatch("community/fetch_post_types");
 });
 
 // 切换分类

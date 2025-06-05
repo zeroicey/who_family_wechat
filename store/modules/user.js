@@ -5,6 +5,7 @@ import {
   updateUserAvatar,
   fetchPosts,
   fetchMorePosts,
+  deletePost,
 } from "@/api/user";
 
 const state = {
@@ -29,6 +30,10 @@ const getters = {
   get_user_avatar_url: (state) => state.avatarUrl,
 
   get_posts: (state) => state.posts,
+
+  add_posts(state, posts) {
+    state.posts = [...state.posts, ...posts];
+  },
 };
 
 const mutations = {
@@ -38,6 +43,10 @@ const mutations = {
 
   add_posts(state, posts) {
     state.posts = [...state.posts, ...posts];
+  },
+
+  delete_post(state, postId) {
+    state.posts = state.posts.filter((post) => post.id !== postId);
   },
   // 设置用户信息
   set_user_info(state, userInfo) {
@@ -167,7 +176,7 @@ const actions = {
 
       // 调用API获取帖子列表
       if (state.posts.length > 0) {
-        const postsRes = await fetchUserPosts(
+        const postsRes = await fetchMorePosts(
           state.posts[state.posts.length - 1].id
         );
         commit("add_posts", postsRes.data);
@@ -177,6 +186,20 @@ const actions = {
       console.log("[我的模块] 获取更多帖子成功");
     } catch (error) {
       console.error("[我的模块] 获取更多帖子失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async delete_post({ commit }, postId) {
+    try {
+      console.log("[社区模块] 开始删除帖子");
+      // 调用API删除帖子
+      commit("delete_post", postId);
+      await deletePost(postId);
+
+      console.log("[社区模块] 删除帖子成功");
+    } catch (error) {
+      console.error("[社区模块] 删除帖子失败", error);
       return Promise.reject(error);
     }
   },

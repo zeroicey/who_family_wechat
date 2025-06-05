@@ -10,6 +10,7 @@ import {
   uploadImage,
   likePost,
   unlikePost,
+  deletePost,
 } from "@/api/community";
 import { getAvatarUrl } from "@/api/user";
 

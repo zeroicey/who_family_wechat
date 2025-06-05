@@ -53,7 +53,7 @@
       </view>
 
       <!-- 删除 -->
-      <view class="action-group" v-if="isInMe">
+      <view class="action-group" v-if="isInMe" @click="handleDeleteClick">
         <image class="action-icon" src="/static/images/community/trash.png" />
       </view>
     </view>
@@ -81,6 +81,15 @@ const props = defineProps({
 
 // 创建一个 ref 来存储头像 URL
 const fetchedAvatarUrl = ref(''); // 初始可以设置一个默认头像或空字符串
+
+const handleDeleteClick = async () => {
+  await store.dispatch("user/delete_post", props.post.id);
+  uni.showToast({
+    title: '删除成功',
+    icon: 'success',
+    mask: true
+  })
+}
 
 // 异步获取头像的函数
 const fetchAvatar = async () => {
