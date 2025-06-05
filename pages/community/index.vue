@@ -178,10 +178,7 @@ const onPublish = () => {
     },
     fail: (err) => {
       // 即使用户取消选择图片，也跳转到发布页面
-      console.log('Choose image failed or cancelled:', err);
-      uni.navigateTo({
-        url: "/pages/community/publish",
-      });
+      console.log('用户取消选择图片');
     }
   });
 };
