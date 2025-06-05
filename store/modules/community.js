@@ -38,7 +38,7 @@ const mutations = {
 
   set_post_types(state, postTypes) {
     state.postTypes = postTypes;
-    state.postClasses = ["所有", ...postTypes];
+    state.postClasses = ["推荐", ...postTypes];
   },
 
   set_post_avatar(state, { avatarId, avatarUrl }) {

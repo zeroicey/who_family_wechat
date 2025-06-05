@@ -8,6 +8,8 @@ import {
   deletePost,
 } from "@/api/user";
 
+import { likePost, unlikePost } from "@/api/community";
+
 const state = {
   posts: [],
   userInfo: uni.getStorageSync("userInfo") || {},
@@ -79,6 +81,22 @@ const mutations = {
   // 设置登录加载状态
   set_login_loading(state, loading) {
     state.loginLoading = loading;
+  },
+
+  like_post(state, postId) {
+    const post = state.posts.find((post) => post.id === postId);
+    if (post) {
+      post.likeCount++;
+      post.isLike = 1;
+    }
+  },
+
+  unlike_post(state, postId) {
+    const post = state.posts.find((post) => post.id === postId);
+    if (post) {
+      post.likeCount--;
+      post.isLike = 0;
+    }
   },
 };
 
@@ -200,6 +218,35 @@ const actions = {
       console.log("[社区模块] 删除帖子成功");
     } catch (error) {
       console.error("[社区模块] 删除帖子失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async like_post({ commit }, postId) {
+    try {
+      console.log("[社区模块] 开始点赞帖子");
+      // 调用API点赞帖子
+      await likePost(postId);
+
+      commit("like_post", postId);
+
+      console.log("[社区模块] 点赞帖子成功");
+    } catch (error) {
+      console.error("[社区模块] 点赞帖子失败", error);
+      return Promise.reject(error);
+    }
+  },
+  async unlike_post({ commit }, postId) {
+    try {
+      console.log("[社区模块] 开始取消点赞帖子");
+      // 调用API取消点赞帖子
+      await unlikePost(postId);
+
+      commit("unlike_post", postId);
+
+      console.log("[社区模块] 取消点赞帖子成功");
+    } catch (error) {
+      console.error("[社区模块] 取消点赞帖子失败", error);
       return Promise.reject(error);
     }
   },

@@ -109,13 +109,9 @@ const fetchAvatar = async () => {
 
 const handleLikeClick = () => {
   // 处理点赞逻辑
-  if (props.post.isLike === 1) {
-    // 已经点赞，取消点赞
-    store.dispatch("community/unlike_post", props.post.id);
-    return;
-  }
-  // 未点赞，执行点赞操作
-  store.dispatch("community/like_post", props.post.id);
+  const actionPrefix = props.post.isLike === 1 ? 'unlike' : 'like';
+  const modulePrefix = props.isInMe ? 'user' : 'community';
+  store.dispatch(`${modulePrefix}/${actionPrefix}_post`, props.post.id);
 };
 
 // 组件挂载时获取头像
