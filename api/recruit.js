@@ -1,3 +1,5 @@
+import request from "./request";
+
 export const fetchRecruitTypes = async () => {
   return request.get("/hire/job-types");
 };

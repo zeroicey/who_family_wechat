@@ -1,3 +1,12 @@
+import {
+  fetchRecruits,
+  fetchMoreRecruits,
+  fetchRecruitById,
+  fetchRecruitTypes,
+  collectRecruit,
+  uncollectRecruit,
+} from "@/api/recruit.js";
+
 const state = {
   recruits: [],
   recruitTypes: [],
@@ -21,7 +30,17 @@ const mutations = {
 
   set_recruit_types(state, recruitTypes) {
     state.recruitTypes = recruitTypes;
-    state.recruitClasses = ["所有", "已收藏", ...recruitTypes];
+    state.recruitClasses = [
+      {
+        id: -1,
+        name: "所有",
+      },
+      {
+        id: -2,
+        name: "已收藏",
+      },
+      ...recruitTypes,
+    ];
   },
 
   collect_recruit(state, recruitId) {
@@ -44,7 +63,7 @@ const actions = {
 
       commit("set_recruits", recruitsRes.data);
 
-      // console.log("[招聘模块] 获取招聘成功", recruitsRes.data);
+      console.log("[招聘模块] 获取招聘成功", recruitsRes.data);
       console.log("[招聘模块] 获取招聘成功");
     } catch (error) {
       console.error("[招聘模块] 获取招聘失败", error);
