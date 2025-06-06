@@ -24,29 +24,6 @@
         </view>
       </view>
 
-      <!-- 习惯打卡卡片 -->
-      <view class="function-card plan-card" @tap="navigateTo('/pages/plan/index')">
-        <view class="card-header">
-          <view class="card-content">
-            <view class="card-icon-container plan-icon">
-              <view class="card-icon-bg"></view>
-              <text class="card-icon-text">习</text>
-            </view>
-            <view class="card-info">
-              <text class="card-title">习惯打卡</text>
-              <view class="streak-container">
-                <text class="card-streak">已坚持</text>
-                <text class="streak-number">{{ checkinData.streak || 0 }}</text>
-                <text class="card-streak">天</text>
-              </view>
-            </view>
-          </view>
-        </view>
-        <view class="card-status" :class="{ 'checked-in': checkinData.checkedToday }">
-          <text>{{ checkinData.checkedToday ? '今日已完成' : '点击记录' }}</text>
-        </view>
-      </view>
-
       <!-- 专注时刻卡片 -->
       <view class="function-card focus-card" @tap="navigateTo('/pages/focus/index')">
         <view class="card-header">
@@ -84,12 +61,6 @@ const todoData = ref({
   progress: 0,
 });
 
-// 打卡数据
-const checkinData = ref({
-  streak: 0,
-  checkedToday: false,
-});
-
 // 专注数据
 const focusData = ref({
   todayDuration: 0,
@@ -124,24 +95,6 @@ const fetchTodoData = async () => {
   }
 };
 
-// 获取打卡数据
-const fetchCheckinData = async () => {
-  try {
-    // 调用Vuex获取打卡数据
-    await store.dispatch('home/getCheckinData');
-    const data = await store.dispatch('checkin/getUserCheckins');
-
-    if (data) {
-      checkinData.value = {
-        streak: data.continuousDays || 0,
-        checkedToday: data.todayChecked || false
-      };
-    }
-  } catch (error) {
-    console.error('获取打卡数据失败', error);
-  }
-};
-
 // 获取专注数据
 const fetchFocusData = async () => {
   try {
@@ -172,7 +125,6 @@ const navigateTo = (url) => {
 // 组件挂载时获取数据
 onMounted(() => {
   fetchTodoData();
-  fetchCheckinData();
   fetchFocusData();
 });
 </script>
