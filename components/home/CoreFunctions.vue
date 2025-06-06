@@ -2,7 +2,7 @@
   <view class="core-functions">
     <view class="function-cards">
       <!-- 任务待办卡片 -->
-      <view class="function-card community-card" @tap="navigateTo('/pages/community/index')">
+      <view class="function-card community-card" @tap="navigateTo('/pages/todo/index')">
         <view class="card-header">
           <view class="card-content">
             <view class="card-icon-container community-icon">
@@ -75,58 +75,10 @@ const formatTime = (time) => {
   return `${hours}小时${minutes}分钟${seconds}秒`;
 };
 
-// 获取任务待办数据
-const fetchTodoData = async () => {
-  try {
-    // 调用Vuex获取待办数据
-    await store.dispatch('home/getTodoData');
-    const data = await store.dispatch('todo/getUserTodos');
-
-    // 计算进度
-    if (data) {
-      const { total, unfinished } = data;
-      todoData.value = {
-        count: unfinished || 0,
-        progress: total ? Math.round(((total - unfinished) / total) * 100) : 0
-      };
-    }
-  } catch (error) {
-    console.error('获取任务数据失败', error);
-  }
-};
-
-// 获取专注数据
-const fetchFocusData = async () => {
-  try {
-    // 调用Vuex获取专注数据
-    await store.dispatch('home/getFocusData');
-    const data = await store.dispatch('focus/getUserFocus');
-
-    if (data) {
-      const todayMinutes = data.todayMinutes || 0;
-      const hours = Math.floor(todayMinutes / 60);
-      const minutes = todayMinutes % 60;
-
-      focusData.value = {
-        todayDuration: todayMinutes ? `${hours}小时${minutes}分钟` : '未开始',
-        rank: data.rank || 0
-      };
-    }
-  } catch (error) {
-    console.error('获取专注数据失败', error);
-  }
-};
-
 // 页面跳转
 const navigateTo = (url) => {
   uni.navigateTo({ url });
 };
-
-// 组件挂载时获取数据
-onMounted(() => {
-  fetchTodoData();
-  fetchFocusData();
-});
 </script>
 
 <style lang="scss" scoped>

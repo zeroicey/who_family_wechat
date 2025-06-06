@@ -2,20 +2,16 @@
   <view class="campus-notifications">
     <view class="section-header">
       <text class="section-title">校园动态</text>
-      <view class="view-more" @tap="navigateTo('/pages/community/index')">
+      <view class="view-more">
         <text>查看更多</text>
-        <text class="arrow-icon">〉</text>
+        <text class=" arrow-icon">〉</text>
       </view>
     </view>
-    
+
     <view class="notification-list">
       <scroll-view class="notification-scroll" scroll-y>
-        <view 
-          class="notification-item" 
-          v-for="(item, index) in notifications" 
-          :key="index"
-          @tap="viewNotification(item)"
-        >
+        <view class="notification-item" v-for="(item, index) in notifications" :key="index"
+          @tap="viewNotification(item)">
           <view class="tag-container">
             <view class="notification-tag" :style="{ backgroundColor: getTagColor(item.type) }">
               {{ item.typeText }}
@@ -39,10 +35,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
+import { ref } from 'vue';
 
 // 校园通知数据
 const notifications = ref([
@@ -131,103 +124,6 @@ const getTagColor = (type) => {
   };
   return colors[type] || '#1890ff';
 };
-
-// 查看通知详情
-const viewNotification = (item) => {
-  uni.navigateTo({
-    url: `/pages/notification/detail?id=${item.id}`
-  });
-};
-
-// 跳转到页面
-const navigateTo = (url) => {
-  // 如果是TabBar页面，使用switchTab，否则使用navigateTo
-  if (url.includes('/pages/community/index')) {
-    uni.switchTab({ url });
-  } else {
-    uni.navigateTo({ url });
-  }
-};
-
-// 加载状态
-const loading = ref(false);
-
-// 获取校园通知数据
-const fetchNotifications = async () => {
-  try {
-    loading.value = true;
-    
-    // 调用Vuex获取通知数据
-    await store.dispatch('home/getNoticeList');
-    const noticeData = store.getters['home/getNoticeList'];
-    
-    if (noticeData && noticeData.length > 0) {
-      // 将返回的数据格式化为组件需要的结构
-      notifications.value = noticeData.map(notice => {
-        // 根据类型设置显示文本
-        const typeTextMap = {
-          'important': '重要',
-          'normal': '通知',
-          'activity': '活动',
-          'lecture': '讲座',
-          'scholarship': '奖学金',
-          'career': '就业',
-          'club': '社团'
-        };
-        
-        // 格式化时间
-        const timeAgo = (timestamp) => {
-          const now = new Date().getTime();
-          const diff = now - timestamp;
-          const minute = 60 * 1000;
-          const hour = minute * 60;
-          const day = hour * 24;
-          
-          if (diff < hour) {
-            const minutes = Math.floor(diff / minute);
-            return `${minutes}分钟前`;
-          } else if (diff < day) {
-            const hours = Math.floor(diff / hour);
-            return `${hours}小时前`;
-          } else if (diff < day * 2) {
-            return '昨天';
-          } else if (diff < day * 3) {
-            return '2天前';
-          } else if (diff < day * 4) {
-            return '3天前';
-          } else {
-            const date = new Date(timestamp);
-            return `${date.getMonth() + 1}月${date.getDate()}日`;
-          }
-        };
-        
-        return {
-          id: notice.id,
-          type: notice.type || 'normal',
-          typeText: typeTextMap[notice.type] || '通知',
-          title: notice.title,
-          description: notice.description || notice.content,
-          time: timeAgo(notice.publishTime),
-          sender: notice.publisher || notice.sender || '学校',
-          readers: notice.readCount || notice.readers || Math.floor(Math.random() * 1000 + 500)
-        };
-      });
-    }
-  } catch (error) {
-    console.error('获取校园通知失败', error);
-    uni.showToast({
-      title: '加载通知失败，请重试',
-      icon: 'none',
-      duration: 2000
-    });
-  } finally {
-    loading.value = false;
-  }
-};
-
-onMounted(() => {
-  fetchNotifications();
-});
 </script>
 
 <style lang="scss" scoped>
@@ -237,51 +133,51 @@ onMounted(() => {
   padding: 4vw 5vw;
   margin: 3vw 5vw;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  
+
   .section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 3vw;
-    
+
     .section-title {
       font-size: 4.5vw;
       font-weight: 600;
       color: #333;
     }
-    
+
     .view-more {
       display: flex;
       align-items: center;
-      
+
       text {
         font-size: 3.2vw;
         color: #666;
       }
-      
+
       .arrow-icon {
         margin-left: 1vw;
         font-size: 3vw;
       }
     }
   }
-  
+
   .notification-list {
     .notification-scroll {
       height: 65vw;
-      
+
       .notification-item {
         display: flex;
         padding: 3vw 0;
         border-bottom: 1px solid #f0f0f0;
-        
+
         &:last-child {
           border-bottom: none;
         }
-        
+
         .tag-container {
           margin-right: 3vw;
-          
+
           .notification-tag {
             padding: 1vw 2.5vw;
             border-radius: 0.5vw;
@@ -292,10 +188,10 @@ onMounted(() => {
             text-align: center;
           }
         }
-        
+
         .notification-content {
           flex: 1;
-          
+
           .notification-title {
             font-size: 3.6vw;
             font-weight: 600;
@@ -303,7 +199,7 @@ onMounted(() => {
             margin-bottom: 1.5vw;
             line-height: 1.3;
           }
-          
+
           .notification-desc {
             font-size: 3.2vw;
             color: #666;
@@ -316,27 +212,27 @@ onMounted(() => {
             overflow: hidden;
             text-overflow: ellipsis;
           }
-          
+
           .notification-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            
+
             .notification-sender {
               font-size: 3vw;
               color: #666;
             }
-            
+
             .notification-info {
               display: flex;
               align-items: center;
-              
+
               .notification-time {
                 font-size: 3vw;
                 color: #999;
                 margin-right: 2vw;
               }
-              
+
               .notification-readers {
                 font-size: 3vw;
                 color: #999;

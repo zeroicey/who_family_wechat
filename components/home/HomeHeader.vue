@@ -88,7 +88,7 @@ const bannerList = ref([
   },
   {
     id: 4,
-    imageUrl: '/static/images/banner.jpg',
+    imageUrl: 'https://images.unsplash.com/photo-1600267175161-cfaa711b4a81?q=80&w=2070&auto=format&fit=crop',
     linkUrl: '/pages/learning/index',
     title: '学习资源共享',
     description: '优质学习资源一站获取'
