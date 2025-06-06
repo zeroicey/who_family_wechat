@@ -1,15 +1,5 @@
 <template>
   <view class="home-header">
-    <!-- 搜索栏 -->
-    <view class="search-bar">
-      <view class="search-input" @tap="navigateToSearch">
-        <view class="search-icon-wrapper">
-          <view class="search-icon"></view>
-        </view>
-        <text class="search-placeholder">搜索服务、资源或内容</text>
-      </view>
-    </view>
-
     <!-- 欢迎语 -->
     <view class="welcome-section">
       <view class="welcome-text">
@@ -25,7 +15,7 @@
     <view class="banner-container">
       <swiper class="banner-swiper" circular :indicator-dots="true" :autoplay="true" :interval="3000" :duration="500"
         :indicator-color="'rgba(255, 255, 255, 0.5)'" :indicator-active-color="'#ffffff'">
-        <swiper-item v-for="(item, index) in bannerList" :key="index" @tap="onBannerClick(item)">
+        <swiper-item v-for="(item, index) in bannerList" :key="index">
           <view class="banner-item">
             <image class="banner-image" :src="item.imageUrl" mode="aspectFill"></image>
             <view class="banner-text">
@@ -40,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 
 // 初始化 store
@@ -104,101 +94,11 @@ const bannerList = ref([
     description: '优质学习资源一站获取'
   }
 ]);
-
-// 获取轮播图数据
-const fetchBannerList = async () => {
-  try {
-    // 从 Vuex 中获取轮播图数据
-    await store.dispatch('home/fetchBanners');
-    const banners = store.getters['home/getBanners'];
-
-    if (banners && banners.length > 0) {
-      bannerList.value = banners;
-    }
-  } catch (error) {
-    console.error('获取轮播图失败', error);
-    uni.showToast({
-      title: '轮播图加载失败',
-      icon: 'none',
-      duration: 1500
-    });
-  }
-};
-
-// 点击轮播图
-const onBannerClick = (item) => {
-  if (item.linkUrl) {
-    uni.navigateTo({
-      url: item.linkUrl
-    });
-  }
-};
-
-// 跳转到搜索页面
-const navigateToSearch = () => {
-  uni.navigateTo({
-    url: '/pages/service/search'
-  });
-};
-
-// 组件挂载时获取数据
-onMounted(() => {
-  fetchBannerList();
-});
 </script>
 
 <style lang="scss" scoped>
 .home-header {
   width: 100%;
-
-  .search-bar {
-    padding: 4vw 5vw;
-
-    .search-input {
-      display: flex;
-      align-items: center;
-      height: 10vw;
-      background-color: #f5f5f5;
-      border-radius: 5vw;
-      padding: 0 4vw;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-
-      .search-icon-wrapper {
-        width: 5vw;
-        height: 5vw;
-        margin-right: 2vw;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .search-icon {
-          width: 3.6vw;
-          height: 3.6vw;
-          border: 0.6vw solid #999;
-          border-radius: 50%;
-          position: relative;
-
-          &:after {
-            content: '';
-            position: absolute;
-            width: 1.8vw;
-            height: 0.6vw;
-            background-color: #999;
-            bottom: -0.8vw;
-            right: -1vw;
-            transform: rotate(45deg);
-            border-radius: 1vw;
-          }
-        }
-      }
-
-      .search-placeholder {
-        font-size: 3.5vw;
-        color: #999;
-      }
-    }
-  }
 
   .welcome-section {
     padding: 0 5vw 4vw;
