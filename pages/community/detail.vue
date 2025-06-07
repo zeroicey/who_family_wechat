@@ -58,6 +58,7 @@ onLoad(async (options) => {
       "community/fetch_first_comments_by_post_id",
       postId.value
     );
+    console.log(comments.value)
   } else {
     uni.showToast({ title: "帖子ID无效", icon: "none" });
   }

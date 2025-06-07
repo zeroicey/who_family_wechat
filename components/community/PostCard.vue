@@ -115,8 +115,8 @@ const handleLikeClick = () => {
 };
 
 // 组件挂载时获取头像
-onMounted(() => {
-  fetchAvatar();
+onMounted(async () => {
+  await fetchAvatar();
 });
 
 // 监听 post prop 的变化，如果 avaterId 或 username 变了，重新获取头像

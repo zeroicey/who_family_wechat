@@ -1,8 +1,7 @@
 <template>
   <view class="comment-item-card">
     <view class="comment-author-avatar">
-      <image v-if="comment.avatarId === 1 && avatarUrl" :src="avatarUrl" class="avatar-image" />
-      <text v-else class="avatar-text">{{ comment.username.charAt(0) }}</text>
+      <image :src="avatarUrl" class="avatar-image" />
     </view>
     <view class="comment-content-wrapper">
       <view class="comment-header">
@@ -10,15 +9,16 @@
         <text class="comment-time">{{ formattedTime }}</text>
       </view>
       <text class="comment-text">{{ comment.content }}</text>
-      <!-- 已移除 reply-info 部分 -->
     </view>
   </view>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { formatRelativeTime } from '@/utils/timeFormat.js';
-import { getRandomAvatarUrl } from '@/utils/randomData.js';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const props = defineProps({
   comment: {
@@ -31,18 +31,25 @@ const formattedTime = computed(() => {
   return formatRelativeTime(props.comment.createTime);
 });
 
-const avatarUrl = computed(() => {
-  if (props.comment.avatarId === 1) {
-    const seed = props.comment.username || 'defaultUser';
-    return getRandomAvatarUrl(seed);
-  }
-  return null;
-});
+const avatarUrl = ref("")
 
-// viewReplies 函数已不再需要，可以移除
-// const viewReplies = () => {
-//   uni.showToast({ title: '查看回复功能待实现', icon: 'none' });
-// };
+const fetchAvatar = async () => {
+  if (props.comment.avatarId && props.comment.username) {
+    try {
+      const url = await store.dispatch("community/fetch_post_user_avatar", {
+        avatarId: props.comment.avatarId, // Corrected typo here
+        name: props.comment.username,
+      });
+      avatarUrl.value = url; // 更新 ref
+    } catch (error) {
+      console.error("Failed to fetch avatar:", error);
+    }
+  }
+};
+
+onMounted(async () => {
+  await fetchAvatar()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -72,12 +79,6 @@ const avatarUrl = computed(() => {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-
-  .avatar-text {
-    color: white;
-    font-size: 30rpx;
-    font-weight: bold;
   }
 }
 
@@ -109,7 +110,8 @@ const avatarUrl = computed(() => {
   font-size: 28rpx;
   color: #333;
   line-height: 1.6;
-  margin-bottom: 12rpx; /* 确保与之前样式一致，如果不需要底部额外间距可以移除或调整 */
+  margin-bottom: 12rpx;
+  /* 确保与之前样式一致，如果不需要底部额外间距可以移除或调整 */
   word-break: break-word;
 }
 
