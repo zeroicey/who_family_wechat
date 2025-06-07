@@ -21,10 +21,19 @@
           <text v-if="recruit.isHot === 'true'" class="recruit-card__tag recruit-card__tag--hot">热门</text>
         </view>
       </view>
+      
+      <!-- 右上角信息区域 -->
+      <view class="recruit-card__corner-info">
+        <text v-if="recruit.isRecommended === 'true'" class="recruit-card__recommend-badge">推荐</text>
+        <view v-if="recruit.location" class="recruit-card__location">
+          <text class="recruit-card__location-icon">📍</text>
+          <text class="recruit-card__location-text">{{ recruit.location }}</text>
+        </view>
+      </view>
     </view>
     
     <!-- 描述文本 -->
-    <view class="recruit-card__desc">第十届校园歌手大赛即将举行，现招募活动志愿者，负责活动现场秩序维护，选手引导，观众服务等工作。</view>
+    <view class="recruit-card__desc">{{ recruit.description }}</view>
     
     <!-- 统计信息 -->
     <view class="recruit-card__footer">
@@ -96,6 +105,7 @@ const formatTime = (timeString) => {
     display: flex;
     align-items: flex-start;
     margin-bottom: 32rpx;
+    position: relative;
   }
   
   &__logo {
@@ -173,6 +183,52 @@ const formatTime = (timeString) => {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
+  }
+  
+  &__corner-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12rpx;
+  }
+  
+  &__recommend-badge {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+    color: #fff;
+    font-size: 20rpx;
+    font-weight: 600;
+    padding: 8rpx 16rpx;
+    border-radius: 20rpx;
+    box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+    transform: scale(0.9);
+  }
+  
+  &__location {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2rpx solid #f0f0f0;
+    border-radius: 16rpx;
+    padding: 6rpx 12rpx;
+    backdrop-filter: blur(10rpx);
+    
+    &-icon {
+      font-size: 20rpx;
+      margin-right: 6rpx;
+    }
+    
+    &-text {
+      font-size: 20rpx;
+      color: #666;
+      font-weight: 500;
+      max-width: 120rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   
   &__tag {
