@@ -7,6 +7,12 @@
       }
     },
     {
+      "path": "pages/focus/index",
+      "style": {
+        "navigationBarTitleText": "专注"
+      }
+    },
+    {
       "path": "pages/login",
       "style": {
         "navigationBarTitleText": "登录",

@@ -34,13 +34,8 @@
             </view>
             <view class="card-info">
               <text class="card-title">专注时刻</text>
-              <text class="card-time">今日专注 {{ formatTime(focusData.todayDuration) }}</text>
+              <text class="card-time">今日专注 {{ formatTime(todayFocusTime) }}</text>
             </view>
-          </view>
-        </view>
-        <view class="card-rank">
-          <view class="rank-tag">
-            <text>成就值 #{{ focusData.rank || '--' }}</text>
           </view>
         </view>
       </view>
@@ -49,30 +44,35 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 
 // 初始化 store
 const store = useStore();
 
-// 社区数据
+const todayFocusTime = computed(() => store.getters['focus/get_today_focus_time']); // 修正getter名称
+
+onMounted(async () => {
+  await store.dispatch('focus/fetch_today_focus_time');
+})
+
+// 待办数据 (示例，实际应从store或API获取)
 const todoData = ref({
-  count: 0,
-  progress: 0,
+  count: 5, // 示例数据
+  progress: 60, // 示例数据
 });
 
-// 专注数据
-const focusData = ref({
-  todayDuration: 0,
-  rank: 0,
-});
-
-// 格式化时间
-const formatTime = (time) => {
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
-  const seconds = time % 60;
-  return `${hours}小时${minutes}分钟${seconds}秒`;
+// 格式化时间 (接收分钟数)
+const formatTime = (minutes) => {
+  if (minutes === null || minutes === undefined || minutes < 0) {
+    return '0分钟'; // 或者其他默认值
+  }
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h > 0) {
+    return `${h}小时${m}分钟`;
+  }
+  return `${m}分钟`;
 };
 
 // 页面跳转
@@ -149,13 +149,6 @@ const navigateTo = (url) => {
             }
           }
 
-          &.plan-icon {
-            .card-icon-bg {
-              background: linear-gradient(135deg, #52c41a, #73d13d);
-              box-shadow: 0 3px 8px rgba(82, 196, 26, 0.3);
-            }
-          }
-
           &.focus-icon {
             .card-icon-bg {
               background: linear-gradient(135deg, #fa8c16, #ffc53d);
@@ -176,34 +169,11 @@ const navigateTo = (url) => {
             letter-spacing: 0.02em;
           }
 
-          .card-desc {
-            font-size: 3.2vw;
-            color: #666;
-            display: block;
-          }
-
           .card-count {
             font-size: 3.2vw;
             color: #666;
             display: flex;
             align-items: center;
-          }
-
-          .streak-container {
-            display: flex;
-            align-items: center;
-
-            .card-streak {
-              font-size: 3.2vw;
-              color: #666;
-            }
-
-            .streak-number {
-              font-size: 4.5vw;
-              font-weight: 600;
-              color: #52c41a;
-              margin: 0 1vw;
-            }
           }
 
           .card-time {
