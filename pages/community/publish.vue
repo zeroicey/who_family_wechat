@@ -12,8 +12,8 @@
 
     <view class="form-item">
       <text class="form-label">类型</text>
-      <picker class="form-picker" @change="bindPickerChange" :value="typeIndex" :range="typeArray">
-        <view class="picker-display">{{ typeArray[typeIndex] }}</view>
+      <picker class="form-picker" @change="bindPickerChange" :value="typeIndex" :range="typeArray" range-key="name">
+        <view class="picker-display">{{ typeArray[typeIndex] ? typeArray[typeIndex].name : '请选择类型' }}</view>
       </picker>
     </view>
 
@@ -45,7 +45,12 @@ const store = useStore();
 
 const title = ref("");
 const content = ref("");
-const typeArray = computed(() => store.getters["community/get_post_types"]);
+const typeArray = computed(() => {
+  const types = store.getters["community/get_post_types"];
+  // 确保 types 是一个数组并且包含对象，如果直接是字符串数组，则需要转换
+  // 假设 store 返回的已经是 [{id:1, name: '日常分享'}, ...]
+  return Array.isArray(types) ? types : [];
+});
 const typeIndex = ref(0);
 const imageList = ref([]); // 存储本地图片路径或上传后的URL
 
@@ -122,7 +127,7 @@ const submitPost = async () => {
   const postData = {
     title: title.value,
     content: content.value,
-    type: typeArray.value[typeIndex.value],
+    type: typeArray.value[typeIndex.value] ? typeArray.value[typeIndex.value].name : '', // 获取选中类型的名称
     // images: uploadedImageUrls, // 如果你的后端需要图片URL列表
     imgCount: imagePaths.length,
   };

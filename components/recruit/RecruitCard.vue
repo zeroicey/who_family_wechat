@@ -4,7 +4,8 @@
     <view class="recruit-card__header">
       <!-- 组织logo -->
       <view class="recruit-card__logo">
-        <text class="recruit-card__logo-text">{{ recruit.organizationName.charAt(0) }}</text>
+        <image v-if="recruit.logoUrl" :src="recruit.logoUrl" class="recruit-card__logo-image" mode="aspectFill"></image>
+        <text v-else class="recruit-card__logo-text">{{ recruit.organizationName.charAt(0) }}</text>
       </view>
       
       <!-- 右侧内容区域 -->
@@ -122,6 +123,12 @@ const formatTime = (timeString) => {
     position: relative;
     overflow: hidden;
     
+    &-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 20rpx; /* 与父元素保持一致的圆角 */
+    }
+
     &::before {
       content: '';
       position: absolute;
@@ -169,6 +176,12 @@ const formatTime = (timeString) => {
     display: flex;
     align-items: center;
     
+    &-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 20rpx; /* 与父元素保持一致的圆角 */
+    }
+
     &::before {
       content: '';
       width: 6rpx;

@@ -3,9 +3,9 @@
     <!-- 分类导航 -->
     <scroll-view class="type-scroll" scroll-x show-scrollbar="false">
       <view class="type-list">
-        <view v-for="(type, index) in types" :key="index" class="type-item" :class="{ active: currentType === type }"
-          @click="changeCategory(type.value)">
-          <text>{{ type }}</text>
+        <view v-for="(type, index) in types" :key="type.id" class="type-item" :class="{ active: currentType === type.name }"
+          @click="changeCategory(type.name)">
+          <text>{{ type.name }}</text>
         </view>
         <!-- 添加占位元素，确保右侧有足够空间 -->
         <view class="type-spacer"></view>
@@ -53,7 +53,7 @@ const posts = computed(() => store.getters["community/get_posts"]);
 const types = computed(() => store.getters["community/get_post_classes"]);
 
 // 当前选中的分类
-const currentType = ref("");
+const currentType = ref(""); // 初始化为空字符串，或者根据实际情况设置为types[0].name
 
 // 下拉刷新与加载更多状态
 const refreshing = ref(false);
@@ -69,12 +69,14 @@ onMounted(async () => {
     await store.dispatch("community/fetch_first_posts");
   }
   await store.dispatch("community/fetch_post_types");
-  currentType.value = types.value[0];
+  if (types.value && types.value.length > 0) {
+    currentType.value = types.value[0].name; // 默认选中第一个分类的名称
+  }
 });
 
 // 切换分类
-const changeCategory = (type) => {
-  currentType.value = type;
+const changeCategory = (typeName) => {
+  currentType.value = typeName;
   // 可以在这里根据分类筛选数据
   handleCategoryClick();
 };

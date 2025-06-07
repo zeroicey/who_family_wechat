@@ -38,7 +38,13 @@ const mutations = {
 
   set_post_types(state, postTypes) {
     state.postTypes = postTypes;
-    state.postClasses = ["推荐", ...postTypes];
+    state.postClasses = [
+      {
+        id: -1,
+        name: "推荐",
+      },
+      ...postTypes,
+    ];
   },
 
   set_post_avatar(state, { avatarId, avatarUrl }) {
@@ -198,7 +204,7 @@ const actions = {
 
       commit("set_post_types", postTypesRes.data);
 
-      // console.log("[社区模块] 获取帖子类型成功", postTypesRes.data);
+      console.log("[社区模块] 获取帖子类型成功", postTypesRes.data);
       console.log("[社区模块] 获取帖子类型成功");
     } catch (error) {
       console.error("[社区模块] 获取帖子类型失败", error);
