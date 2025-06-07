@@ -7,7 +7,7 @@
 
         <view class="recruitment-list">
             <!-- 没有数据时显示空状态 -->
-            <view class="empty-state" v-if="!loading && recruitmentList.length === 0">
+            <view class="empty-state" v-if="recruits.length == 0">
                 <text class="empty-text">暂无招聘信息</text>
             </view>
 
@@ -18,18 +18,18 @@
             </view>
 
             <!-- 招聘列表 -->
-            <view class="recruitment-item" v-for="(item, index) in recruitmentList" :key="index"
-                @click="viewDetail(item)" v-else>
+            <view class="recruitment-item" v-for="(item, index) in recruits" :key="index" @click="viewDetail(item)"
+                v-else>
                 <view class="recruitment-info">
-                    <view class="recruitment-title">{{ item.title }}</view>
+                    <view class="recruitment-title">{{ item.name }}</view>
                     <view class="recruitment-tags">
-                        <text class="tag" :class="item.typeClass">{{ item.type }}</text>
-                        <text class="deadline">截止: {{ item.deadline }}</text>
+                        <text class="tag type-default">{{ item.type }}</text> <!-- 使用默认的 type-default 样式 -->
+                        <text class="deadline">截止: {{ item.endTime }}</text>
                     </view>
-                    <view class="recruitment-org">{{ item.organization }}</view>
+                    <view class="recruitment-org">{{ item.organizationName }}</view>
                 </view>
                 <view class="recruitment-right">
-                    <text class="status" :class="{ 'status-urgent': item.isUrgent }">{{ item.status }}</text>
+                    <!-- <text class="status" :class="{ 'status-urgent': item.isUrgent }">{{ item.status }}</text> --> <!-- 移除 status 和 isUrgent -->
                     <text class="arrow">›</text>
                 </view>
             </view>
@@ -38,14 +38,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
+
+const store = useStore()
+
 // 加载状态
 const loading = ref(false);
 
 // 招聘数据
-const recruitmentList = ref([]);
+const recruits = computed(() => store.getters["recruit/get_recruits"]);
 
+
+onMounted(async () => {
+    if (!recruits.value || recruits.value.length === 0) {
+        await store.dispatch("recruit/fetch_first_recruits");
+    }
+    console.log(recruits.value)
+})
 
 // 查看更多
 const navigateToMore = () => {
@@ -206,7 +216,13 @@ const viewDetail = (item) => {
                         font-weight: 500;
                     }
 
-                    .type-campus {
+                    .type-default {
+                        background-color: #e6f7ff; /* 默认背景色 */
+                        color: #1890ff; /* 默认文字颜色 */
+                    }
+
+                    /* 保留其他特定类型样式，如果将来需要可以取消注释 */
+                    /* .type-campus {
                         background-color: #e6f7ff;
                         color: #1890ff;
                     }
@@ -219,7 +235,7 @@ const viewDetail = (item) => {
                     .type-club {
                         background-color: #f9f0ff;
                         color: #722ed1;
-                    }
+                    } */
 
                     .deadline {
                         font-size: 2.8vw;
@@ -242,7 +258,7 @@ const viewDetail = (item) => {
                 display: flex;
                 align-items: center;
 
-                .status {
+                /* .status {
                     font-size: 3vw;
                     color: #52c41a;
                     margin-right: 2vw;
@@ -255,7 +271,7 @@ const viewDetail = (item) => {
                 .status-urgent {
                     color: #f5222d;
                     background-color: rgba(245, 34, 45, 0.1);
-                }
+                } */
 
                 .arrow {
                     font-size: 5vw;
