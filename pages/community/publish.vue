@@ -2,7 +2,7 @@
   <view class="publish-container">
     <view class="form-item">
       <text class="form-label">标题</text>
-      <input class="form-input" type="text" v-model="title" placeholder="请输入标题" />
+      <input class="form-input" type="text" v-model="title" placeholder="请输入标题" maxlength="99" />
     </view>
 
     <view class="form-item">
@@ -108,6 +108,10 @@ const deleteImage = (index) => {
 const submitPost = async () => {
   if (!title.value.trim()) {
     uni.showToast({ title: "请输入标题", icon: "none" });
+    return;
+  }
+  if (title.value.length > 99) {
+    uni.showToast({ title: "标题不能超过99个字", icon: "none" });
     return;
   }
   if (!content.value.trim()) {
