@@ -286,6 +286,7 @@ onUnmounted(() => {
 
   .start-button {
     background-color: #409EFF; // 主题色
+
     &:hover {
       background-color: #66b1ff;
     }
@@ -293,7 +294,8 @@ onUnmounted(() => {
 
   .end-button {
     background-color: #F56C6C; // 危险色
-     &:hover {
+
+    &:hover {
       background-color: #f78989;
     }
   }
@@ -301,7 +303,8 @@ onUnmounted(() => {
   .cancel-button {
     background-color: #909399; // 次要信息色
     color: #fff;
-     &:hover {
+
+    &:hover {
       background-color: #a6a9ad;
     }
   }
@@ -320,6 +323,7 @@ onUnmounted(() => {
     display: block;
     font-style: italic;
   }
+
   .sub-tip {
     font-size: 26rpx;
     color: #aaa;
@@ -372,7 +376,7 @@ onUnmounted(() => {
     animation: drawKick 0.3s 0.7s ease-out forwards;
     transform-origin: bottom;
   }
-  
+
   .completion-text {
     margin-top: 40rpx;
     font-size: 40rpx;
@@ -387,6 +391,7 @@ onUnmounted(() => {
   from {
     transform: scale(0);
   }
+
   to {
     transform: scale(1);
   }
@@ -396,6 +401,7 @@ onUnmounted(() => {
   from {
     height: 0;
   }
+
   to {
     height: 50rpx;
   }
@@ -405,6 +411,7 @@ onUnmounted(() => {
   from {
     height: 0;
   }
+
   to {
     height: 25rpx;
   }
@@ -415,6 +422,7 @@ onUnmounted(() => {
     opacity: 0;
     transform: translateY(20rpx);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

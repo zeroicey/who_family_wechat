@@ -45,16 +45,16 @@ const mutations = {
   },
 
   collect_recruit(state, recruitId) {
-    const recruit = state.recruits.find((recruit) => recruit.id === recruitId);
+    const recruit = state.recruits.find((recruit) => recruit.id === +recruitId);
     recruit.isCollected = true;
   },
   uncollect_recruit(state, recruitId) {
-    const recruit = state.recruits.find((recruit) => recruit.id === recruitId);
+    const recruit = state.recruits.find((recruit) => recruit.id === +recruitId);
     recruit.isCollected = false;
   },
 
   delivery_job(state, recruitId) {
-    const recruit = state.recruits.find((recruit) => recruit.id === recruitId);
+    const recruit = state.recruits.find((recruit) => recruit.id === +recruitId);
     recruit.isDelivery = true;
   },
 };
@@ -135,6 +135,7 @@ const actions = {
 
       // 调用API收藏招聘
       await collectRecruit(recruitId);
+      console.log(recruitId);
 
       commit("collect_recruit", recruitId);
 

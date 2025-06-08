@@ -77,7 +77,7 @@ const actions = {
   async fetch_today_focus_time({ commit }) {
     try {
       const todayFocusTime = await fetchTodayFocusTime();
-      commit("set_today_focus_time", todayFocusTime.todayMinutes);
+      commit("set_today_focus_time", todayFocusTime.data.todayMinutes);
       console.log("[专注模块] 今日专注时间获取成功");
     } catch (error) {
       console.error("[专注模块] 今日专注时间获取失败", error);

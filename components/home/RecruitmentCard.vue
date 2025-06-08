@@ -29,7 +29,8 @@
                     <view class="recruitment-org">{{ item.organizationName }}</view>
                 </view>
                 <view class="recruitment-right">
-                    <!-- <text class="status" :class="{ 'status-urgent': item.isUrgent }">{{ item.status }}</text> --> <!-- 移除 status 和 isUrgent -->
+                    <!-- <text class="status" :class="{ 'status-urgent': item.isUrgent }">{{ item.status }}</text> -->
+                    <!-- 移除 status 和 isUrgent -->
                     <text class="arrow">›</text>
                 </view>
             </view>
@@ -57,7 +58,6 @@ onMounted(async () => {
     if (!recruits.value || recruits.value.length === 0) {
         await store.dispatch("recruit/fetch_first_recruits");
     }
-    console.log(recruits.value)
 })
 
 // 查看更多
@@ -220,8 +220,10 @@ const viewDetail = (item) => {
                     }
 
                     .type-default {
-                        background-color: #e6f7ff; /* 默认背景色 */
-                        color: #1890ff; /* 默认文字颜色 */
+                        background-color: #e6f7ff;
+                        /* 默认背景色 */
+                        color: #1890ff;
+                        /* 默认文字颜色 */
                     }
 
                     /* 保留其他特定类型样式，如果将来需要可以取消注释 */
