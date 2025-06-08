@@ -2,11 +2,7 @@
   <view class="comment-section-container">
     <view class="section-title">热门评论</view> <!-- 或者 '全部评论' -->
     <view v-if="comments && comments.length > 0" class="comment-list">
-      <comment-item
-        v-for="comment in comments"
-        :key="comment.id"
-        :comment="comment"
-      />
+      <comment-item v-for="comment in comments" :key="comment.id" :comment="comment" />
     </view>
     <view v-else class="empty-comments">
       <text>暂无评论，快来抢沙发吧！</text>
@@ -17,12 +13,28 @@
 <script setup>
 import CommentItem from './CommentItem.vue';
 
+import { ref, onMounted } from 'vue';
+import { useStore } from 'vuex';
+
 const props = defineProps({
-  comments: {
-    type: Array,
-    default: () => []
+  postId: {
+    type: String,
+    required: true
   }
 });
+
+const comments = ref([]);
+const store = useStore();
+
+onMounted(async () => {
+  try {
+    const postId = props.postId;
+    const commentsData = await store.dispatch('community/fetch_first_comments', postId);
+    comments.value = commentsData;
+  } catch (error) {
+    console.log(error)
+  }
+})
 </script>
 
 <style lang="scss" scoped>

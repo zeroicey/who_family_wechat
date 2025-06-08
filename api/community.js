@@ -12,8 +12,24 @@ export const fetchPostById = async (postId) => {
   return request.get(`/community/post?id=${postId}`);
 };
 
-export const fetchFirstCommentsByPostId = async (postId) => {
+export const fetchFirstComments = async (postId) => {
   return request.get(`/community/post-comment?id=${postId}`);
+};
+
+export const fetchFirstMoreComments = async (postId, lastCommentId) => {
+  return request.get(
+    `/community/post-comment?id=${postId}&lastCommentId=${lastCommentId}`
+  );
+};
+
+export const fetchSecondComments = async (commentId) => {
+  return request.get(`/community/post-comment-reply?id=${commentId}`);
+};
+
+export const fetchSecondMoreComments = async (commentId, lastCommentId) => {
+  return request.get(
+    `/community/post-comment-reply?id=${commentId}&lastCommentId=${lastCommentId}`
+  );
 };
 
 export const publishPreparePost = async (post) => {

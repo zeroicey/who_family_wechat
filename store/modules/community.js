@@ -3,7 +3,7 @@ import {
   fetchMorePosts,
   fetchPosts,
   fetchPostById,
-  fetchFirstCommentsByPostId,
+  fetchFirstComments,
   publishPost,
   publishPreparePost,
   markImageUploaded,
@@ -124,11 +124,11 @@ const actions = {
     }
   },
 
-  async fetch_first_comments_by_post_id({ commit }, postId) {
+  async fetch_first_comments({ commit }, postId) {
     try {
       console.log("[社区模块] 开始获取帖子评论");
       // 调用API获取帖子评论
-      const commentsRes = await fetchFirstCommentsByPostId(postId);
+      const commentsRes = await fetchFirstComments(postId);
 
       console.log("[社区模块] 获取帖子评论成功", commentsRes.data);
       console.log("[社区模块] 获取帖子评论成功");

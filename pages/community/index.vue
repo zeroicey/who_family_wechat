@@ -14,7 +14,7 @@
 
     <!-- 下拉刷新区域 -->
     <scroll-view class="posts-scroll" scroll-y refresher-enabled :refresher-triggered="refreshing"
-      @refresherrefresh="onRefresh" @scrolltolower="loadMore">
+      @refresherrefresh="onRefresh" @scrolltolower="loadMore" lower-threshold="0">
       <!-- 帖子列表 -->
       <view v-if="posts && posts.length > 0" class="posts-container">
         <post-card v-for="post in posts" :key="post.id" :post="post" :isInMe="false" @click="viewPostDetail(post.id)" />
@@ -28,9 +28,26 @@
 
       <!-- 加载更多 -->
       <view v-if="posts && posts.length > 0" class="load-more">
-        <text v-if="loading">加载中...</text>
-        <text v-else-if="noMoreData">没有更多了</text>
-        <text v-else>上拉加载更多</text>
+        <!-- 加载中状态 -->
+        <view v-if="loading" class="loading-state">
+          <view class="loading-spinner"></view>
+          <text class="loading-text">正在加载更多...</text>
+        </view>
+        
+        <!-- 加载错误状态 -->
+        <view v-else-if="loadError" class="error-state" @click="retryLoadMore">
+          <text class="error-text">加载失败，点击重试</text>
+        </view>
+        
+        <!-- 没有更多数据 -->
+        <view v-else-if="noMoreData" class="no-more-state">
+          <text class="no-more-text">— 没有更多内容了 —</text>
+        </view>
+        
+        <!-- 默认状态 -->
+        <view v-else class="default-state">
+          <text class="default-text">下拉查看更多</text>
+        </view>
       </view>
     </scroll-view>
 
@@ -42,7 +59,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from "vue"; // 引入 onMounted
+import { computed, ref, onMounted, onUnmounted } from "vue"; // 引入 onMounted 和 onUnmounted
 import { useStore } from "vuex";
 import PostCard from "@/components/community/PostCard.vue";
 
@@ -59,8 +76,10 @@ const currentType = ref(""); // 初始化为空字符串，或者根据实际情
 const refreshing = ref(false);
 const loading = ref(false);
 const noMoreData = ref(false);
+const loadError = ref(false); // 加载错误状态
 const isLongPress = ref(false); // 用于区分长按和单击
 let longPressTimer = null; // 用于长按后的延迟重置isLongPress
+let loadMoreTimer = null; // 防抖定时器
 
 // 组件挂载后检查帖子是否为空
 onMounted(async () => {
@@ -71,6 +90,18 @@ onMounted(async () => {
   await store.dispatch("community/fetch_post_types");
   if (types.value && types.value.length > 0) {
     currentType.value = types.value[0].name; // 默认选中第一个分类的名称
+  }
+});
+
+// 组件卸载时清理定时器
+onUnmounted(() => {
+  if (loadMoreTimer) {
+    clearTimeout(loadMoreTimer);
+    loadMoreTimer = null;
+  }
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+    longPressTimer = null;
   }
 });
 
@@ -95,23 +126,53 @@ const onRefresh = async () => {
   }, 1000);
 };
 
-// 加载更多
-const loadMore = async () => {
-  if (loading.value || noMoreData.value) return;
+// 加载更多（带防抖）
+const loadMore = () => {
+  // 防抖处理，避免频繁触发
+  if (loadMoreTimer) {
+    clearTimeout(loadMoreTimer);
+  }
+  
+  loadMoreTimer = setTimeout(async () => {
+    await executeLoadMore();
+  }, 300); // 300ms 防抖延迟
+};
+
+// 执行加载更多的核心逻辑
+const executeLoadMore = async () => {
+  // 如果没有帖子，或者正在加载，或者已经没有更多数据，则不执行
+  if (!posts.value || posts.value.length === 0 || loading.value || noMoreData.value) return;
 
   loading.value = true;
-  // 这里可以调用加载更多的接口
-  await store.dispatch("community/fetch_more_posts");
+  loadError.value = false;
+  const previousPostsCount = posts.value ? posts.value.length : 0;
 
-  // 模拟加载
-  setTimeout(() => {
-    loading.value = false;
-
-    // 判断是否还有更多数据
-    if (posts.value.length > 20) {
+  try {
+    await store.dispatch("community/fetch_more_posts");
+    const currentPostsCount = posts.value ? posts.value.length : 0;
+    
+    if (currentPostsCount === previousPostsCount) {
       noMoreData.value = true;
     }
-  }, 1000);
+  } catch (error) {
+    console.error("Failed to load more posts:", error);
+    loadError.value = true;
+    
+    // 显示错误提示
+    uni.showToast({
+      title: '加载失败，请重试',
+      icon: 'none',
+      duration: 2000
+    });
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 重试加载更多
+const retryLoadMore = () => {
+  loadError.value = false;
+  executeLoadMore();
 };
 
 // 回到顶部
@@ -315,6 +376,73 @@ const onPublish = () => {
 .load-more {
   text-align: center;
   padding: 16px 0;
+}
+
+/* 加载中状态 */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #6e8efb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  color: #666;
+  font-size: 13px;
+}
+
+/* 错误状态 */
+.error-state {
+  padding: 8px 16px;
+  background-color: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 6px;
+  margin: 0 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.error-state:active {
+  background-color: #ffe7e6;
+}
+
+.error-text {
+  color: #ff4d4f;
+  font-size: 13px;
+}
+
+/* 没有更多数据状态 */
+.no-more-state {
+  padding: 8px 0;
+}
+
+.no-more-text {
+  color: #999;
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* 默认状态 */
+.default-state {
+  padding: 8px 0;
+}
+
+.default-text {
   color: #999;
   font-size: 13px;
 }

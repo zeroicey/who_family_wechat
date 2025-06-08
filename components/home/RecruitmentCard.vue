@@ -47,7 +47,10 @@ const store = useStore()
 const loading = ref(false);
 
 // 招聘数据
-const recruits = computed(() => store.getters["recruit/get_recruits"]);
+const recruits = computed(() => {
+    const allRecruits = store.getters["recruit/get_recruits"];
+    return allRecruits && allRecruits.length > 5 ? allRecruits.slice(0, 5) : allRecruits;
+});
 
 
 onMounted(async () => {

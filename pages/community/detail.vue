@@ -17,7 +17,7 @@
       <view class="divider"></view>
 
       <!-- 评论区 -->
-      <comment-section :comments="comments" />
+      <comment-section v-if="postId" :postId="postId" />
     </scroll-view>
 
     <!-- 底部评论输入栏 (可选，根据后续需求添加) -->
@@ -42,7 +42,6 @@ import { useStore } from "vuex";
 const store = useStore();
 
 const post = ref(null);
-const comments = ref([]);
 const postId = ref(null);
 
 onLoad(async (options) => {
@@ -54,11 +53,6 @@ onLoad(async (options) => {
       "community/fetch_post_by_id",
       postId.value
     );
-    comments.value = await store.dispatch(
-      "community/fetch_first_comments_by_post_id",
-      postId.value
-    );
-    console.log(comments.value)
   } else {
     uni.showToast({ title: "帖子ID无效", icon: "none" });
   }
