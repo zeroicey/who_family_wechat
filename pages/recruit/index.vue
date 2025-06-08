@@ -1,31 +1,18 @@
 <template>
   <view class="recruit-page">
     <!-- 顶部分类栏 -->
-    <CategoryTabs 
-      :selected-type-index="selectedTypeIndex" 
-      @select-type="selectType" 
-    />
+    <CategoryTabs :selected-type-index="selectedTypeIndex" @select-type="selectType" />
 
     <!-- 招聘列表 -->
-    <scroll-view 
-      class="recruit-list"
-      scroll-y="true"
-      @scrolltolower="onLoadMore"
-      :lower-threshold="100"
-    >
+    <scroll-view class="recruit-list" scroll-y="true" @scrolltolower="onLoadMore" :lower-threshold="100">
       <view class="list-container">
-        <RecruitCard 
-          v-for="recruit in filteredRecruits" 
-          :key="recruit.id"
-          :recruit="recruit"
-          @click="goToDetail"
-        />
+        <RecruitCard v-for="recruit in filteredRecruits" :key="recruit.id" :recruit="recruit" @click="goToDetail" />
 
         <!-- 加载更多提示 -->
         <view v-if="loading" class="loading-tip">
           <text>加载中...</text>
         </view>
-        
+
         <view v-if="noMore" class="no-more-tip">
           <text>没有更多了</text>
         </view>
@@ -36,6 +23,8 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue';
+
+import { onPullDownRefresh } from "@dcloudio/uni-app";
 import { useStore } from 'vuex';
 import CategoryTabs from '@/components/recruit/CategoryTabs.vue';
 import RecruitCard from '@/components/recruit/RecruitCard.vue';
@@ -74,13 +63,13 @@ const selectType = (index) => {
 
 const onLoadMore = async () => {
   if (loading.value || noMore.value) return;
-  
+
   loading.value = true;
   try {
     const beforeLength = recruits.value.length;
     await store.dispatch('recruit/fetch_more_recruits');
     const afterLength = recruits.value.length;
-    
+
     if (beforeLength === afterLength) {
       noMore.value = true;
     }
@@ -90,6 +79,34 @@ const onLoadMore = async () => {
     loading.value = false;
   }
 };
+
+onPullDownRefresh(async () => {
+  // 重置状态
+  noMore.value = false;
+  loading.value = false;
+
+  // 重新获取第一页数据
+  await store.dispatch('recruit/fetch_first_recruits')
+    .then(() => {
+      uni.showToast({
+        title: '刷新成功',
+        icon: 'success',
+        duration: 1500
+      });
+    })
+    .catch((error) => {
+      console.error('刷新失败:', error);
+      uni.showToast({
+        title: '刷新失败',
+        icon: 'none',
+        duration: 1500
+      });
+    })
+    .finally(() => {
+      // 停止下拉刷新动画
+      uni.stopPullDownRefresh();
+    });
+})
 
 const goToDetail = (recruitId) => {
   uni.navigateTo({
@@ -116,7 +133,8 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
-  padding-top: 120rpx; /* 为固定的分类栏留出空间 */
+  padding-top: 120rpx;
+  /* 为固定的分类栏留出空间 */
 }
 
 /* 招聘列表样式 */

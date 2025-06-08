@@ -84,12 +84,32 @@ const props = defineProps({
 const fetchedAvatarUrl = ref(''); // 初始可以设置一个默认头像或空字符串
 
 const handleDeleteClick = async () => {
-  await store.dispatch("user/delete_post", props.post.id);
-  uni.showToast({
-    title: '删除成功',
-    icon: 'success',
-    mask: true
-  })
+  uni.showModal({
+    title: '确认删除',
+    content: '确定要删除这条动态吗？删除后无法恢复。',
+    confirmText: '删除',
+    cancelText: '取消',
+    confirmColor: '#ff4757',
+    success: async (res) => {
+      if (res.confirm) {
+        try {
+          await store.dispatch("user/delete_post", props.post.id);
+          uni.showToast({
+            title: '删除成功',
+            icon: 'success',
+            mask: true
+          });
+        } catch (error) {
+          console.error('删除失败:', error);
+          uni.showToast({
+            title: '删除失败',
+            icon: 'none',
+            mask: true
+          });
+        }
+      }
+    }
+  });
 }
 
 // 异步获取头像的函数
