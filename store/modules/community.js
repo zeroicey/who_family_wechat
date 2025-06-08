@@ -124,17 +124,171 @@ const actions = {
     }
   },
 
-  async fetch_first_comments({ commit }, postId) {
+  async fetch_first_comments({ commit }, { postId, comments }) {
     try {
       console.log("[社区模块] 开始获取帖子评论");
       // 调用API获取帖子评论
       const commentsRes = await fetchFirstComments(postId);
 
+      comments = [...comments, ...commentsRes.data];
+
       console.log("[社区模块] 获取帖子评论成功", commentsRes.data);
       console.log("[社区模块] 获取帖子评论成功");
-      return commentsRes.data;
+      return comments;
     } catch (error) {
       console.error("[社区模块] 获取帖子评论失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async fetch_first_more_comments({ commit }, { postId, lastCommentId }) {
+    try {
+      console.log("[社区模块] 开始获取更多帖子评论");
+      // 调用API获取帖子评论
+      const commentsRes = await fetchFirstMoreComments(postId, lastCommentId);
+
+      console.log("[社区模块] 获取更多帖子评论成功", commentsRes.data);
+      console.log("[社区模块] 获取更多帖子评论成功");
+      return commentsRes.data;
+    } catch (error) {
+      console.error("[社区模块] 获取更多帖子评论失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async fetch_second_comments({ commit }, { commentId, comments }) {
+    try {
+      console.log(`[社区模块] 开始获取二级评论${commentId}回复`);
+      // 调用API获取帖子评论
+      const commentsRes = await fetchSecondComments(commentId);
+
+      comments = comments.map((comment) => {
+        if (comment.id === commentId) {
+          comment.replyList = commentsRes.data;
+        }
+      });
+
+      console.log(`[社区模块] 获取评论${commentId}回复成功`, commentsRes.data);
+      console.log(`[社区模块] 获取评论${commentId}回复成功`);
+      return comments;
+    } catch (error) {
+      console.error(`[社区模块] 获取评论${commentId}回复失败`, error);
+      return Promise.reject(error);
+    }
+  },
+
+  async fetch_second_more_comments(
+    { commit },
+    { commentId, lastCommentId, comments }
+  ) {
+    try {
+      console.log(`[社区模块] 开始获取更多二级评论${commentId}回复`);
+      // 调用API获取帖子评论
+      const commentsRes = await fetchSecondMoreComments(
+        commentId,
+        lastCommentId
+      );
+
+      comments = comments.map((comment) => {
+        if (comment.id === commentId) {
+          comment.replyList = [...comment.replyList, ...commentsRes.data];
+        }
+      });
+
+      console.log(
+        `[社区模块] 获取更多评论${commentId}回复成功`,
+        commentsRes.data
+      );
+      console.log(`[社区模块] 获取更多评论${commentId}回复成功`);
+      return commentsRes.data;
+    } catch (error) {
+      console.error(`[社区模块] 获取更多评论${commentId}回复失败`, error);
+      return Promise.reject(error);
+    }
+  },
+
+  async delete_first_comment({ commit }, { comments, commentId }) {
+    try {
+      console.log(`[社区模块] 开始删除一级评论${commentId}`);
+      // 调用API删除一级评论
+      await deleteFirstComment(commentId);
+
+      comments = comments.filter((comment) => comment.id !== commentId);
+
+      console.log(`[社区模块] 删除一级评论${commentId}成功`);
+    } catch (error) {
+      console.error(`[社区模块] 删除一级评论${commentId}失败`, error);
+      return Promise.reject(error);
+    }
+  },
+
+  async delete_second_comment({ commit }, { comments, commentId, replyId }) {
+    try {
+      console.log(`[社区模块] 开始删除二级评论${commentId}`);
+      // 调用API删除二级评论
+      await deleteSecondComment(commentId);
+
+      comments = comments.map((comment) => {
+        if (comment.id === commentId) {
+          comment.replyList = comment.replyList.filter(
+            (reply) => reply.id !== replyId
+          );
+        }
+      });
+
+      console.log(`[社区模块] 删除二级评论${commentId}成功`);
+      return comments;
+    } catch (error) {
+      console.error(`[社区模块] 删除二级评论${commentId}失败`, error);
+      return Promise.reject(error);
+    }
+  },
+
+  async add_first_comment({ commit }, { postId, content, comments }) {
+    try {
+      console.log(`[社区模块] 开始添加一级评论`);
+      // 调用API添加一级评论
+      const commentRes = await addFirstComment(postId, content);
+
+      comments = [
+        ...comments,
+        {
+          content,
+          id: commentRes.data,
+        },
+      ];
+
+      console.log(`[社区模块] 添加一级评论成功`, commentRes.data);
+      console.log(`[社区模块] 添加一级评论成功`);
+      return comments;
+    } catch (error) {
+      console.error(`[社区模块] 添加一级评论失败`, error);
+      return Promise.reject(error);
+    }
+  },
+
+  async add_second_comment({ commit }, { commentId, content, comments }) {
+    try {
+      console.log(`[社区模块] 开始添加二级评论`);
+      // 调用API添加二级评论
+      const commentRes = await addSecondComment(commentId, content);
+
+      comments = comments.map((comment) => {
+        if (comment.id === commentId) {
+          comment.replyList = [
+            ...comment.replyList,
+            {
+              content,
+              id: commentRes.data,
+            },
+          ];
+        }
+      });
+      console.log(`[社区模块] 添加二级评论成功`, commentRes.data);
+      console.log(`[社区模块] 添加二级评论成功`);
+      return comments;
+    } catch (error) {
+      console.error(`[社区模块] 添加二级评论失败`, error);
       return Promise.reject(error);
     }
   },

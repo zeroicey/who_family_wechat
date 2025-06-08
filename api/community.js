@@ -32,6 +32,36 @@ export const fetchSecondMoreComments = async (commentId, lastCommentId) => {
   );
 };
 
+export const addFirstComment = async (postId, content) => {
+  return request.post("/community/post-comment", {
+    id: postId,
+    content,
+  });
+};
+
+export const addSecondComment = async (commentId, content) => {
+  return request.post("/community/post-comment-reply", {
+    id: commentId,
+    content,
+  });
+};
+
+export const deleteFirstComment = async (commentId) => {
+  return request.delete("/community/post-comment", {
+    data: {
+      id: commentId,
+    },
+  });
+};
+
+export const deleteSecondComment = async (commentId) => {
+  return request.delete("/community/post-comment-reply", {
+    data: {
+      id: commentId,
+    },
+  });
+};
+
 export const publishPreparePost = async (post) => {
   return request.post("/community/prepare-post", post);
 };
