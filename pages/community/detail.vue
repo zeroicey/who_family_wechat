@@ -1,6 +1,6 @@
 <template>
   <view class="post-detail-container">
-    <scroll-view scroll-y class="scroll-view-content">
+    <view class="scroll-view-content">
       <!-- 帖子作者信息 -->
       <post-author-info v-if="post" :post="post" />
 
@@ -18,7 +18,7 @@
 
       <!-- 评论区 -->
       <comment-section v-if="postId" :postId="postId" />
-    </scroll-view>
+    </view>
 
     <!-- 底部评论输入栏 (可选，根据后续需求添加) -->
     <!-- <view class="comment-input-bar">
