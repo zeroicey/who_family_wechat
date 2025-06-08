@@ -2,10 +2,6 @@
   <view class="campus-notifications">
     <view class="section-header">
       <text class="section-title">校园动态</text>
-      <view class="view-more">
-        <text>查看更多</text>
-        <text class=" arrow-icon">〉</text>
-      </view>
     </view>
 
     <view class="notification-list">
@@ -144,21 +140,6 @@ const getTagColor = (type) => {
       font-size: 4.5vw;
       font-weight: 600;
       color: #333;
-    }
-
-    .view-more {
-      display: flex;
-      align-items: center;
-
-      text {
-        font-size: 3.2vw;
-        color: #666;
-      }
-
-      .arrow-icon {
-        margin-left: 1vw;
-        font-size: 3vw;
-      }
     }
   }
 
