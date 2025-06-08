@@ -122,7 +122,7 @@ onMounted(() => {
   // 获取页面参数
   const pages = getCurrentPages();
   const currentPage = pages[pages.length - 1];
-  recruitId.value = parseInt(currentPage.options.id);
+  recruitId.value = currentPage.options.id;
   
   if (recruitId.value) {
     loadRecruitDetail();
@@ -135,7 +135,7 @@ onMounted(() => {
 const loadRecruitDetail = async () => {
   try {
     loading.value = true;
-    const data = await store.dispatch('recruit/fetch_recruit_by_id', Number(recruitId.value));
+    const data = await store.dispatch('recruit/fetch_recruit_by_id', recruitId.value);
     recruitDetail.value = data;
     
     // 设置收藏和投递状态
@@ -157,14 +157,14 @@ const loadRecruitDetail = async () => {
 const toggleCollect = async () => {
   try {
     if (isCollected.value) {
-      await store.dispatch('recruit/uncollect_recruit', Number(recruitId.value));
+      await store.dispatch('recruit/uncollect_recruit', recruitId.value);
       isCollected.value = false;
       uni.showToast({
         title: '取消收藏成功',
         icon: 'success'
       });
     } else {
-      await store.dispatch('recruit/collect_recruit', Number(recruitId.value));
+      await store.dispatch('recruit/collect_recruit', recruitId.value);
       isCollected.value = true;
       uni.showToast({
         title: '收藏成功',
@@ -196,7 +196,7 @@ const handleApply = () => {
     success: async (res) => {
       if (res.confirm) {
         try {
-          await store.dispatch('recruit/delivery_job', Number(recruitId.value));
+          await store.dispatch('recruit/delivery_job', recruitId.value);
           isDelivered.value = true;
           
           // 更新投递人数
