@@ -23,3 +23,7 @@ export const collectRecruit = async (recruitId) => {
 export const uncollectRecruit = async (recruitId) => {
   return request.post("/hire/collect-job", { id: recruitId, collect: false });
 };
+
+export const deliveryJob = async (recruitId) => {
+  return request.post("/hire/submit", { id: recruitId });
+};

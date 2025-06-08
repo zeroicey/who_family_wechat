@@ -62,6 +62,12 @@
       }
     },
     {
+      "path": "pages/recruit/detail",
+      "style": {
+        "navigationBarTitleText": "招聘详情"
+      }
+    },
+    {
       "path": "pages/me/index",
       "style": {
         "navigationBarTitleText": "我的"

@@ -6,6 +6,7 @@ import {
   collectRecruit,
   uncollectRecruit,
 } from "@/api/recruit.js";
+import { deliveryJob } from "../../api/recruit";
 
 const state = {
   recruits: [],
@@ -50,6 +51,11 @@ const mutations = {
   uncollect_recruit(state, recruitId) {
     const recruit = state.recruits.find((recruit) => recruit.id === recruitId);
     recruit.isCollected = false;
+  },
+
+  delivery_job(state, recruitId) {
+    const recruit = state.recruits.find((recruit) => recruit.id === recruitId);
+    recruit.isDelivery = true;
   },
 };
 
@@ -153,6 +159,21 @@ const actions = {
       console.log("[招聘模块] 取消收藏招聘成功");
     } catch (error) {
       console.error("[招聘模块] 取消收藏招聘失败", error);
+      return Promise.reject(error);
+    }
+  },
+
+  async delivery_job({ commit }, recruitId) {
+    try {
+      console.log("[招聘模块] 开始投递招聘");
+
+      // 调用API投递招聘
+      await deliveryJob(recruitId);
+      commit("delivery_job", recruitId);
+
+      console.log("[招聘模块] 投递招聘成功");
+    } catch (error) {
+      console.error("[招聘模块] 投递招聘失败", error);
       return Promise.reject(error);
     }
   },
