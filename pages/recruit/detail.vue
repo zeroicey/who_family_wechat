@@ -122,7 +122,7 @@ onMounted(() => {
   // 获取页面参数
   const pages = getCurrentPages();
   const currentPage = pages[pages.length - 1];
-  recruitId.value = currentPage.options.id;
+  recruitId.value = parseInt(currentPage.options.id);
   
   if (recruitId.value) {
     loadRecruitDetail();
@@ -135,7 +135,7 @@ onMounted(() => {
 const loadRecruitDetail = async () => {
   try {
     loading.value = true;
-    const data = await store.dispatch('recruit/fetch_recruit_by_id', recruitId.value);
+    const data = await store.dispatch('recruit/fetch_recruit_by_id', Number(recruitId.value));
     recruitDetail.value = data;
     
     // 设置收藏和投递状态
@@ -157,14 +157,14 @@ const loadRecruitDetail = async () => {
 const toggleCollect = async () => {
   try {
     if (isCollected.value) {
-      await store.dispatch('recruit/uncollect_recruit', recruitId.value);
+      await store.dispatch('recruit/uncollect_recruit', Number(recruitId.value));
       isCollected.value = false;
       uni.showToast({
         title: '取消收藏成功',
         icon: 'success'
       });
     } else {
-      await store.dispatch('recruit/collect_recruit', recruitId.value);
+      await store.dispatch('recruit/collect_recruit', Number(recruitId.value));
       isCollected.value = true;
       uni.showToast({
         title: '收藏成功',
@@ -196,7 +196,7 @@ const handleApply = () => {
     success: async (res) => {
       if (res.confirm) {
         try {
-          await store.dispatch('recruit/delivery_job', recruitId.value);
+          await store.dispatch('recruit/delivery_job', Number(recruitId.value));
           isDelivered.value = true;
           
           // 更新投递人数
@@ -237,8 +237,8 @@ const formatDate = (dateStr) => {
 <style lang="scss" scoped>
 .recruit-detail {
   min-height: 100vh;
-  background-color: #f5f5f5;
-  padding-bottom: 120rpx;
+  background-color: #f8f9fa;
+  padding-bottom: 140rpx;
 }
 
 .loading-container,
@@ -248,44 +248,49 @@ const formatDate = (dateStr) => {
   align-items: center;
   justify-content: center;
   height: 60vh;
+  padding: 0 32rpx;
   
   .loading-text,
   .error-text {
     font-size: 32rpx;
     color: #666;
     margin-bottom: 40rpx;
+    text-align: center;
   }
   
   .retry-btn {
     background-color: #1890ff;
     color: white;
     border: none;
-    border-radius: 8rpx;
-    padding: 20rpx 40rpx;
+    border-radius: 12rpx;
+    padding: 24rpx 48rpx;
     font-size: 28rpx;
   }
 }
 
 .detail-content {
-  padding: 0 0 40rpx 0;
+  padding: 24rpx 24rpx 40rpx 24rpx;
 }
 
 .header-section {
   background: white;
-  padding: 40rpx;
-  margin-bottom: 20rpx;
+  padding: 32rpx;
+  margin-bottom: 16rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
   
   .company-info {
     display: flex;
     align-items: center;
-    margin-bottom: 30rpx;
+    margin-bottom: 32rpx;
     
     .company-logo {
-      width: 120rpx;
-      height: 120rpx;
-      border-radius: 16rpx;
-      margin-right: 24rpx;
+      width: 100rpx;
+      height: 100rpx;
+      border-radius: 12rpx;
+      margin-right: 20rpx;
       background-color: #f5f5f5;
+      border: 1rpx solid #eee;
     }
     
     .company-details {
@@ -293,15 +298,17 @@ const formatDate = (dateStr) => {
       
       .company-name {
         display: block;
-        font-size: 36rpx;
+        font-size: 32rpx;
         font-weight: 600;
         color: #333;
-        margin-bottom: 12rpx;
+        margin-bottom: 8rpx;
+        line-height: 1.4;
       }
       
       .location {
-        font-size: 28rpx;
+        font-size: 26rpx;
         color: #666;
+        line-height: 1.4;
       }
     }
   }
@@ -309,28 +316,32 @@ const formatDate = (dateStr) => {
   .position-info {
     .position-name {
       display: block;
-      font-size: 40rpx;
+      font-size: 36rpx;
       font-weight: 700;
       color: #333;
-      margin-bottom: 16rpx;
+      margin-bottom: 12rpx;
+      line-height: 1.3;
     }
     
     .salary {
       display: block;
-      font-size: 36rpx;
+      font-size: 32rpx;
       font-weight: 600;
       color: #ff4d4f;
-      margin-bottom: 24rpx;
+      margin-bottom: 20rpx;
+      line-height: 1.3;
     }
     
     .tags {
       display: flex;
-      gap: 16rpx;
+      gap: 12rpx;
+      flex-wrap: wrap;
       
       .tag {
-        padding: 8rpx 16rpx;
-        border-radius: 20rpx;
-        font-size: 24rpx;
+        padding: 6rpx 12rpx;
+        border-radius: 16rpx;
+        font-size: 22rpx;
+        line-height: 1.2;
         
         &.type-tag {
           background-color: #e6f7ff;
@@ -354,21 +365,24 @@ const formatDate = (dateStr) => {
 .detail-section {
   .section-item {
     background: white;
-    padding: 40rpx;
-    margin-bottom: 20rpx;
+    padding: 32rpx;
+    margin-bottom: 16rpx;
+    border-radius: 16rpx;
+    box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
     
     .section-title {
       display: block;
-      font-size: 32rpx;
+      font-size: 30rpx;
       font-weight: 600;
       color: #333;
-      margin-bottom: 24rpx;
+      margin-bottom: 20rpx;
+      line-height: 1.4;
     }
     
     .section-content {
-      font-size: 28rpx;
+      font-size: 26rpx;
       color: #666;
-      line-height: 1.6;
+      line-height: 1.7;
       white-space: pre-line;
       
       &.contact {
@@ -380,22 +394,27 @@ const formatDate = (dateStr) => {
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24rpx;
+      gap: 20rpx;
       
       .info-item {
         display: flex;
         flex-direction: column;
+        padding: 16rpx;
+        background-color: #fafafa;
+        border-radius: 8rpx;
         
         .info-label {
-          font-size: 24rpx;
+          font-size: 22rpx;
           color: #999;
-          margin-bottom: 8rpx;
+          margin-bottom: 6rpx;
+          line-height: 1.3;
         }
         
         .info-value {
-          font-size: 28rpx;
+          font-size: 26rpx;
           color: #333;
           font-weight: 500;
+          line-height: 1.3;
         }
       }
     }
@@ -408,10 +427,11 @@ const formatDate = (dateStr) => {
   left: 0;
   right: 0;
   background: white;
-  padding: 24rpx 40rpx;
-  box-shadow: 0 -2rpx 16rpx rgba(0, 0, 0, 0.1);
+  padding: 20rpx 24rpx 32rpx 24rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
   display: flex;
-  gap: 24rpx;
+  gap: 20rpx;
+  border-top: 1rpx solid #f0f0f0;
   
   .action-btn {
     display: flex;
@@ -423,27 +443,34 @@ const formatDate = (dateStr) => {
     transition: all 0.3s;
     
     &.collect-btn {
-      width: 120rpx;
-      height: 80rpx;
-      background-color: #f5f5f5;
+      width: 100rpx;
+      height: 88rpx;
+      background-color: #f8f9fa;
+      border: 1rpx solid #e8e8e8;
       
       .action-icon {
-        font-size: 32rpx;
-        margin-bottom: 4rpx;
+        font-size: 28rpx;
+        margin-bottom: 2rpx;
       }
       
       .action-text {
-        font-size: 24rpx;
+        font-size: 22rpx;
         color: #666;
+        line-height: 1.2;
+      }
+      
+      &:active {
+        background-color: #f0f0f0;
       }
     }
     
     &.apply-btn {
       flex: 1;
-      height: 80rpx;
+      height: 88rpx;
       background: linear-gradient(135deg, #1890ff, #36cfc9);
       color: white;
       font-weight: 600;
+      font-size: 30rpx;
       
       &.disabled {
         background: #d9d9d9;
@@ -452,6 +479,7 @@ const formatDate = (dateStr) => {
       
       &:not(.disabled):active {
         transform: scale(0.98);
+        opacity: 0.9;
       }
     }
   }

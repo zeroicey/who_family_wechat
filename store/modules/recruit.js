@@ -103,7 +103,7 @@ const actions = {
       // 调用API获取招聘详情
       const recruitRes = await fetchRecruitById(recruitId);
 
-      // console.log("[招聘模块] 获取招聘详情成功", recruitRes.data);
+      console.log("[招聘模块] 获取招聘详情成功", recruitRes.data);
       console.log("[招聘模块] 获取招聘详情成功");
       return recruitRes.data;
     } catch (error) {
