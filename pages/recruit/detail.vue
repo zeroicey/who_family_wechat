@@ -229,7 +229,9 @@ const formatText = (text) => {
 // 格式化日期
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
-  const date = new Date(dateStr);
+  // 修复iOS兼容性：将 "yyyy-MM-dd HH:mm:ss" 格式转换为 "yyyy/MM/dd HH:mm:ss"
+  const iosCompatibleDateStr = dateStr.replace(/-/g, '/');
+  const date = new Date(iosCompatibleDateStr);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 </script>

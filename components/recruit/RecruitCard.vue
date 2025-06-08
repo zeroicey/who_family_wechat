@@ -123,7 +123,13 @@ const handleSubmitClick = async () => {
 };
 
 const formatTime = (timeString) => {
-  const date = new Date(timeString);
+  // 检查输入是否为空
+  if (!timeString) {
+    return '';
+  }
+  // 修复iOS兼容性：将 "yyyy-MM-dd HH:mm:ss" 格式转换为 "yyyy/MM/dd HH:mm:ss"
+  const iosCompatibleTimeString = timeString.replace(/-/g, '/');
+  const date = new Date(iosCompatibleTimeString);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 </script>
