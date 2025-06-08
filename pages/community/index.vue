@@ -1,16 +1,16 @@
 <template>
   <view class="community-container">
     <!-- 分类导航 -->
-    <scroll-view class="type-scroll" scroll-x show-scrollbar="false">
-      <view class="type-list">
-        <view v-for="(type, index) in types" :key="type.id" class="type-item" :class="{ active: currentType === type.name }"
-          @click="changeCategory(type.name)">
-          <text>{{ type.name }}</text>
+    <view class="category-tabs">
+      <scroll-view scroll-x="true" class="tabs-scroll" show-scrollbar="false">
+        <view class="tabs-container">
+          <view v-for="(type, index) in types" :key="type.id" class="tab-item"
+            :class="{ active: currentType === type.name }" @click="changeCategory(type.name)">
+            {{ type.name }}
+          </view>
         </view>
-        <!-- 添加占位元素，确保右侧有足够空间 -->
-        <view class="type-spacer"></view>
-      </view>
-    </scroll-view>
+      </scroll-view>
+    </view>
 
     <!-- 下拉刷新区域 -->
     <scroll-view class="posts-scroll" scroll-y refresher-enabled :refresher-triggered="refreshing"
@@ -297,39 +297,54 @@ const onPublish = () => {
 }
 
 /* 分类导航 */
-.type-scroll {
-  background-color: #ffffff;
-  white-space: nowrap;
-  padding: 0 8px;
+.category-tabs {
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   margin-top: 10px;
 }
 
-.type-list {
-  display: flex;
-  padding: 12px 8px;
-  width: 100%;
+.tabs-scroll {
+  white-space: nowrap;
 }
 
-.type-item {
-  padding: 6px 16px;
-  margin: 0 6px;
+.tabs-container {
+  display: flex;
+  padding: 0 10px;
+}
+
+.tab-item {
+  flex-shrink: 0;
+  padding: 12px 16px;
   font-size: 14px;
   color: #666;
-  border-radius: 16px;
-  background-color: #f5f5f5;
-  transition: all 0.3s;
-  flex-shrink: 0;
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin: 4px 2px;
 }
 
-.type-spacer {
+.tab-item:hover {
+  color: #6e8efb;
+  background-color: rgba(110, 142, 251, 0.05);
+}
+
+.tab-item.active {
+  color: #6e8efb;
+  font-weight: 600;
+  background-color: rgba(110, 142, 251, 0.08);
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 20px;
-  flex-shrink: 0;
-}
-
-.type-item.active {
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
-  color: white;
-  font-weight: 500;
+  height: 2px;
+  background-color: #6e8efb;
+  border-radius: 1px;
 }
 
 /* 帖子列表 */
