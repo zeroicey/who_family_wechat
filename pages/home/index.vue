@@ -24,6 +24,8 @@ import HomeHeader from '@/components/home/HomeHeader.vue';
 import CoreFunctions from '@/components/home/CoreFunctions.vue';
 import CampusNotifications from '@/components/home/CampusNotifications.vue';
 import RecruitmentCard from '@/components/home/RecruitmentCard.vue';
+
+
 </script>
 
 <style lang="scss" scoped>

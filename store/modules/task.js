@@ -12,6 +12,12 @@ const state = {
 
 const getters = {
   get_tasks: (state) => state.tasks,
+  get_todo_task_num: (state) => {
+    return state.tasks.filter((task) => task.status === "待完成").length;
+  },
+  get_done_task_num: (state) => {
+    return state.tasks.filter((task) => task.status === "已完成").length;
+  },
 };
 
 const mutations = {

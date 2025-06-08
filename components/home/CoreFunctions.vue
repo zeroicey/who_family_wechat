@@ -11,7 +11,7 @@
             </view>
             <view class="card-info">
               <text class="card-title">任务待办</text>
-              <text class="card-count">{{ todoData.count || 0 }} 项未完成</text>
+              <text class="card-count">{{ todoData.count }} 项未完成</text>
             </view>
           </view>
           <view class="card-badge">活跃</view>
@@ -51,15 +51,29 @@ import { useStore } from 'vuex';
 const store = useStore();
 
 const todayFocusTime = computed(() => store.getters['focus/get_today_focus_time']); // 修正getter名称
+const todoTaskNum = computed(() => store.getters['task/get_todo_task_num']);
+const doneTaskNum = computed(() => store.getters['task/get_done_task_num']);
 
 onMounted(async () => {
-  await store.dispatch('focus/fetch_today_focus_time');
-})
+  try {
+    await store.dispatch('task/fetch_all_tasks');
+    await store.dispatch('focus/fetch_today_focus_time');
+  } catch (error) {
+    uni.showToast({
+      title: '数据获取失败',
+      icon: 'none'
+    });
+  }
+});
 
-// 待办数据 (示例，实际应从store或API获取)
-const todoData = ref({
-  count: 5, // 示例数据
-  progress: 60, // 示例数据
+// 待办数据计算
+const todoData = computed(() => {
+  const total = todoTaskNum.value + doneTaskNum.value;
+  const progress = total > 0 ? Math.round((doneTaskNum.value / total) * 100) : 0;
+  return {
+    count: todoTaskNum.value,
+    progress: progress
+  };
 });
 
 // 格式化时间 (接收分钟数)
