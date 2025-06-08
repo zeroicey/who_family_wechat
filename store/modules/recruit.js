@@ -45,17 +45,29 @@ const mutations = {
   },
 
   collect_recruit(state, recruitId) {
-    const recruit = state.recruits.find((recruit) => recruit.id === +recruitId);
-    recruit.isCollected = true;
+    state.recruits = state.recruits.map((recruit) => {
+      if (recruit.id === +recruitId) {
+        recruit.isCollect = 1;
+      }
+      return recruit;
+    });
   },
   uncollect_recruit(state, recruitId) {
-    const recruit = state.recruits.find((recruit) => recruit.id === +recruitId);
-    recruit.isCollected = false;
+    state.recruits = state.recruits.map((recruit) => {
+      if (recruit.id === +recruitId) {
+        recruit.isCollect = 0;
+      }
+      return recruit;
+    });
   },
 
   delivery_job(state, recruitId) {
-    const recruit = state.recruits.find((recruit) => recruit.id === +recruitId);
-    recruit.isDelivery = true;
+    state.recruits = state.recruits.map((recruit) => {
+      if (recruit.id === +recruitId) {
+        recruit.isDeliver = 1;
+      }
+      return recruit;
+    });
   },
 };
 

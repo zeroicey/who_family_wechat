@@ -59,7 +59,7 @@ const filteredRecruits = computed(() => {
     return recruits.value;
   } else if (selectedTypeIndex.value === 1) {
     // 已收藏
-    return recruits.value.filter(recruit => recruit.isCollected);
+    return recruits.value.filter(recruit => recruit.isCollect === 1);
   } else {
     // 按类型过滤
     const selectedType = recruitClasses.value[selectedTypeIndex.value];

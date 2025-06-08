@@ -59,17 +59,15 @@
     </view>
 
     <!-- 申请按钮 -->
-    <view 
-      class="recruit-card__btn" 
-      :class="{ 'recruit-card__btn--disabled': recruit.isDeliver === 1 }"
-      @click.stop="handleSubmitClick"
-    >
+    <view class="recruit-card__btn" :class="{ 'recruit-card__btn--disabled': recruit.isDeliver === 1 }"
+      @click.stop="handleSubmitClick">
       <text class="recruit-card__btn-text">{{ recruit.isDeliver === 1 ? '已投递' : '立即申请' }}</text>
     </view>
   </view>
 </template>
 
 <script setup>
+import { useStore } from "vuex"
 // Props
 const props = defineProps({
   recruit: {
@@ -77,6 +75,8 @@ const props = defineProps({
     required: true
   }
 });
+
+const store = useStore();
 
 // Emits
 const emit = defineEmits(['click']);
@@ -95,9 +95,31 @@ const handleSubmitClick = async () => {
     });
     return;
   }
-  
+
   // 处理提交逻辑
-  await store.dispatch("recruit/delivery_job", props.recruit.id)
+
+  uni.showModal({
+    title: '确认投递',
+    content: '确定要投递该职位吗？投递后无法撤销。',
+    success: async (res) => {
+      if (res.confirm) {
+        try {
+          await store.dispatch("recruit/delivery_job", props.recruit.id)
+
+          uni.showToast({
+            title: '投递成功',
+            icon: 'success'
+          });
+        } catch (error) {
+          console.error('投递失败:', error);
+          uni.showToast({
+            title: '投递失败',
+            icon: 'none'
+          });
+        }
+      }
+    }
+  });
 };
 
 const formatTime = (timeString) => {
@@ -371,13 +393,13 @@ const formatTime = (timeString) => {
       background: #d9d9d9;
       box-shadow: none;
       cursor: not-allowed;
-      
+
       &:active {
         background: #d9d9d9;
         transform: none;
         box-shadow: none;
       }
-      
+
       .recruit-card__btn-text {
         color: #999;
       }
