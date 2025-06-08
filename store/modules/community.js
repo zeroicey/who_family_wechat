@@ -10,6 +10,13 @@ import {
   uploadImage,
   likePost,
   unlikePost,
+  addFirstComment,
+  addSecondComment,
+  deleteFirstComment,
+  deleteSecondComment,
+  fetchSecondComments,
+  fetchSecondMoreComments,
+  fetchFirstMoreComments,
 } from "@/api/community";
 import { getAvatarUrl } from "@/api/user";
 
@@ -166,6 +173,7 @@ const actions = {
         if (comment.id === commentId) {
           comment.replyList = commentsRes.data;
         }
+        return comment;
       });
 
       console.log(`[社区模块] 获取评论${commentId}回复成功`, commentsRes.data);
@@ -191,8 +199,12 @@ const actions = {
 
       comments = comments.map((comment) => {
         if (comment.id === commentId) {
-          comment.replyList = [...comment.replyList, ...commentsRes.data];
+          comment.replyList = [
+            ...(comment.replyList || []),
+            ...commentsRes.data,
+          ];
         }
+        return comment;
       });
 
       console.log(
@@ -200,7 +212,7 @@ const actions = {
         commentsRes.data
       );
       console.log(`[社区模块] 获取更多评论${commentId}回复成功`);
-      return commentsRes.data;
+      return comments;
     } catch (error) {
       console.error(`[社区模块] 获取更多评论${commentId}回复失败`, error);
       return Promise.reject(error);
@@ -224,22 +236,23 @@ const actions = {
 
   async delete_second_comment({ commit }, { comments, commentId, replyId }) {
     try {
-      console.log(`[社区模块] 开始删除二级评论${commentId}`);
+      console.log(`[社区模块] 开始删除二级评论${replyId}`);
       // 调用API删除二级评论
-      await deleteSecondComment(commentId);
+      await deleteSecondComment(replyId);
 
       comments = comments.map((comment) => {
         if (comment.id === commentId) {
-          comment.replyList = comment.replyList.filter(
+          comment.replyList = (comment.replyList || []).filter(
             (reply) => reply.id !== replyId
           );
         }
+        return comment;
       });
 
-      console.log(`[社区模块] 删除二级评论${commentId}成功`);
+      console.log(`[社区模块] 删除二级评论${replyId}成功`);
       return comments;
     } catch (error) {
-      console.error(`[社区模块] 删除二级评论${commentId}失败`, error);
+      console.error(`[社区模块] 删除二级评论${replyId}失败`, error);
       return Promise.reject(error);
     }
   },
@@ -276,13 +289,14 @@ const actions = {
       comments = comments.map((comment) => {
         if (comment.id === commentId) {
           comment.replyList = [
-            ...comment.replyList,
+            ...(comment.replyList || []),
             {
               content,
               id: commentRes.data,
             },
           ];
         }
+        return comment;
       });
       console.log(`[社区模块] 添加二级评论成功`, commentRes.data);
       console.log(`[社区模块] 添加二级评论成功`);
