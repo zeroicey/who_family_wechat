@@ -13,6 +13,12 @@
       }
     },
     {
+      "path": "pages/task/index",
+      "style": {
+        "navigationBarTitleText": "任务"
+      }
+    },
+    {
       "path": "pages/login",
       "style": {
         "navigationBarTitleText": "登录",

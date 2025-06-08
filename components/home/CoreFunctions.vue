@@ -2,7 +2,7 @@
   <view class="core-functions">
     <view class="function-cards">
       <!-- 任务待办卡片 -->
-      <view class="function-card community-card" @tap="navigateTo('/pages/todo/index')">
+      <view class="function-card community-card" @tap="navigateTo('/pages/task/index')">
         <view class="card-header">
           <view class="card-content">
             <view class="card-icon-container community-icon">

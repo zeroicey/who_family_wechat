@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 
+import task from "@/store/modules/task";
 import user from "@/store/modules/user";
 import focus from "@/store/modules/focus";
 import community from "@/store/modules/community";
@@ -47,6 +48,7 @@ const store = createStore({
     focus,
     community,
     recruit,
+    task,
   },
 });
 
