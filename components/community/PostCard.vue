@@ -210,6 +210,10 @@ const imageLayoutClass = computed(() => {
 .post-title {
   font-size: 13px;
   color: #888;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .post-time {

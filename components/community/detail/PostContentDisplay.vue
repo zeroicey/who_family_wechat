@@ -31,6 +31,9 @@ const props = defineProps({
   color: #333;
   margin-bottom: 20rpx;
   line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .post-main-content {
