@@ -32,17 +32,17 @@ export const fetchSecondMoreComments = async (commentId, lastCommentId) => {
   );
 };
 
-export const addFirstComment = async (postId, content) => {
+export const addFirstComment = async (commentData) => {
   return request.post("/community/post-comment", {
-    id: postId,
-    content,
+    id: commentData.postId,
+    content: commentData.content,
   });
 };
 
-export const addSecondComment = async (commentId, content) => {
+export const addSecondComment = async (replyData) => {
   return request.post("/community/post-comment-reply", {
-    id: commentId,
-    content,
+    id: replyData.commentId,
+    content: replyData.content,
   });
 };
 

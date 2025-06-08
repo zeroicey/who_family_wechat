@@ -13,10 +13,10 @@
         <!-- 一级评论操作按钮 -->
         <view class="comment-actions">
           <view class="action-btn" @click="handleReply">
-            <text>回复</text>
+            <image class="action-icon" src="/static/images/chat.png" mode="aspectFit"></image>
           </view>
           <view class="action-btn delete-btn" @click="handleDelete">
-            <text>删除</text>
+            <image class="action-icon" src="/static/images/community/trash.png" mode="aspectFit"></image>
           </view>
         </view>
       </view>
@@ -42,7 +42,7 @@
             </view>
             <view class="reply-actions">
               <view class="action-btn delete-btn" @click="handleDeleteReply(reply)">
-                <text>删除</text>
+                <image class="action-icon" src="/static/images/community/trash.png" mode="aspectFit"></image>
               </view>
             </view>
           </view>
@@ -259,26 +259,55 @@ watch(
 
 .comment-actions {
   display: flex;
-  gap: 24rpx;
+  gap: 16rpx;
+  margin-top: 16rpx;
   margin-bottom: 16rpx;
 }
 
 .action-btn {
-  padding: 8rpx 16rpx;
-  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
   background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
   
   text {
     font-size: 24rpx;
     color: #6c757d;
   }
   
+  .action-icon {
+    width: 28rpx;
+    height: 28rpx;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+  
   &:active {
+    transform: scale(0.95);
     background-color: #e9ecef;
+    
+    .action-icon {
+      opacity: 1;
+    }
   }
   
   &.delete-btn {
+    background-color: #fff5f5;
+    
+    .action-icon {
+      filter: hue-rotate(0deg) saturate(1.5) brightness(0.8);
+    }
+    
+    &:active {
+      background-color: #fed7d7;
+    }
+    
     text {
       color: #dc3545;
     }
@@ -364,7 +393,8 @@ watch(
 
 .reply-actions {
   display: flex;
-  gap: 20rpx;
+  gap: 16rpx;
+  margin-top: 12rpx;
 }
 
 .load-more-replies-btn {

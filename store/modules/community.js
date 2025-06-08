@@ -257,22 +257,37 @@ const actions = {
     }
   },
 
-  async add_first_comment({ commit }, { postId, content, comments }) {
+  async add_first_comment({ commit }, { postId, content, comments, userData }) {
     try {
       console.log(`[社区模块] 开始添加一级评论`);
+
+      // 准备发送给API的完整数据
+      const commentData = {
+        postId,
+        content,
+        uid: userData.uid,
+        username: userData.username,
+        avatarId: userData.avatarId,
+        createTime: userData.createTime,
+      };
+
       // 调用API添加一级评论
-      const commentRes = await addFirstComment(postId, content);
+      const commentRes = await addFirstComment(commentData);
 
       comments = [
         ...comments,
         {
-          content,
           id: commentRes.data,
+          uid: userData.uid,
+          username: userData.username,
+          avatarId: userData.avatarId,
+          content,
+          createTime: userData.createTime,
+          replyCount: 0,
         },
       ];
 
       console.log(`[社区模块] 添加一级评论成功`, commentRes.data);
-      console.log(`[社区模块] 添加一级评论成功`);
       return comments;
     } catch (error) {
       console.error(`[社区模块] 添加一级评论失败`, error);
@@ -280,19 +295,37 @@ const actions = {
     }
   },
 
-  async add_second_comment({ commit }, { commentId, content, comments }) {
+  async add_second_comment(
+    { commit },
+    { commentId, content, comments, userData }
+  ) {
     try {
       console.log(`[社区模块] 开始添加二级评论`);
+
+      // 准备发送给API的完整数据
+      const replyData = {
+        commentId,
+        content,
+        uid: userData.uid,
+        username: userData.username,
+        avatarId: userData.avatarId,
+        createTime: userData.createTime,
+      };
+
       // 调用API添加二级评论
-      const commentRes = await addSecondComment(commentId, content);
+      const commentRes = await addSecondComment(replyData);
 
       comments = comments.map((comment) => {
         if (comment.id === commentId) {
           comment.replyList = [
             ...(comment.replyList || []),
             {
-              content,
               id: commentRes.data,
+              uid: userData.uid,
+              username: userData.username,
+              avatarId: userData.avatarId,
+              content: `回复：${content}`,
+              createTime: userData.createTime,
             },
           ];
         }

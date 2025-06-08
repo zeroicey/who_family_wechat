@@ -1,28 +1,21 @@
 <template>
   <view class="comment-section-container">
     <view class="section-title">全部评论</view>
-    
+
     <!-- 评论列表 -->
     <view v-if="comments && comments.length > 0" class="comment-list">
-      <comment-item 
-        v-for="comment in comments" 
-        :key="comment.id" 
-        :comment="comment"
-        @reply="handleReply"
-        @delete="handleDeleteComment"
-        @load-replies="handleLoadReplies"
-        @load-more-replies="handleLoadMoreReplies"
-      />
+      <comment-item v-for="comment in comments" :key="comment.id" :comment="comment" @reply="handleReply"
+        @delete="handleDeleteComment" @load-replies="handleLoadReplies" @load-more-replies="handleLoadMoreReplies" />
     </view>
     <view v-else class="empty-comments">
       <text>暂无评论，快来抢沙发吧！</text>
     </view>
-    
+
     <!-- 加载更多一级评论按钮 -->
     <view v-if="showLoadMoreComments" class="load-more-btn" @click="loadMoreComments">
       <text>加载更多评论</text>
     </view>
-    
+
     <!-- 评论输入框 -->
     <view class="comment-input-container">
       <!-- 回复提示 -->
@@ -30,20 +23,11 @@
         <text class="reply-text">回复 {{ replyTarget.username }}: {{ truncateText(replyTarget.content, 20) }}</text>
         <text class="cancel-reply" @click="cancelReply">×</text>
       </view>
-      
+
       <view class="input-wrapper">
-        <input 
-          v-model="commentText" 
-          type="text" 
-          :placeholder="replyTarget ? '回复评论...' : '写下你的评论...'" 
-          class="comment-input"
-          @confirm="submitComment"
-        />
-        <button 
-          class="submit-btn" 
-          :disabled="!commentText.trim()"
-          @click="submitComment"
-        >
+        <input v-model="commentText" type="text" :placeholder="replyTarget ? '回复评论...' : '写下你的评论...'"
+          class="comment-input" @confirm="submitComment" />
+        <button class="submit-btn" :disabled="!commentText.trim()" @click="submitComment">
           发送
         </button>
       </view>
@@ -102,7 +86,7 @@ const loadMoreComments = async () => {
   try {
     const lastCommentId = comments.value[comments.value.length - 1]?.id;
     if (!lastCommentId) return;
-    
+
     const moreComments = await store.dispatch('community/fetch_first_more_comments', {
       postId: props.postId,
       lastCommentId
@@ -127,14 +111,35 @@ const cancelReply = () => {
 // 提交评论
 const submitComment = async () => {
   if (!commentText.value.trim()) return;
-  
+
   try {
+    // 获取当前用户信息
+    const userInfo = await store.getters['user/get_user_info'];
+    const currentTime = new Date().toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).replace(/\//g, '-');
+
+    const userData = {
+      uid: userInfo.id,
+      username: userInfo.name,
+      avatarId: userInfo.avaterId,
+      createTime: currentTime
+    };
+    console.log(userData)
+
     if (replyTarget.value) {
       // 添加二级评论
       const updatedComments = await store.dispatch('community/add_second_comment', {
         commentId: replyTarget.value.id,
         content: commentText.value.trim(),
-        comments: comments.value
+        comments: comments.value,
+        userData: userData
       });
       comments.value = updatedComments;
     } else {
@@ -142,11 +147,12 @@ const submitComment = async () => {
       const updatedComments = await store.dispatch('community/add_first_comment', {
         postId: props.postId,
         content: commentText.value.trim(),
-        comments: comments.value
+        comments: comments.value,
+        userData: userData
       });
       comments.value = updatedComments;
     }
-    
+
     commentText.value = '';
     replyTarget.value = null;
     uni.showToast({ title: '评论成功', icon: 'success' });
@@ -175,7 +181,7 @@ const handleDeleteComment = async ({ commentId, isReply, parentCommentId }) => {
       });
       comments.value = comments.value.filter(comment => comment.id !== commentId);
     }
-    
+
     uni.showToast({ title: '删除成功', icon: 'success' });
   } catch (error) {
     console.error('删除失败:', error);
@@ -200,10 +206,10 @@ const handleLoadReplies = async (comment) => {
 // 处理加载更多回复
 const handleLoadMoreReplies = async (comment) => {
   try {
-    const lastReplyId = comment.replyList && comment.replyList.length > 0 
-      ? comment.replyList[comment.replyList.length - 1].id 
+    const lastReplyId = comment.replyList && comment.replyList.length > 0
+      ? comment.replyList[comment.replyList.length - 1].id
       : null;
-    
+
     const updatedComments = await store.dispatch('community/fetch_second_more_comments', {
       commentId: comment.id,
       lastCommentId: lastReplyId,
@@ -257,12 +263,12 @@ onMounted(() => {
   background-color: #f8f9fa;
   border-radius: 8rpx;
   border: 1px solid #e9ecef;
-  
+
   text {
     color: #6c757d;
     font-size: 28rpx;
   }
-  
+
   &:active {
     background-color: #e9ecef;
   }
@@ -282,13 +288,13 @@ onMounted(() => {
   background-color: #f8f9fa;
   border-radius: 8rpx;
   margin-bottom: 16rpx;
-  
+
   .reply-text {
     flex: 1;
     font-size: 26rpx;
     color: #6c757d;
   }
-  
+
   .cancel-reply {
     width: 40rpx;
     height: 40rpx;
@@ -300,7 +306,7 @@ onMounted(() => {
     font-size: 32rpx;
     color: #6c757d;
     font-weight: bold;
-    
+
     &:active {
       background-color: #ced4da;
     }
@@ -322,7 +328,7 @@ onMounted(() => {
   background-color: #f8f9fa;
   font-size: 28rpx;
   color: #333;
-  
+
   &:focus {
     border-color: #6e8efb;
     background-color: #ffffff;
@@ -330,22 +336,30 @@ onMounted(() => {
 }
 
 .submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 80rpx;
-  padding: 0 32rpx;
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  padding: 0 24rpx;
+  background: linear-gradient(135deg, #a8e6cf, #88d8c0);
   color: white;
   border: none;
   border-radius: 40rpx;
-  font-size: 28rpx;
+  font-size: 26rpx;
   font-weight: 500;
-  
+  box-shadow: 0 4rpx 12rpx rgba(168, 230, 207, 0.3);
+  transition: all 0.2s ease;
+  text-align: center;
+
   &:disabled {
-    background: #ced4da;
-    color: #6c757d;
+    background: #f1f3f4;
+    color: #9aa0a6;
+    box-shadow: none;
   }
-  
+
   &:not(:disabled):active {
-    opacity: 0.8;
+    transform: translateY(2rpx);
+    box-shadow: 0 2rpx 8rpx rgba(168, 230, 207, 0.4);
   }
 }
 </style>
