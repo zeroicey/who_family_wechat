@@ -63,8 +63,12 @@ const actions = {
 
   async add_task({ commit }, task) {
     try {
-      await addTask(task);
-      commit("add_task", task);
+      const taskRes = await addTask(task);
+      commit("add_task", {
+        id: taskRes.data,
+        status: "待完成",
+        title: task.title,
+      });
       console.log("[任务模块] 任务添加成功");
     } catch (error) {
       console.error("[任务模块] 任务添加失败", error);

@@ -1,62 +1,70 @@
 <template>
-  <view class="recruit-card" @click="handleClick">
-    <!-- 头部区域：logo + 标题组织标签 -->
-    <view class="recruit-card__header">
-      <!-- 组织logo -->
-      <view class="recruit-card__logo">
-        <image v-if="recruit.logoUrl" :src="recruit.logoUrl" class="recruit-card__logo-image" mode="aspectFill"></image>
-        <text v-else class="recruit-card__logo-text">{{ recruit.organizationName.charAt(0) }}</text>
-      </view>
-      
-      <!-- 右侧内容区域 -->
-      <view class="recruit-card__header-content">
-        <!-- 标题 -->
-        <view class="recruit-card__title">{{ recruit.name }}</view>
-        
-        <!-- 组织信息 -->
-        <view class="recruit-card__org">{{ recruit.organizationName }}</view>
-        
-        <!-- 标签 -->
-        <view class="recruit-card__tags">
-          <text class="recruit-card__tag recruit-card__tag--type">活动招募</text>
-          <text v-if="recruit.isHot === 'true'" class="recruit-card__tag recruit-card__tag--hot">热门</text>
+  <view class="recruit-card">
+    <view @click="handleClick">
+
+      <!-- 头部区域：logo + 标题组织标签 -->
+      <view class="recruit-card__header">
+        <!-- 组织logo -->
+        <view class="recruit-card__logo">
+          <image v-if="recruit.logoUrl" :src="recruit.logoUrl" class="recruit-card__logo-image" mode="aspectFill">
+          </image>
+          <text v-else class="recruit-card__logo-text">{{ recruit.organizationName.charAt(0) }}</text>
+        </view>
+
+        <!-- 右侧内容区域 -->
+        <view class="recruit-card__header-content">
+          <!-- 标题 -->
+          <view class="recruit-card__title">{{ recruit.name }}</view>
+
+          <!-- 组织信息 -->
+          <view class="recruit-card__org">{{ recruit.organizationName }}</view>
+
+          <!-- 标签 -->
+          <view class="recruit-card__tags">
+            <text class="recruit-card__tag recruit-card__tag--type">活动招募</text>
+            <text v-if="recruit.isHot === 'true'" class="recruit-card__tag recruit-card__tag--hot">热门</text>
+          </view>
+        </view>
+
+        <!-- 右上角信息区域 -->
+        <view class="recruit-card__corner-info">
+          <text v-if="recruit.isRecommended === 'true'" class="recruit-card__recommend-badge">推荐</text>
+          <view v-if="recruit.location" class="recruit-card__location">
+            <text class="recruit-card__location-icon">📍</text>
+            <text class="recruit-card__location-text">{{ recruit.location }}</text>
+          </view>
         </view>
       </view>
-      
-      <!-- 右上角信息区域 -->
-      <view class="recruit-card__corner-info">
-        <text v-if="recruit.isRecommended === 'true'" class="recruit-card__recommend-badge">推荐</text>
-        <view v-if="recruit.location" class="recruit-card__location">
-          <text class="recruit-card__location-icon">📍</text>
-          <text class="recruit-card__location-text">{{ recruit.location }}</text>
+
+      <!-- 描述文本 -->
+      <view class="recruit-card__desc">{{ recruit.description }}</view>
+
+      <!-- 统计信息 -->
+      <view class="recruit-card__footer">
+        <view class="recruit-card__positions">
+          <view class="recruit-card__positions-item">
+            <text class="recruit-card__positions-label">招募</text>
+            <text class="recruit-card__positions-value">{{ recruit.positions }}人</text>
+          </view>
+          <view class="recruit-card__positions-item">
+            <text class="recruit-card__positions-label">已申请</text>
+            <text class="recruit-card__positions-value">12人</text>
+          </view>
+        </view>
+        <view class="recruit-card__deadline">
+          <text class="recruit-card__deadline-label">截止日期</text>
+          <text class="recruit-card__deadline-value">{{ formatTime(recruit.endTime) }}</text>
         </view>
       </view>
     </view>
-    
-    <!-- 描述文本 -->
-    <view class="recruit-card__desc">{{ recruit.description }}</view>
-    
-    <!-- 统计信息 -->
-    <view class="recruit-card__footer">
-      <view class="recruit-card__positions">
-        <view class="recruit-card__positions-item">
-          <text class="recruit-card__positions-label">招募</text>
-          <text class="recruit-card__positions-value">{{ recruit.positions }}人</text>
-        </view>
-        <view class="recruit-card__positions-item">
-          <text class="recruit-card__positions-label">已申请</text>
-          <text class="recruit-card__positions-value">12人</text>
-        </view>
-      </view>
-      <view class="recruit-card__deadline">
-        <text class="recruit-card__deadline-label">截止日期</text>
-        <text class="recruit-card__deadline-value">{{ formatTime(recruit.endTime) }}</text>
-      </view>
-    </view>
-    
+
     <!-- 申请按钮 -->
-    <view class="recruit-card__btn" @click.stop="handleClick">
-      <text class="recruit-card__btn-text">立即申请</text>
+    <view 
+      class="recruit-card__btn" 
+      :class="{ 'recruit-card__btn--disabled': recruit.isDeliver === 1 }"
+      @click.stop="handleSubmitClick"
+    >
+      <text class="recruit-card__btn-text">{{ recruit.isDeliver === 1 ? '已投递' : '立即申请' }}</text>
     </view>
   </view>
 </template>
@@ -78,6 +86,20 @@ const handleClick = () => {
   emit('click', props.recruit.id);
 };
 
+const handleSubmitClick = async () => {
+  // 如果已投递，则不执行任何操作
+  if (props.recruit.isDeliver === 1) {
+    uni.showToast({
+      title: '您已投递过该职位',
+      icon: 'none'
+    });
+    return;
+  }
+  
+  // 处理提交逻辑
+  await store.dispatch("recruit/delivery_job", props.recruit.id)
+};
+
 const formatTime = (timeString) => {
   const date = new Date(timeString);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -96,19 +118,19 @@ const formatTime = (timeString) => {
   position: relative;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
-  
+
   &:active {
     transform: scale(0.98);
     box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
   }
-  
+
   &__header {
     display: flex;
     align-items: flex-start;
     margin-bottom: 32rpx;
     position: relative;
   }
-  
+
   &__logo {
     width: 120rpx;
     height: 120rpx;
@@ -122,11 +144,12 @@ const formatTime = (timeString) => {
     box-shadow: 0 8rpx 24rpx rgba(168, 237, 234, 0.3);
     position: relative;
     overflow: hidden;
-    
+
     &-image {
       width: 100%;
       height: 100%;
-      border-radius: 20rpx; /* 与父元素保持一致的圆角 */
+      border-radius: 20rpx;
+      /* 与父元素保持一致的圆角 */
     }
 
     &::before {
@@ -136,27 +159,27 @@ const formatTime = (timeString) => {
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%);
       border-radius: 20rpx;
     }
-    
+
     &-text {
       color: #fff;
       font-size: 52rpx;
       font-weight: 700;
-      text-shadow: 0 2rpx 8rpx rgba(0,0,0,0.2);
+      text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
       position: relative;
       z-index: 1;
     }
   }
-  
+
   &__header-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  
+
   &__title {
     font-size: 36rpx;
     font-weight: 700;
@@ -166,7 +189,7 @@ const formatTime = (timeString) => {
     text-align: left;
     letter-spacing: -0.5rpx;
   }
-  
+
   &__org {
     font-size: 26rpx;
     color: #8a8a8a;
@@ -175,11 +198,12 @@ const formatTime = (timeString) => {
     font-weight: 500;
     display: flex;
     align-items: center;
-    
+
     &-image {
       width: 100%;
       height: 100%;
-      border-radius: 20rpx; /* 与父元素保持一致的圆角 */
+      border-radius: 20rpx;
+      /* 与父元素保持一致的圆角 */
     }
 
     &::before {
@@ -191,13 +215,13 @@ const formatTime = (timeString) => {
       margin-right: 12rpx;
     }
   }
-  
+
   &__tags {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
   }
-  
+
   &__corner-info {
     position: absolute;
     top: 0;
@@ -207,7 +231,7 @@ const formatTime = (timeString) => {
     align-items: flex-end;
     gap: 12rpx;
   }
-  
+
   &__recommend-badge {
     background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
     color: #fff;
@@ -218,7 +242,7 @@ const formatTime = (timeString) => {
     box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
     transform: scale(0.9);
   }
-  
+
   &__location {
     display: flex;
     align-items: center;
@@ -227,12 +251,12 @@ const formatTime = (timeString) => {
     border-radius: 16rpx;
     padding: 6rpx 12rpx;
     backdrop-filter: blur(10rpx);
-    
+
     &-icon {
       font-size: 20rpx;
       margin-right: 6rpx;
     }
-    
+
     &-text {
       font-size: 20rpx;
       color: #666;
@@ -243,7 +267,7 @@ const formatTime = (timeString) => {
       white-space: nowrap;
     }
   }
-  
+
   &__tag {
     font-size: 24rpx;
     padding: 6rpx 20rpx;
@@ -251,18 +275,18 @@ const formatTime = (timeString) => {
     margin-right: 16rpx;
     margin-bottom: 8rpx;
     font-weight: 500;
-    
+
     &--type {
       background-color: #e6f7ff;
       color: #1890ff;
     }
-    
+
     &--hot {
       background-color: #fff2e8;
       color: #fa541c;
     }
   }
-  
+
   &__desc {
     font-size: 28rpx;
     color: #666;
@@ -276,7 +300,7 @@ const formatTime = (timeString) => {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
   &__footer {
     display: flex;
     justify-content: space-between;
@@ -286,47 +310,47 @@ const formatTime = (timeString) => {
     padding: 24rpx;
     margin-bottom: 36rpx;
   }
-  
+
   &__positions {
     display: flex;
-    
+
     &-item {
       display: flex;
       flex-direction: column;
       margin-right: 40rpx;
     }
-    
+
     &-label {
       font-size: 24rpx;
       color: #999;
       margin-bottom: 8rpx;
     }
-    
+
     &-value {
       font-size: 28rpx;
       color: #333;
       font-weight: 500;
     }
   }
-  
+
   &__deadline {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    
+
     &-label {
       font-size: 24rpx;
       color: #999;
       margin-bottom: 8rpx;
     }
-    
+
     &-value {
       font-size: 28rpx;
       color: #fa8c16;
       font-weight: 500;
     }
   }
-  
+
   &__btn {
     height: 80rpx;
     border-radius: 40rpx;
@@ -336,13 +360,29 @@ const formatTime = (timeString) => {
     justify-content: center;
     transition: all 0.3s;
     box-shadow: 0 8rpx 24rpx rgba(24, 144, 255, 0.3);
-    
+
     &:active {
       background: linear-gradient(90deg, #0c80f0, #1890ff);
       transform: translateY(4rpx);
       box-shadow: 0 4rpx 12rpx rgba(24, 144, 255, 0.3);
     }
-    
+
+    &--disabled {
+      background: #d9d9d9;
+      box-shadow: none;
+      cursor: not-allowed;
+      
+      &:active {
+        background: #d9d9d9;
+        transform: none;
+        box-shadow: none;
+      }
+      
+      .recruit-card__btn-text {
+        color: #999;
+      }
+    }
+
     &-text {
       color: #fff;
       font-size: 32rpx;
