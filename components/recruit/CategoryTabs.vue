@@ -2,13 +2,8 @@
   <view class="category-tabs">
     <scroll-view scroll-x="true" class="tabs-scroll">
       <view class="tabs-container">
-        <view 
-          v-for="(type, index) in recruitClasses" 
-          :key="index"
-          class="tab-item"
-          :class="{ active: selectedTypeIndex === index }"
-          @click="selectType(index)"
-        >
+        <view v-for="(type, index) in recruitClasses" :key="index" class="tab-item"
+          :class="{ active: selectedTypeIndex === index }" @click="selectType(index)">
           {{ type.name }}
         </view>
       </view>
@@ -47,11 +42,7 @@ const selectType = (index) => {
 .category-tabs {
   background-color: #fff;
   border-bottom: 1px solid #f0f0f0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
+  position: sticky;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
 }
 

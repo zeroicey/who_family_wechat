@@ -4,18 +4,9 @@
     <CategoryTabs :selected-type-index="selectedTypeIndex" @select-type="selectType" />
 
     <!-- 招聘列表 -->
-    <scroll-view class="recruit-list" scroll-y="true" @scrolltolower="onLoadMore" :lower-threshold="100">
+    <scroll-view class="recruit-list" scroll-y="true">
       <view class="list-container">
         <RecruitCard v-for="recruit in filteredRecruits" :key="recruit.id" :recruit="recruit" @click="goToDetail" />
-
-        <!-- 加载更多提示 -->
-        <view v-if="loading" class="loading-tip">
-          <text>加载中...</text>
-        </view>
-
-        <view v-if="noMore" class="no-more-tip">
-          <text>没有更多了</text>
-        </view>
       </view>
     </scroll-view>
   </view>
@@ -33,8 +24,6 @@ const store = useStore();
 
 // 响应式数据
 const selectedTypeIndex = ref(0);
-const loading = ref(false);
-const noMore = ref(false);
 
 // 计算属性
 const recruits = computed(() => store.getters['recruit/get_recruits']);
@@ -61,30 +50,9 @@ const selectType = (index) => {
   selectedTypeIndex.value = index;
 };
 
-const onLoadMore = async () => {
-  if (loading.value || noMore.value) return;
 
-  loading.value = true;
-  try {
-    const beforeLength = recruits.value.length;
-    await store.dispatch('recruit/fetch_more_recruits');
-    const afterLength = recruits.value.length;
-
-    if (beforeLength === afterLength) {
-      noMore.value = true;
-    }
-  } catch (error) {
-    console.error('加载更多失败:', error);
-  } finally {
-    loading.value = false;
-  }
-};
 
 onPullDownRefresh(async () => {
-  // 重置状态
-  noMore.value = false;
-  loading.value = false;
-
   // 重新获取第一页数据
   await store.dispatch('recruit/fetch_first_recruits')
     .then(() => {
@@ -133,7 +101,6 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
-  padding-top: 120rpx;
   /* 为固定的分类栏留出空间 */
 }
 
@@ -146,12 +113,5 @@ onMounted(async () => {
   padding: 20rpx;
 }
 
-/* 加载提示 */
-.loading-tip,
-.no-more-tip {
-  text-align: center;
-  padding: 40rpx;
-  color: #999;
-  font-size: 28rpx;
-}
+
 </style>

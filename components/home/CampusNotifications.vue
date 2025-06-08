@@ -6,8 +6,7 @@
 
     <view class="notification-list">
       <scroll-view class="notification-scroll" scroll-y>
-        <view class="notification-item" v-for="(item, index) in notifications" :key="index"
-          @tap="viewNotification(item)">
+        <view class="notification-item" v-for="(item, index) in notifications" :key="index">
           <view class="tag-container">
             <view class="notification-tag" :style="{ backgroundColor: getTagColor(item.type) }">
               {{ item.typeText }}
