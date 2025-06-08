@@ -7,7 +7,7 @@
 
     <view class="form-item">
       <text class="form-label">内容</text>
-      <textarea class="form-textarea" v-model="content" placeholder="分享新鲜事..." />
+      <textarea class="form-textarea" v-model="content" placeholder="分享新鲜事..." maxlength="10000" />
     </view>
 
     <view class="form-item">
@@ -112,6 +112,10 @@ const submitPost = async () => {
   }
   if (!content.value.trim()) {
     uni.showToast({ title: "请输入内容", icon: "none" });
+    return;
+  }
+  if (content.value.length > 10000) {
+    uni.showToast({ title: "内容不能超过10000个字", icon: "none" });
     return;
   }
 

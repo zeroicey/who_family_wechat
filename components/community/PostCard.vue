@@ -19,6 +19,7 @@
       <!-- 内容区域 -->
       <view class="post-content">
         <text class="content-text">{{ post.content }}</text>
+        <text v-if="isContentTruncated" class="view-more-text">... 点击查看全部</text>
       </view>
 
       <!-- 图片区域 -->
@@ -143,6 +144,11 @@ const imageLayoutClass = computed(() => {
   if (count === 3) return "image-triple";
   return "image-grid";
 });
+
+// 判断内容是否被截断（简单估算：超过约150个字符认为可能被截断）
+const isContentTruncated = computed(() => {
+  return props.post.content && props.post.content.length > 150;
+});
 </script>
 
 <style scoped>
@@ -232,6 +238,17 @@ const imageLayoutClass = computed(() => {
   line-height: 1.5;
   color: #333;
   word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.view-more-text {
+  font-size: 13px;
+  color: #007AFF;
+  margin-top: 4px;
 }
 
 /* 图片区域样式 */
