@@ -116,6 +116,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
+  padding-top: 120rpx; /* 为固定的分类栏留出空间 */
 }
 
 /* 招聘列表样式 */

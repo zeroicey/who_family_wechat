@@ -47,9 +47,11 @@ const selectType = (index) => {
 .category-tabs {
   background-color: #fff;
   border-bottom: 1px solid #f0f0f0;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
 }
 
