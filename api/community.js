@@ -48,17 +48,13 @@ export const addSecondComment = async (replyData) => {
 
 export const deleteFirstComment = async (commentId) => {
   return request.delete("/community/post-comment", {
-    data: {
-      id: commentId,
-    },
+    id: commentId,
   });
 };
 
 export const deleteSecondComment = async (commentId) => {
   return request.delete("/community/post-comment-reply", {
-    data: {
-      id: commentId,
-    },
+    id: commentId,
   });
 };
 
