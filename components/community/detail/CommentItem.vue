@@ -24,7 +24,7 @@
     
     <!-- 查看回复按钮 -->
     <view v-if="comment.replyCount > 0 && !showReplies" class="view-replies-btn" @click="handleViewReplies">
-      <text>查看 {{ comment.replyCount }} 条回复</text>
+      <text>查看回复</text>
     </view>
     
     <!-- 二级评论列表 -->
@@ -337,6 +337,7 @@ watch(
 .view-replies-btn {
   padding: 12rpx 0;
   margin-bottom: 16rpx;
+  margin-left: 100rpx; /* 与头像和间距宽度一致，80rpx + 20rpx */
   
   text {
     font-size: 26rpx;
