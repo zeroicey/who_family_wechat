@@ -15,7 +15,7 @@
           <view class="action-btn" @click="handleReply">
             <image class="action-icon" src="/static/images/chat.png" mode="aspectFit"></image>
           </view>
-          <view class="action-btn delete-btn" @click="handleDelete">
+          <view class="action-btn delete-btn" v-if="canDeleteComment" @click="handleDelete">
             <image class="action-icon" src="/static/images/community/trash.png" mode="aspectFit"></image>
           </view>
         </view>
@@ -41,7 +41,7 @@
               <text>{{ reply.content }}</text>
             </view>
             <view class="reply-actions">
-              <view class="action-btn delete-btn" @click="handleDeleteReply(reply)">
+              <view class="action-btn delete-btn" v-if="canDeleteReply(reply)" @click="handleDeleteReply(reply)">
                 <image class="action-icon" src="/static/images/community/trash.png" mode="aspectFit"></image>
               </view>
             </view>
@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted, watch, computed } from 'vue'
 import { useStore } from 'vuex'
 
 // 定义props
@@ -138,9 +138,25 @@ const handleReply = () => {
   emit('reply', props.comment)
 }
 
+const currentUser = store.getters['user/get_user_info'];
+
+// 计算属性，判断是否可以删除一级评论
+const canDeleteComment = computed(() => {
+  return currentUser && currentUser.id === props.comment.uid;
+});
+
+// 计算属性，判断是否可以删除二级评论
+const canDeleteReply = (reply) => {
+  return currentUser && currentUser.id === reply.uid;
+};
+
 // 处理删除
 const handleDelete = () => {
-  emit('delete', props.comment)
+  if (canDeleteComment.value) {
+    emit('delete', props.comment)
+  } else {
+    uni.showToast({ title: '无法删除他人评论', icon: 'none' });
+  }
 }
 
 // 处理查看回复
@@ -151,10 +167,14 @@ const handleViewReplies = () => {
 
 // 处理删除回复
 const handleDeleteReply = (reply) => {
-  emit('delete-reply', {
-    parentComment: props.comment,
-    reply: reply
-  })
+  if (canDeleteReply(reply)) {
+    emit('delete-reply', {
+      parentComment: props.comment,
+      reply: reply
+    })
+  } else {
+    uni.showToast({ title: '无法删除他人评论', icon: 'none' });
+  }
 }
 
 // 处理加载更多回复

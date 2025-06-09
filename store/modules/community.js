@@ -275,7 +275,6 @@ const actions = {
       const commentRes = await addFirstComment(commentData);
 
       comments = [
-        ...comments,
         {
           id: commentRes.data,
           uid: userData.uid,
@@ -285,6 +284,7 @@ const actions = {
           createTime: userData.createTime,
           replyCount: 0,
         },
+        ...comments,
       ];
 
       console.log(`[社区模块] 添加一级评论成功`, commentRes.data);
@@ -318,7 +318,6 @@ const actions = {
       comments = comments.map((comment) => {
         if (comment.id === commentId) {
           comment.replyList = [
-            ...(comment.replyList || []),
             {
               id: commentRes.data,
               uid: userData.uid,
@@ -327,6 +326,7 @@ const actions = {
               content: `回复：${content}`,
               createTime: userData.createTime,
             },
+            ...(comment.replyList || []),
           ];
         }
         return comment;
