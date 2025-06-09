@@ -21,12 +21,12 @@
         </view>
       </view>
     </view>
-    
+
     <!-- 查看回复按钮 -->
     <view v-if="comment.replyCount > 0 && !showReplies" class="view-replies-btn" @click="handleViewReplies">
       <text>查看回复</text>
     </view>
-    
+
     <!-- 二级评论列表 -->
     <view v-if="showReplies && comment.replyList && comment.replyList.length > 0" class="reply-list">
       <view v-for="reply in comment.replyList" :key="reply.id" class="reply-item">
@@ -48,7 +48,7 @@
           </view>
         </view>
       </view>
-      
+
       <!-- 加载更多二级评论 -->
       <view v-if="comment.replyList.length >= 10" class="load-more-replies-btn" @click="handleLoadMoreReplies">
         <text>加载更多回复</text>
@@ -83,22 +83,22 @@ const replyAvatars = reactive({})
 // 格式化时间
 const formatTime = (timeString) => {
   if (!timeString) return ''
-  
+
   // iOS兼容性处理
   const formattedTimeString = timeString.replace(/-/g, '/')
   const date = new Date(formattedTimeString)
   const now = new Date()
   const diff = now - date
-  
+
   const minutes = Math.floor(diff / (1000 * 60))
   const hours = Math.floor(diff / (1000 * 60 * 60))
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  
+
   if (minutes < 1) return '刚刚'
   if (minutes < 60) return `${minutes}分钟前`
   if (hours < 24) return `${hours}小时前`
   if (days < 7) return `${days}天前`
-  
+
   return date.toLocaleDateString()
 }
 
@@ -120,7 +120,7 @@ const fetchAvatar = async () => {
 // 获取二级评论头像
 const getUserAvatar = async (avatarId, username) => {
   if (!avatarId || !username) return ''
-  
+
   try {
     const avatarUrl = await store.dispatch('community/fetch_post_user_avatar', {
       avatarId: avatarId,
@@ -186,7 +186,7 @@ const handleLoadMoreReplies = () => {
 onMounted(async () => {
   // 加载一级评论作者头像
   await fetchAvatar()
-  
+
   // 加载二级评论头像
   if (props.comment.replyList && props.comment.replyList.length > 0) {
     for (const reply of props.comment.replyList) {
@@ -268,7 +268,7 @@ watch(
 
 .comment-content {
   margin-bottom: 12rpx;
-  
+
   text {
     font-size: 28rpx;
     line-height: 1.6;
@@ -295,39 +295,39 @@ watch(
   border: none;
   transition: all 0.2s ease;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
-  
+
   text {
     font-size: 24rpx;
     color: #6c757d;
   }
-  
+
   .action-icon {
     width: 28rpx;
     height: 28rpx;
     opacity: 0.7;
     transition: opacity 0.2s ease;
   }
-  
+
   &:active {
     transform: scale(0.95);
     background-color: #e9ecef;
-    
+
     .action-icon {
       opacity: 1;
     }
   }
-  
+
   &.delete-btn {
     background-color: #fff5f5;
-    
+
     .action-icon {
       filter: hue-rotate(0deg) saturate(1.5) brightness(0.8);
     }
-    
+
     &:active {
       background-color: #fed7d7;
     }
-    
+
     text {
       color: #dc3545;
     }
@@ -337,13 +337,14 @@ watch(
 .view-replies-btn {
   padding: 12rpx 0;
   margin-bottom: 16rpx;
-  margin-left: 100rpx; /* 与头像和间距宽度一致，80rpx + 20rpx */
-  
+  margin-left: 100rpx;
+  /* 与头像和间距宽度一致，80rpx + 20rpx */
+
   text {
     font-size: 26rpx;
     color: #6e8efb;
   }
-  
+
   &:active {
     opacity: 0.7;
   }
@@ -358,7 +359,7 @@ watch(
 .reply-item {
   padding: 16rpx 0;
   border-bottom: 1px solid #f8f9fa;
-  
+
   &:last-child {
     border-bottom: none;
   }
@@ -403,7 +404,7 @@ watch(
 
 .reply-content {
   margin-bottom: 10rpx;
-  
+
   text {
     font-size: 26rpx;
     line-height: 1.5;
@@ -425,12 +426,12 @@ watch(
   background-color: #f8f9fa;
   border-radius: 8rpx;
   border: 1px solid #e9ecef;
-  
+
   text {
     color: #6c757d;
     font-size: 26rpx;
   }
-  
+
   &:active {
     background-color: #e9ecef;
   }

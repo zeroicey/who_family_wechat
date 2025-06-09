@@ -230,6 +230,7 @@ const actions = {
       comments = comments.filter((comment) => comment.id !== commentId);
 
       console.log(`[社区模块] 删除一级评论${commentId}成功`);
+      return comments;
     } catch (error) {
       console.error(`[社区模块] 删除一级评论${commentId}失败`, error);
       return Promise.reject(error);

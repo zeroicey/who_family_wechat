@@ -22,7 +22,8 @@
     <!-- 评论列表 -->
     <view v-if="comments && comments.length > 0" class="comment-list">
       <comment-item v-for="comment in comments" :key="comment.id" :comment="comment" @reply="handleReply"
-        @delete="handleDeleteComment" @load-replies="handleLoadReplies" @load-more-replies="handleLoadMoreReplies" />
+        @delete="handleDeleteComment" @delete-reply="handleDeleteReplyComment" @load-replies="handleLoadReplies"
+        @load-more-replies="handleLoadMoreReplies" />
     </view>
     <view v-else class="empty-comments">
       <text>暂无评论，快来抢沙发吧！</text>
@@ -163,24 +164,14 @@ const submitComment = async () => {
 };
 
 // 处理删除评论
-const handleDeleteComment = async ({ commentId, isReply, parentCommentId }) => {
+const handleDeleteComment = async (delete_comment) => {
   try {
-    if (isReply) {
-      // 删除二级评论
-      const updatedComments = await store.dispatch('community/delete_second_comment', {
-        comments: comments.value,
-        commentId: parentCommentId,
-        replyId: commentId
-      });
-      comments.value = updatedComments;
-    } else {
-      // 删除一级评论
-      await store.dispatch('community/delete_first_comment', {
-        comments: comments.value,
-        commentId
-      });
-      comments.value = comments.value.filter(comment => comment.id !== commentId);
-    }
+    // 删除一级评论
+    const updatedComments = await store.dispatch('community/delete_first_comment', {
+      comments: comments.value,
+      commentId: delete_comment.id
+    });
+    comments.value = updatedComments;
 
     uni.showToast({ title: '删除成功', icon: 'success' });
   } catch (error) {
@@ -188,6 +179,22 @@ const handleDeleteComment = async ({ commentId, isReply, parentCommentId }) => {
     uni.showToast({ title: '删除失败', icon: 'none' });
   }
 };
+
+const handleDeleteReplyComment = async ({ parentComment, reply }) => {
+  try {
+    // 删除二级评论
+    const updatedComments = await store.dispatch('community/delete_second_comment', {
+      comments: comments.value,
+      commentId: parentComment.id,
+      replyId: reply.id
+    });
+    comments.value = updatedComments;
+    uni.showToast({ title: '删除成功', icon: 'success' });
+  } catch (error) {
+    console.error('删除失败:', error);
+    uni.showToast({ title: '删除失败', icon: 'none' });
+  }
+}
 
 // 处理加载回复
 const handleLoadReplies = async (comment) => {
