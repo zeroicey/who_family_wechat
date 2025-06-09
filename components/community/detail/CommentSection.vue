@@ -1,6 +1,11 @@
 <template>
   <view class="comment-section-container">
-    <view class="section-title">全部评论</view>
+    <view class="section-header">
+      <view class="section-title">全部评论</view>
+      <view class="refresh-btn" @click="refreshComments">
+        <text class="refresh-icon">↻</text>
+      </view>
+    </view>
 
     <!-- 评论输入框 -->
     <view class="comment-input-container">
@@ -79,6 +84,24 @@ const loadInitialComments = async () => {
   } catch (error) {
     console.error('加载评论失败:', error);
     uni.showToast({ title: '加载评论失败', icon: 'none' });
+  }
+};
+
+// 刷新评论
+const refreshComments = async () => {
+  try {
+    uni.showLoading({ title: '刷新中...' });
+    const commentsData = await store.dispatch('community/fetch_first_comments', {
+      postId: props.postId,
+      comments: []
+    });
+    comments.value = commentsData;
+    uni.hideLoading();
+    uni.showToast({ title: '刷新成功', icon: 'success' });
+  } catch (error) {
+    uni.hideLoading();
+    console.error('刷新评论失败:', error);
+    uni.showToast({ title: '刷新失败', icon: 'none' });
   }
 };
 
@@ -243,13 +266,42 @@ onMounted(() => {
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1px solid #f0f0f0;
+}
+
 .section-title {
   font-size: 32rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 24rpx;
-  padding-bottom: 16rpx;
-  border-bottom: 1px solid #f0f0f0;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60rpx;
+  height: 60rpx;
+  background-color: #f8f9fa;
+  border-radius: 50%;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+
+  .refresh-icon {
+    font-size: 32rpx;
+    color: #6c757d;
+    font-weight: bold;
+  }
+
+  &:active {
+    background-color: #e9ecef;
+    transform: rotate(180deg);
+  }
 }
 
 .comment-list {
