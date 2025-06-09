@@ -50,7 +50,7 @@
       </view>
 
       <!-- 加载更多二级评论 -->
-      <view v-if="comment.replyList.length >= 10" class="load-more-replies-btn" @click="handleLoadMoreReplies">
+      <view v-if="comment.replyList.length >= 5" class="load-more-replies-btn" @click="handleLoadMoreReplies">
         <text>加载更多回复</text>
       </view>
     </view>

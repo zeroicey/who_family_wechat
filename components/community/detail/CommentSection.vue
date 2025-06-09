@@ -239,6 +239,7 @@ const handleLoadMoreReplies = async (comment) => {
     const lastReplyId = comment.replyList && comment.replyList.length > 0
       ? comment.replyList[comment.replyList.length - 1].id
       : null;
+    console.log(comment.id)
 
     const updatedComments = await store.dispatch('community/fetch_second_more_comments', {
       commentId: comment.id,

@@ -326,7 +326,7 @@ const actions = {
               uid: userData.uid,
               username: userData.username,
               avatarId: userData.avatarId,
-              content: `回复：${content}`,
+              content: content,
               createTime: userData.createTime,
             },
             ...(comment.replyList || []),
