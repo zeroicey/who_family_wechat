@@ -65,7 +65,8 @@
     {
       "path": "pages/recruit/detail",
       "style": {
-        "navigationBarTitleText": "招聘详情"
+        "navigationBarTitleText": "招聘详情",
+        "enablePullDownRefresh": true
       }
     },
     {

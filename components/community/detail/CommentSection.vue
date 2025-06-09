@@ -2,20 +2,6 @@
   <view class="comment-section-container">
     <view class="section-title">全部评论</view>
 
-    <!-- 评论列表 -->
-    <view v-if="comments && comments.length > 0" class="comment-list">
-      <comment-item v-for="comment in comments" :key="comment.id" :comment="comment" @reply="handleReply"
-        @delete="handleDeleteComment" @load-replies="handleLoadReplies" @load-more-replies="handleLoadMoreReplies" />
-    </view>
-    <view v-else class="empty-comments">
-      <text>暂无评论，快来抢沙发吧！</text>
-    </view>
-
-    <!-- 加载更多一级评论按钮 -->
-    <view v-if="showLoadMoreComments" class="load-more-btn" @click="loadMoreComments">
-      <text>加载更多评论</text>
-    </view>
-
     <!-- 评论输入框 -->
     <view class="comment-input-container">
       <!-- 回复提示 -->
@@ -31,6 +17,20 @@
           发送
         </button>
       </view>
+    </view>
+
+    <!-- 评论列表 -->
+    <view v-if="comments && comments.length > 0" class="comment-list">
+      <comment-item v-for="comment in comments" :key="comment.id" :comment="comment" @reply="handleReply"
+        @delete="handleDeleteComment" @load-replies="handleLoadReplies" @load-more-replies="handleLoadMoreReplies" />
+    </view>
+    <view v-else class="empty-comments">
+      <text>暂无评论，快来抢沙发吧！</text>
+    </view>
+
+    <!-- 加载更多一级评论按钮 -->
+    <view v-if="showLoadMoreComments" class="load-more-btn" @click="loadMoreComments">
+      <text>加载更多评论</text>
     </view>
   </view>
 </template>
@@ -275,9 +275,9 @@ onMounted(() => {
 }
 
 .comment-input-container {
-  margin-top: 24rpx;
-  padding-top: 24rpx;
-  border-top: 1px solid #f0f0f0;
+  margin-bottom: 24rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .reply-target {
