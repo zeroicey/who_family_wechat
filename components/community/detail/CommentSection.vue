@@ -1,11 +1,6 @@
 <template>
   <view class="comment-section-container">
-    <view class="section-header">
-      <view class="section-title">全部评论</view>
-      <view class="refresh-btn" @click="refreshComments">
-        <text class="refresh-icon">↻</text>
-      </view>
-    </view>
+    <view class="section-title">全部评论</view>
 
     <!-- 评论输入框 -->
     <view class="comment-input-container">
@@ -17,7 +12,7 @@
 
       <view class="input-wrapper">
         <input v-model="commentText" type="text" :placeholder="replyTarget ? '回复评论...' : '写下你的评论...'"
-          class="comment-input" @confirm="submitComment" />
+          class="comment-input" @confirm="submitComment" maxlength="200" />
         <button class="submit-btn" :disabled="!commentText.trim()" @click="submitComment">
           发送
         </button>
@@ -84,24 +79,6 @@ const loadInitialComments = async () => {
   } catch (error) {
     console.error('加载评论失败:', error);
     uni.showToast({ title: '加载评论失败', icon: 'none' });
-  }
-};
-
-// 刷新评论
-const refreshComments = async () => {
-  try {
-    uni.showLoading({ title: '刷新中...' });
-    const commentsData = await store.dispatch('community/fetch_first_comments', {
-      postId: props.postId,
-      comments: []
-    });
-    comments.value = commentsData;
-    uni.hideLoading();
-    uni.showToast({ title: '刷新成功', icon: 'success' });
-  } catch (error) {
-    uni.hideLoading();
-    console.error('刷新评论失败:', error);
-    uni.showToast({ title: '刷新失败', icon: 'none' });
   }
 };
 
@@ -267,42 +244,13 @@ onMounted(() => {
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24rpx;
-  padding-bottom: 16rpx;
-  border-bottom: 1px solid #f0f0f0;
-}
-
 .section-title {
   font-size: 32rpx;
   font-weight: bold;
   color: #333;
-}
-
-.refresh-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60rpx;
-  height: 60rpx;
-  background-color: #f8f9fa;
-  border-radius: 50%;
-  border: 1px solid #e9ecef;
-  transition: all 0.2s ease;
-
-  .refresh-icon {
-    font-size: 32rpx;
-    color: #6c757d;
-    font-weight: bold;
-  }
-
-  &:active {
-    background-color: #e9ecef;
-    transform: rotate(180deg);
-  }
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .comment-list {
@@ -366,6 +314,8 @@ onMounted(() => {
     font-size: 32rpx;
     color: #6c757d;
     font-weight: bold;
+    line-height: 1;
+    text-align: center;
 
     &:active {
       background-color: #ced4da;
@@ -400,26 +350,27 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 80rpx;
-  padding: 0 24rpx;
-  background: linear-gradient(135deg, #a8e6cf, #88d8c0);
+  padding: 0 30rpx; /* 稍微增加左右padding，让文字更舒展 */
+  background: linear-gradient(135deg, #6e8efb, #a777e3); /* 更改为蓝紫色渐变 */
   color: white;
-  border: none;
+  border: none; /* 确保没有边框 */
   border-radius: 40rpx;
-  font-size: 26rpx;
-  font-weight: 500;
-  box-shadow: 0 4rpx 12rpx rgba(168, 230, 207, 0.3);
+  font-size: 28rpx; /* 稍微增大字体 */
+  font-weight: bold; /* 加粗字体 */
+  box-shadow: 0 4rpx 12rpx rgba(110, 142, 251, 0.3); /* 调整阴影颜色以匹配新的背景色 */
   transition: all 0.2s ease;
   text-align: center;
+  line-height: 80rpx; /* 确保文字垂直居中 */
 
   &:disabled {
-    background: #f1f3f4;
-    color: #9aa0a6;
+    background: #e9ecef; /* 调整禁用状态的背景色 */
+    color: #adb5bd; /* 调整禁用状态的文字颜色 */
     box-shadow: none;
   }
 
   &:not(:disabled):active {
     transform: translateY(2rpx);
-    box-shadow: 0 2rpx 8rpx rgba(168, 230, 207, 0.4);
+    box-shadow: 0 2rpx 8rpx rgba(110, 142, 251, 0.4); /* 调整激活状态的阴影颜色 */
   }
 }
 </style>

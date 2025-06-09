@@ -19,12 +19,6 @@
       <!-- 评论区 -->
       <comment-section v-if="postId" :postId="postId" />
     </view>
-
-    <!-- 底部评论输入栏 (可选，根据后续需求添加) -->
-    <!-- <view class="comment-input-bar">
-      <input type="text" placeholder="说点什么..." />
-      <button size="mini">发送</button>
-    </view> -->
   </view>
 </template>
 
