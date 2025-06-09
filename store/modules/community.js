@@ -203,6 +203,8 @@ const actions = {
             ...(comment.replyList || []),
             ...commentsRes.data,
           ];
+          // 更新一级评论的回复数量
+          comment.replyCount = (comment.replyCount || 0) + 1;
         }
         return comment;
       });
@@ -328,6 +330,8 @@ const actions = {
             },
             ...(comment.replyList || []),
           ];
+          // 更新一级评论的回复数量
+          comment.replyCount = (comment.replyCount || 0) + 1;
         }
         return comment;
       });
