@@ -4,7 +4,7 @@
  */
 
 // API 基础路径（生产环境）
-export const BASE_URL = "http://8.148.233.134:3000";
+export const BASE_URL = "https://api.hcyj.xyz";
 
 // API 基础路径（开发环境）
 export const DEV_BASE_URL = "http://localhost:3000";

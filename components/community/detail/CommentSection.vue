@@ -165,35 +165,51 @@ const submitComment = async () => {
 
 // 处理删除评论
 const handleDeleteComment = async (delete_comment) => {
-  try {
-    // 删除一级评论
-    const updatedComments = await store.dispatch('community/delete_first_comment', {
-      comments: comments.value,
-      commentId: delete_comment.id
-    });
-    comments.value = updatedComments;
+  uni.showModal({
+    title: '提示',
+    content: '确定要删除这条评论吗？',
+    success: async function (res) {
+      if (res.confirm) {
+        try {
+          // 删除一级评论
+          const updatedComments = await store.dispatch('community/delete_first_comment', {
+            comments: comments.value,
+            commentId: delete_comment.id
+          });
+          comments.value = updatedComments;
 
-    uni.showToast({ title: '删除成功', icon: 'success' });
-  } catch (error) {
-    console.error('删除失败:', error);
-    uni.showToast({ title: '删除失败', icon: 'none' });
-  }
+          uni.showToast({ title: '删除成功', icon: 'success' });
+        } catch (error) {
+          console.error('删除失败:', error);
+          uni.showToast({ title: '删除失败', icon: 'none' });
+        }
+      }
+    }
+  });
 };
 
 const handleDeleteReplyComment = async ({ parentComment, reply }) => {
-  try {
-    // 删除二级评论
-    const updatedComments = await store.dispatch('community/delete_second_comment', {
-      comments: comments.value,
-      commentId: parentComment.id,
-      replyId: reply.id
-    });
-    comments.value = updatedComments;
-    uni.showToast({ title: '删除成功', icon: 'success' });
-  } catch (error) {
-    console.error('删除失败:', error);
-    uni.showToast({ title: '删除失败', icon: 'none' });
-  }
+  uni.showModal({
+    title: '提示',
+    content: '确定要删除这条回复吗？',
+    success: async function (res) {
+      if (res.confirm) {
+        try {
+          // 删除二级评论
+          const updatedComments = await store.dispatch('community/delete_second_comment', {
+            comments: comments.value,
+            commentId: parentComment.id,
+            replyId: reply.id
+          });
+          comments.value = updatedComments;
+          uni.showToast({ title: '删除成功', icon: 'success' });
+        } catch (error) {
+          console.error('删除失败:', error);
+          uni.showToast({ title: '删除失败', icon: 'none' });
+        }
+      }
+    }
+  });
 }
 
 // 处理加载回复
