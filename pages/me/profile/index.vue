@@ -112,9 +112,11 @@ const chooseAvatar = () => {
       uni.getFileSystemManager().readFile({
         filePath: tempFilePath,
         encoding: "base64",
-        success: (res) => {
+        success: async (res) => {
           const base64Data = res.data;
-          store.dispatch("user/update_user_avatar", base64Data);
+          await store.dispatch("user/update_user_avatar", base64Data);
+          await store.dispatch("community/fetch_first_posts", base64Data);
+          await store.dispatch("user/fetch_first_posts", base64Data);
           uni.showToast({
             title: '头像更新成功',
             icon: 'success',
@@ -154,6 +156,8 @@ const saveProfile = async () => {
   });
 
   await store.dispatch("user/update_user_info", userProfile);
+  await store.dispatch("community/fetch_first_posts", base64Data);
+  await store.dispatch("user/fetch_first_posts", base64Data);
 
   uni.hideLoading();
 
