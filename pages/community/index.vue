@@ -33,17 +33,17 @@
           <view class="loading-spinner"></view>
           <text class="loading-text">正在加载更多...</text>
         </view>
-        
+
         <!-- 加载错误状态 -->
         <view v-else-if="loadError" class="error-state" @click="retryLoadMore">
           <text class="error-text">加载失败，点击重试</text>
         </view>
-        
+
         <!-- 没有更多数据 -->
         <view v-else-if="noMoreData" class="no-more-state">
           <text class="no-more-text">— 没有更多内容了 —</text>
         </view>
-        
+
         <!-- 默认状态 -->
         <view v-else class="default-state">
           <text class="default-text">下拉查看更多</text>
@@ -132,7 +132,7 @@ const loadMore = () => {
   if (loadMoreTimer) {
     clearTimeout(loadMoreTimer);
   }
-  
+
   loadMoreTimer = setTimeout(async () => {
     await executeLoadMore();
   }, 300); // 300ms 防抖延迟
@@ -150,14 +150,14 @@ const executeLoadMore = async () => {
   try {
     await store.dispatch("community/fetch_more_posts");
     const currentPostsCount = posts.value ? posts.value.length : 0;
-    
+
     if (currentPostsCount === previousPostsCount) {
       noMoreData.value = true;
     }
   } catch (error) {
     console.error("Failed to load more posts:", error);
     loadError.value = true;
-    
+
     // 显示错误提示
     uni.showToast({
       title: '加载失败，请重试',
@@ -222,7 +222,7 @@ const onPublish = () => {
   }
   uni.chooseImage({
     count: 4, // 最多可以选择4张图片，与 publish.vue 保持一致
-    sizeType: ["original", "compressed"],
+    sizeType: ["compressed"],
     sourceType: ["album", "camera"],
     success: (res) => {
       const tempFilePaths = res.tempFilePaths;
@@ -412,8 +412,13 @@ const onPublish = () => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-text {
