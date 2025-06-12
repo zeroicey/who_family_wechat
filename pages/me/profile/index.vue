@@ -115,8 +115,8 @@ const chooseAvatar = () => {
         success: async (res) => {
           const base64Data = res.data;
           await store.dispatch("user/update_user_avatar", base64Data);
-          await store.dispatch("community/fetch_first_posts", base64Data);
-          await store.dispatch("user/fetch_first_posts", base64Data);
+          await store.dispatch("community/fetch_first_posts");
+          await store.dispatch("user/fetch_first_posts");
           uni.showToast({
             title: '头像更新成功',
             icon: 'success',
@@ -156,8 +156,8 @@ const saveProfile = async () => {
   });
 
   await store.dispatch("user/update_user_info", userProfile);
-  await store.dispatch("community/fetch_first_posts", base64Data);
-  await store.dispatch("user/fetch_first_posts", base64Data);
+  await store.dispatch("community/fetch_first_posts");
+  await store.dispatch("user/fetch_first_posts");
 
   uni.hideLoading();
 
