@@ -1,8 +1,21 @@
 <template>
     <view class="task-container">
-        <!-- 头部标题 -->
-        <view class="header">
-            <text class="title">共 {{ tasks.length }} 个任务</text>
+        <!-- 顶部区域 -->
+        <view class="top-section">
+            <!-- 添加任务区域 -->
+            <view class="add-task-section top-add-task">
+                <view class="input-container">
+                    <input v-model="newTaskTitle" class="task-input" placeholder="输入新任务，回车即可添加" @confirm="addNewTask"
+                        confirm-type="done" maxlength="50" />
+                    <view class="add-btn" @click="addNewTask">
+                        <text class="add-icon">+</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <!-- 激励语 -->
+        <view class="motivation-section">
             <text class="subtitle">{{ randomMotivation }}</text>
         </view>
 
@@ -10,13 +23,12 @@
         <scroll-view scroll-y class="task-list" :style="{ height: scrollHeight }">
             <!-- 空状态 -->
             <view v-if="tasks.length === 0" class="empty-state">
-                <text class="empty-icon">📝</text>
-                <text class="empty-text">暂无任务</text>
-                <text class="empty-desc">点击下方按钮添加第一个任务吧</text>
+                <image class="empty-image" src="/static/images/community/no-data.png" mode="aspectFit"></image>
+                <text class="empty-text">还没有任务哦，快添加一个吧！</text>
             </view>
 
             <!-- 任务项 -->
-            <view v-for="task in tasks" :key="task.id" class="task-item">
+            <view v-for="task in tasks" :key="task.id" class="task-item" :class="{ 'completed-item': task.status === '已完成' }">
                 <view class="task-content">
                     <!-- 状态图标 -->
                     <view class="status-icon" :class="{ 'completed': task.status === '已完成' }"
@@ -32,21 +44,10 @@
 
                 <!-- 删除按钮 -->
                 <view class="delete-btn" @click="deleteTask(task.id)">
-                    <text class="delete-icon">🗑️</text>
+                    <text class="delete-icon">×</text> <!-- 使用更简洁的删除图标 -->
                 </view>
             </view>
         </scroll-view>
-
-        <!-- 底部添加任务 -->
-        <view class="add-task-section">
-            <view class="input-container">
-                <input v-model="newTaskTitle" class="task-input" placeholder="输入新任务..." @confirm="addNewTask"
-                    confirm-type="done" />
-                <view class="add-btn" @click="addNewTask">
-                    <text class="add-icon">+</text>
-                </view>
-            </view>
-        </view>
     </view>
 </template>
 
@@ -57,7 +58,7 @@ import { useStore } from 'vuex';
 const store = useStore();
 const tasks = computed(() => store.getters['task/get_tasks']);
 const newTaskTitle = ref('');
-const scrollHeight = ref('calc(100vh - 200rpx)');
+const scrollHeight = ref('calc(100vh - 280rpx)'); // 重新调整高度，考虑激励语区域
 
 // 激励语句数组
 const motivationalQuotes = [
@@ -135,9 +136,18 @@ const deleteTask = async (taskId) => {
 
 // 添加新任务
 const addNewTask = async () => {
-    if (!newTaskTitle.value.trim()) {
+    const trimmedTitle = newTaskTitle.value.trim();
+    if (!trimmedTitle) {
         uni.showToast({
             title: '请输入任务内容',
+            icon: 'none'
+        });
+        return;
+    }
+
+    if (trimmedTitle.length > 50) {
+        uni.showToast({
+            title: '任务内容不能超过50个字',
             icon: 'none'
         });
         return;
@@ -169,33 +179,97 @@ const addNewTask = async () => {
 <style lang="scss" scoped>
 .task-container {
     height: 100vh;
-    background-color: #f5f7fa;
+    background-color: #f4f6f8; // 更柔和的背景色
     display: flex;
     flex-direction: column;
 }
 
+.top-section {
+    background-color: #f4f6f8; // 顶部区域统一背景色
+    padding: 20rpx 30rpx; // 调整内边距
+}
+
 .header {
-    padding: 40rpx 30rpx 20rpx;
-    background-color: #ffffff;
-    border-bottom: 1px solid #f0f0f0;
+    // padding: 25rpx 30rpx 20rpx; // 移除独立内边距，由top-section控制
+    background-color: #f4f6f8; // 与容器背景色一致
+    text-align: center; // 标题居中
+    // margin-bottom: 20rpx; // 移除，因为激励语现在独立了
 
     .title {
-        font-size: 44rpx;
+        font-size: 40rpx; // 增大标题字号
         font-weight: bold;
-        color: #333;
+        color: #2c3e50; // 更深的标题颜色
         display: block;
         margin-bottom: 10rpx;
     }
 
     .subtitle {
+        font-size: 28rpx; // 增大副标题字号
+        color: #7f8c8d; // 更柔和的副标题颜色
+    }
+}
+
+.motivation-section {
+    padding: 20rpx 30rpx;
+    text-align: center;
+    background-color: #f4f6f8; // 与页面背景一致
+    .subtitle {
         font-size: 28rpx;
-        color: #666;
+        color: #7f8c8d;
+    }
+}
+
+.add-task-section.top-add-task {
+    background-color: transparent; // 输入区域背景透明，融入top-section
+    padding: 0; // 移除独立内边距
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        background-color: #ffffff; // 输入框容器使用白色背景
+        border-radius: 40rpx; // 更圆润的边角
+        padding: 10rpx 15rpx; // 调整内边距
+        box-shadow: 0 3rpx 10rpx rgba(0, 0, 0, 0.07); // 给输入框容器更明显的阴影
+
+        .task-input {
+            flex: 1;
+            padding: 18rpx 25rpx;
+            font-size: 28rpx; // 调整字体大小
+            color: #333;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            &::placeholder {
+                color: #adb5bd;
+            }
+        }
+
+        .add-btn {
+            width: 60rpx; // 调整按钮大小
+            height: 60rpx;
+            background: linear-gradient(135deg, #007bff, #0056b3); // 更专业的蓝色渐变
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+
+            &:active {
+                background: linear-gradient(135deg, #0056b3, #003d80);
+            }
+
+            .add-icon {
+                color: #ffffff;
+                font-size: 32rpx;
+                font-weight: bold;
+            }
+        }
     }
 }
 
 .task-list {
     flex: 1;
-    padding: 20rpx;
+    padding: 0 0 20rpx; // 移除左右内边距，由task-item的margin控制
 }
 
 .empty-state {
@@ -203,22 +277,18 @@ const addNewTask = async () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 120rpx 40rpx;
+    padding-top: 100rpx; // 调整上边距
+    text-align: center;
 
-    .empty-icon {
-        font-size: 80rpx;
-        margin-bottom: 20rpx;
+    .empty-image {
+        width: 280rpx;
+        height: 280rpx;
+        margin-bottom: 30rpx;
     }
 
     .empty-text {
-        font-size: 32rpx;
-        color: #666;
-        margin-bottom: 10rpx;
-    }
-
-    .empty-desc {
-        font-size: 26rpx;
-        color: #999;
+        font-size: 30rpx;
+        color: #7f8c8d;
     }
 }
 
@@ -227,96 +297,86 @@ const addNewTask = async () => {
     align-items: center;
     justify-content: space-between;
     background-color: #ffffff;
-    padding: 30rpx 25rpx;
-    margin-bottom: 20rpx;
-    border-radius: 16rpx;
-    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+    padding: 30rpx 25rpx; // 统一内边距
+    margin: 0 20rpx 20rpx; // 上0，左右20rpx，下20rpx的外边距
+    border-radius: 16rpx; // 统一圆角大小
+    box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.07); // 调整阴影使其更柔和
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:active {
+        transform: translateY(2rpx);
+        box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.06);
+    }
+    
+    &.completed-item {
+        background-color: #f8f9fa; // 已完成任务的背景色
+        box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.04);
+    }
 
     .task-content {
         display: flex;
         align-items: center;
         flex: 1;
+        overflow: hidden; // 防止内容溢出
 
         .status-icon {
-            width: 44rpx;
-            height: 44rpx;
-            border: 3rpx solid #ddd;
+            width: 40rpx; // 调整图标大小
+            height: 40rpx;
+            border: 2rpx solid #ced4da; // 调整边框颜色
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 20rpx;
-            transition: all 0.3s;
+            margin-right: 25rpx; // 调整右边距
+            transition: all 0.3s ease;
+            flex-shrink: 0; // 防止图标被压缩
 
             &.completed {
-                background-color: #52c41a;
-                border-color: #52c41a;
+                background-color: #28a745; // 更鲜明的完成状态颜色
+                border-color: #28a745;
 
                 .check-icon {
                     color: #ffffff;
-                    font-size: 24rpx;
+                    font-size: 22rpx;
                     font-weight: bold;
                 }
             }
         }
 
         .task-title {
-            font-size: 32rpx;
-            color: #333;
+            font-size: 30rpx; // 调整字体大小
+            color: #343a40; // 更深的文字颜色
             flex: 1;
-            transition: all 0.3s;
+            transition: color 0.3s ease, text-decoration-color 0.3s ease;
+            white-space: nowrap; // 防止标题换行
+            overflow: hidden;
+            text-overflow: ellipsis; // 标题过长时显示省略号
 
             &.completed {
-                color: #999;
+                color: #adb5bd; // 更浅的已完成文字颜色
                 text-decoration: line-through;
+                text-decoration-color: #adb5bd; // 使删除线颜色一致
             }
         }
     }
 
     .delete-btn {
-        padding: 10rpx;
-
-        .delete-icon {
-            font-size: 32rpx;
-        }
-    }
-}
-
-.add-task-section {
-    background-color: #ffffff;
-    padding: 30rpx;
-    border-top: 1px solid #f0f0f0;
-
-    .input-container {
+        padding: 8rpx 12rpx; // 调整内边距
+        margin-left: 15rpx; // 增加左边距
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
         display: flex;
         align-items: center;
-        background-color: #f8f9fa;
-        border-radius: 50rpx;
-        padding: 8rpx;
+        justify-content: center;
 
-        .task-input {
-            flex: 1;
-            padding: 20rpx 30rpx;
-            font-size: 30rpx;
-            background-color: transparent;
-            border: none;
-            outline: none;
+        &:active {
+            background-color: #e9ecef;
         }
 
-        .add-btn {
-            width: 70rpx;
-            height: 70rpx;
-            background: linear-gradient(135deg, #1890ff, #36a6ff);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            .add-icon {
-                color: #ffffff;
-                font-size: 36rpx;
-                font-weight: bold;
-            }
+        .delete-icon {
+            font-size: 30rpx;
+            color: #dc3545; // 醒目的删除图标颜色
+            font-weight: bold;
         }
     }
 }

@@ -133,7 +133,8 @@ const chooseAvatar = () => {
 
 // 性别选择变化
 const onGenderChange = (e) => {
-  userProfile.gender = e.detail.value === 0 ? "男" : "女";
+  const selectedIndex = parseInt(e.detail.value, 10);
+  userProfile.gender = genderOptions[selectedIndex];
 };
 
 // 手机号脱敏显示
@@ -182,7 +183,11 @@ const saveProfile = async () => {
   uni.showToast({
     title: "保存成功",
     icon: "success",
-    duration: 2000,
+    duration: 1700,
+  });
+
+  uni.switchTab({
+    url: '/pages/me/index'
   });
 };
 </script>
