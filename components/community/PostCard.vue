@@ -26,7 +26,7 @@
       <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
         <view v-for="(img, index) in images" :key="index" class="image-item"
           :class="{ 'image-item-single': images.length === 1 }">
-          <image :src="post.imgList[index]" mode="aspectFill" class="post-image" />
+          <image :src="post.imgList[index]" mode="aspectFill" class="post-image" lazy-load="true" />
         </view>
       </view>
 
