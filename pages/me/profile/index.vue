@@ -30,7 +30,7 @@
         <image class="form-item-icon" src="/static/images/profile/gender.png"></image>
       </view>
 
-      <view class="form-item">
+      <!-- <view class="form-item">
         <text class="label">手机号</text>
         <view class="phone-wrapper">
           <text class="phone-text">{{
@@ -41,7 +41,7 @@
           </view>
         </view>
         <image class="form-item-icon" src="/static/images/profile/phone.png"></image>
-      </view>
+      </view> -->
     </view>
 
     <!-- 学校信息表单组 -->
@@ -133,7 +133,7 @@ const chooseAvatar = () => {
 
 // 性别选择变化
 const onGenderChange = (e) => {
-  userProfile.gender = e.detail.value;
+  userProfile.gender = e.detail.value === 0 ? "男" : "女";
 };
 
 // 手机号脱敏显示

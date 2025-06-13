@@ -83,6 +83,7 @@ let loadMoreTimer = null; // 防抖定时器
 
 // 组件挂载后检查帖子是否为空
 onMounted(async () => {
+  await store.dispatch("user/wechat_login")
   noMoreData.value = false;
   if (!posts.value || posts.value.length === 0) {
     await store.dispatch("community/fetch_first_posts");
