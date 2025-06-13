@@ -15,7 +15,7 @@
     <view class="form-group">
       <view class="form-item">
         <text class="label">昵称</text>
-        <input class="input" v-model="userProfile.name" placeholder="请输入昵称" />
+        <input class="input" v-model="userProfile.name" placeholder="请输入昵称" maxlength="15" />
         <image class="form-item-icon" src="/static/images/profile/name.png"></image>
       </view>
 
@@ -151,6 +151,24 @@ const navigateToChangePhone = () => {
 
 // 保存用户资料
 const saveProfile = async () => {
+  if (userProfile.name.length > 15) {
+    uni.showToast({
+      title: '昵称不能超过15个字',
+      icon: 'none',
+      duration: 2000
+    });
+    return;
+  }
+
+  if (userProfile.bio.length > 100) {
+    uni.showToast({
+      title: '个人简介不能超过100个字',
+      icon: 'none',
+      duration: 2000
+    });
+    return;
+  }
+
   uni.showLoading({
     title: "保存中...",
   });

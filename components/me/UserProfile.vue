@@ -9,7 +9,7 @@
         </view>
         <view class="user-info">
           <text class="user-name">{{ userInfo.name || "用户" }}</text>
-          <view class="user-bio" v-if="userInfo.bio">{{ userInfo.bio }}</view>
+          <view class="user-bio" v-if="userInfo.bio">{{ truncatedBio }}</view>
           <view class="user-bio" v-else>这个用户很懒，还没有填写简介哦~</view>
         </view>
         <view class="edit-icon">
@@ -47,6 +47,14 @@ import { useStore } from "vuex";
 const store = useStore();
 const userInfo = computed(() => store.getters["user/get_user_info"]);
 const avatarUrl = computed(() => store.getters["user/get_user_avatar_url"]);
+
+const truncatedBio = computed(() => {
+  const bio = userInfo.value.bio;
+  if (bio && bio.length > 20) {
+    return bio.substring(0, 20) + "...";
+  }
+  return bio;
+});
 
 // 点击跳转到个人资料设置页面
 const navigateToEdit = () => {
