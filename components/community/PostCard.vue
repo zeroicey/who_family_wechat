@@ -48,7 +48,7 @@
       </view>
 
       <!-- 评论 -->
-      <view class="action-group">
+      <view class="action-group" @click="$emit('click')">
         <image class="action-icon" src="/static/images/community/comment.png" />
         <text class="action-text">{{ post.commentCount || 0 }}</text>
       </view>
