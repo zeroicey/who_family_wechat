@@ -19,6 +19,28 @@
       }
     },
     {
+      "path": "pages/service/success",
+      "style": {
+        "navigationBarTitleText": "下单成功",
+        "navigationBarBackgroundColor": "#f5f5f5",
+        "app-plus": {
+          "titleNView": {
+            "buttons": [
+              {
+                "type": "home",
+                "fontSrc": "/static/iconfont.ttf",
+                "text": "\ue600",
+                "fontSize": "22px",
+                "color": "#333333",
+                "float": "left",
+                "onclick": "navigateBack"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
       "path": "pages/focus/index",
       "style": {
         "navigationBarTitleText": "专注"
@@ -117,6 +139,18 @@
         "navigationBarTitleText": "修改地址"
       }
     },
+    // {
+    //   "path": "pages/me/order/index",
+    //   "style": {
+    //     "navigationBarTitleText": "我的订单"
+    //   }
+    // },
+    // {
+    //   "path": "pages/me/order/detail",
+    //   "style": {
+    //     "navigationBarTitleText": "订单详情"
+    //   }
+    // },
     {
       "path": "pages/me/profile/index",
       "style": {

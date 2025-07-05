@@ -29,9 +29,7 @@
         <span class="value">{{ formattedCreatedAt }}</span>
       </div>
     </div>
-    <div class="card-footer">
-      <button v-if="canCancel" class="action-btn cancel-btn">取消订单</button>
-    </div>
+
   </div>
 </template>
 
@@ -61,21 +59,14 @@ const statusClass = computed(() => {
 });
 
 const packageSizeText = computed(() => {
-    const sizeMap = {
-        small: '小件',
-        medium: '中件',
-        large: '大件',
-    };
-    return sizeMap[props.order.data.packageSize] || '未知';
+  return props.order.data.packageSize || '未知';
 });
 
 const formattedCreatedAt = computed(() => {
   return new Date(props.order.createdAt).toLocaleString();
 });
 
-const canCancel = computed(() => {
-  return ['待支付', '待完成'].includes(props.order.status);
-});
+
 
 </script>
 
@@ -83,7 +74,7 @@ const canCancel = computed(() => {
 .order-card {
   background-color: #ffffff;
   border-radius: 12px;
-  margin: 16px;
+  margin: 0;
   padding: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
@@ -124,14 +115,17 @@ const canCancel = computed(() => {
     background-color: #fffbe6;
     color: #faad14;
   }
+
   &.status-processing {
     background-color: #e6f7ff;
     color: #1890ff;
   }
+
   &.status-completed {
     background-color: #f6ffed;
     color: #52c41a;
   }
+
   &.status-cancelled {
     background-color: #f5f5f5;
     color: #bfbfbf;
@@ -162,13 +156,7 @@ const canCancel = computed(() => {
   }
 }
 
-.card-footer {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
-  gap: 10px;
-}
+
 
 .action-btn {
   padding: 6px 16px;

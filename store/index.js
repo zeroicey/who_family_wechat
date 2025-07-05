@@ -6,6 +6,7 @@ import focus from "@/store/modules/focus";
 import community from "@/store/modules/community";
 import recruit from "@/store/modules/recruit";
 import address from "@/store/modules/address";
+import order from "@/store/modules/order";
 
 // 根级别的 state
 const state = {
@@ -49,6 +50,7 @@ const store = createStore({
     recruit,
     task,
     address,
+    order,
   },
 });
 

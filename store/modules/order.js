@@ -26,7 +26,7 @@ const mutations = {
       id: `order_${new Date().getTime()}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      status: '待支付', // '待支付', '待完成', '已完成', '已取消'
+      status: "待支付", // '待支付', '待完成', '已完成', '已取消'
       ...orderPayload,
     };
     state.orders.unshift(newOrder);
@@ -34,9 +34,15 @@ const mutations = {
   },
 
   update_order(state, updatedOrder) {
-    const index = state.orders.findIndex((order) => order.id === updatedOrder.id);
+    const index = state.orders.findIndex(
+      (order) => order.id === updatedOrder.id
+    );
     if (index !== -1) {
-      const newOrder = { ...state.orders[index], ...updatedOrder, updatedAt: new Date().toISOString() };
+      const newOrder = {
+        ...state.orders[index],
+        ...updatedOrder,
+        updatedAt: new Date().toISOString(),
+      };
       state.orders.splice(index, 1, newOrder);
       uni.setStorageSync("orders", state.orders);
     }
@@ -55,13 +61,15 @@ const actions = {
     console.log("[订单模块] 订单加载成功");
   },
 
-  create_order({ commit }, orderPayload) {
+  create_order({ commit, state }, orderPayload) {
     commit("add_order", orderPayload);
-    console.log("[订单模块] 订单创建成功");
+    const newOrder = state.orders[0];
+    console.log("[订单模块] 订单创建成功", newOrder);
+    return newOrder;
   },
 
   update_order_status({ commit, state }, { orderId, status }) {
-    const order = state.orders.find(o => o.id === orderId);
+    const order = state.orders.find((o) => o.id === orderId);
     if (order) {
       commit("update_order", { ...order, status });
       console.log(`[订单模块] 订单 ${orderId} 状态更新为 ${status}`);

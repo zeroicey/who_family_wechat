@@ -106,7 +106,7 @@ const selectAddress = () => {
 	});
 };
 
-const placeOrder = () => {
+const placeOrder = async () => {
 	if (!selectedAddress.value) {
 		uni.showToast({
 			title: '请选择取件地址',
@@ -114,10 +114,28 @@ const placeOrder = () => {
 		});
 		return;
 	}
-	uni.showToast({
-		title: `下单成功，打印${printCopies.value}份`,
-		icon: 'success'
-	});
+
+	const orderPayload = {
+		type: 'print',
+		data: {
+			addressId: selectedAddress.value.id,
+			addressDetails: selectedAddress.value.fullAddress,
+			copies: printCopies.value
+		}
+	};
+
+	const newOrder = await store.dispatch('order/create_order', orderPayload);
+
+	if (newOrder && newOrder.id) {
+		uni.navigateTo({
+			url: `/pages/service/success?orderId=${newOrder.id}`
+		});
+	} else {
+		uni.showToast({
+			title: '下单失败，请稍后重试',
+			icon: 'none'
+		});
+	}
 };
 
 onShow(() => {
