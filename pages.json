@@ -139,18 +139,12 @@
         "navigationBarTitleText": "修改地址"
       }
     },
-    // {
-    //   "path": "pages/me/order/index",
-    //   "style": {
-    //     "navigationBarTitleText": "我的订单"
-    //   }
-    // },
-    // {
-    //   "path": "pages/me/order/detail",
-    //   "style": {
-    //     "navigationBarTitleText": "订单详情"
-    //   }
-    // },
+    {
+      "path": "pages/me/order/index",
+      "style": {
+        "navigationBarTitleText": "我的订单"
+      }
+    },
     {
       "path": "pages/me/profile/index",
       "style": {

@@ -1,7 +1,7 @@
 <template>
   <view class="quick-nav-card">
     <view class="quick-nav-grid">
-      <view class="nav-item" @tap="navigateTo('/pages/me/orders/index')">
+      <view class="nav-item" @tap="navigateTo('/pages/me/order/index')">
         <view class="icon-wrapper" style="background-color: #ff913c;">
           <image src="/static/images/me/order.png" mode="aspectFit" class="icon-image"></image>
         </view>
