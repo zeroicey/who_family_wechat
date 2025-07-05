@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <style>
+      .icon-bg {
+        fill: #E3F2FD;
+      }
+      .icon-fg {
+        fill: #90CAF9;
+      }
+      .icon-pin {
+        fill: #1976D2;
+      }
+    </style>
+  </defs>
+
+  <circle class="icon-bg" cx="100" cy="100" r="90"/>
+
+  <path class="icon-fg" d="M100,30 C72.4,30 50,52.4 50,80 C50,115 100,170 100,170 C100,170 150,115 150,80 C150,52.4 127.6,30 100,30 Z M100,95 C91.7,95 85,88.3 85,80 C85,71.7 91.7,65 100,65 C108.3,65 115,71.7 115,80 C115,88.3 108.3,95 100,95 Z"/>
+
+  <circle class="icon-pin" cx="100" cy="80" r="15"/>
+
+</svg>

@@ -64,7 +64,7 @@ const fetchRecommendServices = async () => {
           price: '¥3起',
           rating: 4.8,
           orders: 1580,
-          url: '/pages/service/express'
+          url: '/pages/service/details/express'
         },
         {
           id: 2,

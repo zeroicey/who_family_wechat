@@ -5,19 +5,18 @@ import user from "@/store/modules/user";
 import focus from "@/store/modules/focus";
 import community from "@/store/modules/community";
 import recruit from "@/store/modules/recruit";
+import address from "@/store/modules/address";
 
 // 根级别的 state
 const state = {
   appVersion: "1.0.0",
   appName: "互成一家",
-  //   platform: uni.getSystemInfoSync().platform,
 };
 
 // 根级别的 getters
 const getters = {
   appVersion: (state) => state.appVersion,
   appName: (state) => state.appName,
-  //   platform: (state) => state.platform,
 };
 
 const mutations = {
@@ -30,7 +29,7 @@ const mutations = {
 // 根级别的 actions
 const actions = {
   // 初始化应用
-  init_app({ dispatch }) {
+  init_app() {
     console.log("初始化应用");
 
     return Promise.resolve();
@@ -49,6 +48,7 @@ const store = createStore({
     community,
     recruit,
     task,
+    address,
   },
 });
 

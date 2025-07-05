@@ -7,6 +7,12 @@
       }
     },
     {
+      "path": "pages/service/details/express",
+      "style": {
+        "navigationBarTitleText": "快递代拿"
+      }
+    },
+    {
       "path": "pages/focus/index",
       "style": {
         "navigationBarTitleText": "专注"
@@ -73,6 +79,24 @@
       "path": "pages/me/index",
       "style": {
         "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/me/address/index",
+      "style": {
+        "navigationBarTitleText": "地址管理"
+      }
+    },
+    {
+      "path": "pages/me/address/create",
+      "style": {
+        "navigationBarTitleText": "新增地址"
+      }
+    },
+    {
+      "path": "pages/me/address/update",
+      "style": {
+        "navigationBarTitleText": "修改地址"
       }
     },
     {
