@@ -6,6 +6,9 @@
         <!-- 核心功能区：任务待办、习惯打卡、专注时刻 -->
         <CoreFunctions />
 
+        <!-- 推荐服务区 -->
+        <ServiceRecommend />
+
         <!-- 校园动态通知区 -->
         <CampusNotifications />
 
@@ -19,13 +22,11 @@
 </template>
 
 <script setup>
-// 导入组件
+import ServiceRecommend from '@/components/home/ServiceRecommend.vue';
 import HomeHeader from '@/components/home/HomeHeader.vue';
 import CoreFunctions from '@/components/home/CoreFunctions.vue';
 import CampusNotifications from '@/components/home/CampusNotifications.vue';
 import RecruitmentCard from '@/components/home/RecruitmentCard.vue';
-
-
 </script>
 
 <style lang="scss" scoped>

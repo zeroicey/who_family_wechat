@@ -3,6 +3,9 @@
     <!-- 用户信息头部 -->
     <UserProfile />
 
+    <!-- 快捷导航卡片 -->
+    <QuickNav />
+
     <!-- 帖子列表 -->
     <scroll-view class="posts-scroll" scroll-y refresher-enabled :refresher-triggered="refreshing"
       @refresherrefresh="onRefresh" @scrolltolower="loadMore">
@@ -45,7 +48,7 @@ import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import UserProfile from '@/components/me/UserProfile.vue';
 import PostCard from '@/components/community/PostCard.vue';
-
+import QuickNav from '@/components/me/QuickNav.vue';
 const store = useStore();
 
 // 获取帖子数据
