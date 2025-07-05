@@ -88,6 +88,18 @@
       }
     },
     {
+      "path": "pages/me/feedback",
+      "style": {
+        "navigationBarTitleText": "反馈"
+      }
+    },
+    {
+      "path": "pages/me/about",
+      "style": {
+        "navigationBarTitleText": "关于"
+      }
+    },
+    {
       "path": "pages/me/address/index",
       "style": {
         "navigationBarTitleText": "地址管理"

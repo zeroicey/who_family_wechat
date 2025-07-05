@@ -13,13 +13,13 @@
         </view>
         <text class="nav-text">地址</text>
       </view>
-      <view class="nav-item" @tap="navigateTo('/pages/me/settings/index')">
+      <view class="nav-item" @tap="navigateTo('/pages/me/about')">
         <view class="icon-wrapper" style="background-color: #3c9dff;">
-          <image src="/static/images/me/settings.png" mode="aspectFit" class="icon-image"></image>
+          <image src="/static/images/me/about.png" mode="aspectFit" class="icon-image"></image>
         </view>
-        <text class="nav-text">设置</text>
+        <text class="nav-text">关于</text>
       </view>
-      <view class="nav-item" @tap="navigateTo('/pages/me/feedback/index')">
+      <view class="nav-item" @tap="navigateTo('/pages/me/feedback')">
         <view class="icon-wrapper" style="background-color: #8a56e8;">
           <image src="/static/images/me/feedback.png" mode="aspectFit" class="icon-image"></image>
         </view>
