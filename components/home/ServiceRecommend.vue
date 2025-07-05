@@ -70,7 +70,7 @@ const fetchRecommendServices = async () => {
           id: 2,
           title: '远程打印服务',
           description: '宿舍也能轻松打印！手机一键上传，即刻获取文件。',
-          imageUrl: 'https://images.unsplash.com/photo-1521587514241-a5b5b0c55a26?q=80&w=800&auto=format&fit=crop',
+          imageUrl: '/static/images/print.png',
           price: '¥0.2/页',
           rating: 4.9,
           orders: 2350,
@@ -79,11 +79,11 @@ const fetchRecommendServices = async () => {
         {
           id: 3,
           title: '更多服务',
-          description: '敬请期待...',
-          imageUrl: 'https://images.unsplash.com/photo-1515266591878-72d7c1880b0e?q=80&w=800&auto=format&fit=crop',
-          price: '',
-          rating: null,
-          orders: null,
+          description: '更多精彩服务即将上线！我们正在精心准备更多便捷实用的校园服务。',
+          imageUrl: '/static/images/what.jpg',
+          price: '???¥',
+          rating: 5.0,
+          orders: 5000,
           url: ''
         }
       ];
