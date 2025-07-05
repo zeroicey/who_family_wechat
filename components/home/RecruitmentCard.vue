@@ -24,13 +24,11 @@
                     <view class="recruitment-title">{{ item.name }}</view>
                     <view class="recruitment-tags">
                         <text class="tag type-default">{{ item.type }}</text> <!-- 使用默认的 type-default 样式 -->
-                        <text class="deadline">截止: {{ item.endTime }}</text>
+                        <view class="recruitment-org">{{ item.organizationName }}</view>
+                        <text v-if="item.endTime" class="deadline">截止: {{ item.endTime }}</text>
                     </view>
-                    <view class="recruitment-org">{{ item.organizationName }}</view>
                 </view>
                 <view class="recruitment-right">
-                    <!-- <text class="status" :class="{ 'status-urgent': item.isUrgent }">{{ item.status }}</text> -->
-                    <!-- 移除 status 和 isUrgent -->
                     <text class="arrow">›</text>
                 </view>
             </view>

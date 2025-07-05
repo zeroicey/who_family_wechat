@@ -152,24 +152,11 @@ const getServiceColor = (index) => {
   return colors[index % colors.length];
 };
 
-// 获取服务名称的首字
-// 显示服务图标的文字
-const getServiceInitial = (name) => {
-  return name.charAt(0);
-};
-
 // 跳转到服务页面
 const navigateToService = (item) => {
   if (!item.url) return;
   uni.navigateTo({
     url: item.url
-  });
-};
-
-// 跳转到所有服务页面
-const navigateToAllServices = () => {
-  uni.switchTab({
-    url: '/pages/service/index'
   });
 };
 
@@ -182,7 +169,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .service-recommend {
-  padding: 4vw 5vw;
+  padding: 1vw 5vw;
 
   .section-title {
     margin-bottom: 3vw;
@@ -194,16 +181,6 @@ onMounted(() => {
       font-size: 4.5vw;
       font-weight: 600;
       color: #333;
-    }
-
-    .view-more {
-      font-size: 3.5vw;
-      color: #666;
-      padding: 1vw 2vw;
-
-      &:active {
-        opacity: 0.7;
-      }
     }
   }
 

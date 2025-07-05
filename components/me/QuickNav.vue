@@ -40,22 +40,22 @@ const navigateTo = (url) => {
 .quick-nav-card {
   width: 95%;
   background-color: #fff;
-  margin: 3vw auto;
+  margin: 1vw auto;
   border-radius: 12px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  padding: 5vw 0;
-  
+  padding: 4vw 0;
+
   .quick-nav-grid {
     display: flex;
     justify-content: space-around;
-    
+
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 25%;
-      
+
       .icon-wrapper {
         width: 12vw;
         height: 12vw;
@@ -64,13 +64,13 @@ const navigateTo = (url) => {
         justify-content: center;
         align-items: center;
         margin-bottom: 2vw;
-        
+
         .icon-image {
           width: 6vw;
           height: 6vw;
         }
       }
-      
+
       .nav-text {
         font-size: 3.2vw;
         color: #333;
