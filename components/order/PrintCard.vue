@@ -26,7 +26,6 @@
       </div>
     </div>
     <div class="card-footer">
-      <button class="action-btn detail-btn">查看详情</button>
       <button v-if="canCancel" class="action-btn cancel-btn">取消订单</button>
     </div>
   </div>
