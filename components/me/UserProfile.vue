@@ -72,10 +72,8 @@ const navigateToEdit = () => {
   .profile-card {
     width: 100%;
     background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(7, 193, 96, 0.12);
+    border-radius: 12px 12px 0 0;
     overflow: hidden;
-    margin-bottom: 3vw;
     position: relative;
 
     // 添加装饰元素

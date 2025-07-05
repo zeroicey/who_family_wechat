@@ -3,8 +3,6 @@
         <!-- 顶部区域：搜索、欢迎语、轮播图 -->
         <HomeHeader />
 
-        <!-- 核心功能区：任务待办、习惯打卡、专注时刻 -->
-        <CoreFunctions />
 
         <!-- 推荐服务区 -->
         <ServiceRecommend />
@@ -24,7 +22,6 @@
 <script setup>
 import ServiceRecommend from '@/components/home/ServiceRecommend.vue';
 import HomeHeader from '@/components/home/HomeHeader.vue';
-import CoreFunctions from '@/components/home/CoreFunctions.vue';
 import CampusNotifications from '@/components/home/CampusNotifications.vue';
 import RecruitmentCard from '@/components/home/RecruitmentCard.vue';
 </script>

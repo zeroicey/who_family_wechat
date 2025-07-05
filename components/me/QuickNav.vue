@@ -39,9 +39,9 @@ const navigateTo = (url) => {
 <style lang="scss" scoped>
 .quick-nav-card {
   width: 95%;
-  background-color: #fff;
-  margin: 1vw auto;
-  border-radius: 12px;
+  background-color: #f8f9fa;
+  margin: 0 auto 0;
+  border-radius: 0 0 12px 12px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   padding: 4vw 0;

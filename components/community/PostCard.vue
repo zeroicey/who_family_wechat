@@ -12,7 +12,6 @@
           <text @click="$emit('click')" class="post-title">{{ post.title }}</text>
         </view>
       </view>
-      <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
     </view>
 
     <view @click="$emit('click')">
@@ -33,6 +32,7 @@
     </view>
     <!-- 底部操作区域 -->
     <view class="post-footer">
+      <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
       <!-- 查看 -->
       <view class="action-group">
 
@@ -174,10 +174,9 @@ const isContentTruncated = computed(() => {
 <style scoped>
 .post-card {
   background-color: #ffffff;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 16px;
-  margin: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin: 0;
   position: relative;
   overflow: hidden;
 }
@@ -285,7 +284,6 @@ const isContentTruncated = computed(() => {
   padding-bottom: calc(33.33% - 4px);
   margin: 2px;
   overflow: hidden;
-  border-radius: 8px;
 }
 
 .post-image {
@@ -295,7 +293,6 @@ const isContentTruncated = computed(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
 }
 
 .image-placeholder {
@@ -312,7 +309,7 @@ const isContentTruncated = computed(() => {
 
 /* 单图样式 */
 .image-single .image-item {
-  width: 70%;
+  width: 100%;
   padding-bottom: 50%;
   margin: 2px auto;
 }

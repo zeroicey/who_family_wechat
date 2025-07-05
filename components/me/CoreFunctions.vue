@@ -14,7 +14,7 @@
               <text class="card-count">{{ todoData.count }} 项未完成</text>
             </view>
           </view>
-          <view class="card-badge">活跃</view>
+
         </view>
         <view class="card-progress">
           <view class="progress-bar">
@@ -97,14 +97,15 @@ const navigateTo = (url) => {
 
 <style lang="scss" scoped>
 .core-functions {
-  padding: 4vw 5vw;
+  padding: 2vw 2vw;
 
   .function-cards {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px;
 
     .function-card {
-      flex: 1;
+      width: 48%;
       background-color: #fff;
       border-radius: 4vw;
       padding: 5vw;
@@ -119,9 +120,7 @@ const navigateTo = (url) => {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       }
 
-      &:last-child {
-        margin-bottom: 0;
-      }
+
 
       .card-header {
         margin-bottom: 3vw;
@@ -132,8 +131,8 @@ const navigateTo = (url) => {
         align-items: center;
 
         .card-icon-container {
-          width: 12vw;
-          height: 12vw;
+          width: 10vw;
+          height: 10vw;
           border-radius: 50%;
           position: relative;
           display: flex;
@@ -151,7 +150,7 @@ const navigateTo = (url) => {
           .card-icon-text {
             position: relative;
             color: white;
-            font-size: 5.5vw;
+            font-size: 4.5vw;
             font-weight: bold;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
           }
@@ -197,17 +196,7 @@ const navigateTo = (url) => {
         }
       }
 
-      .card-badge {
-        background: linear-gradient(135deg, #1890ff, #36cfc9);
-        color: white;
-        font-size: 2.8vw;
-        font-weight: 500;
-        padding: 1vw 2.5vw;
-        border-radius: 3vw;
-        position: absolute;
-        top: 5vw;
-        right: 5vw;
-      }
+
 
       .card-progress {
         display: flex;

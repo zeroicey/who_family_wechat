@@ -17,7 +17,9 @@
       @refresherrefresh="onRefresh" @scrolltolower="loadMore" lower-threshold="0">
       <!-- 帖子列表 -->
       <view v-if="posts && posts.length > 0" class="posts-container">
-        <post-card v-for="post in posts" :key="post.id" :post="post" :isInMe="false" @click="viewPostDetail(post.id)" />
+        <view v-for="post in posts" :key="post.id" class="post-wrapper">
+          <post-card :post="post" :isInMe="false" @click="viewPostDetail(post.id)" />
+        </view>
       </view>
 
       <!-- 空状态 -->
@@ -251,7 +253,7 @@ const onPublish = () => {
 <style scoped>
 /* 整体容器 */
 .community-container {
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   min-height: 100vh;
   position: relative;
 }
@@ -355,7 +357,12 @@ const onPublish = () => {
 }
 
 .posts-container {
-  padding: 8px;
+  padding: 0 8px;
+}
+
+.post-wrapper {
+  border-bottom: 6px solid #f8f8f8;
+  /* padding-bottom: 6px; */
 }
 
 /* 空状态 */
