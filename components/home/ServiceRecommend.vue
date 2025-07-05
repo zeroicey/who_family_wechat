@@ -74,7 +74,7 @@ const fetchRecommendServices = async () => {
           price: '¥0.2/页',
           rating: 4.9,
           orders: 2350,
-          url: '/pages/service/print'
+          url: '/pages/service/details/print'
         },
         {
           id: 3,

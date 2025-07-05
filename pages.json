@@ -13,6 +13,12 @@
       }
     },
     {
+      "path": "pages/service/details/print",
+      "style": {
+        "navigationBarTitleText": "文件打印"
+      }
+    },
+    {
       "path": "pages/focus/index",
       "style": {
         "navigationBarTitleText": "专注"

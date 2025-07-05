@@ -152,9 +152,10 @@ import { getRandomAvatarUrl } from '@/utils/randomData.js';
 
 		.service-intro-card {
 			background-color: #ffffff;
-			margin: 20rpx 30rpx;
+			margin: -60rpx 30rpx 20rpx;
 			padding: 30rpx;
 			border-radius: 20rpx;
+			position: relative;
 			box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
 			display: flex;
 			flex-direction: column;
