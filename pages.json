@@ -74,7 +74,8 @@
     {
       "path": "pages/community/index",
       "style": {
-        "navigationBarTitleText": "社区"
+        "navigationBarTitleText": "社区",
+        "enablePullDownRefresh": true
       }
     },
     {
@@ -92,21 +93,20 @@
     {
       "path": "pages/recruit/index",
       "style": {
-        "navigationBarTitleText": "招聘",
-        "enablePullDownRefresh": true
+        "navigationBarTitleText": "招聘"
       }
     },
     {
       "path": "pages/recruit/detail",
       "style": {
-        "navigationBarTitleText": "招聘详情",
-        "enablePullDownRefresh": true
+        "navigationBarTitleText": "招聘详情"
       }
     },
     {
       "path": "pages/me/index",
       "style": {
-        "navigationBarTitleText": "我的"
+        "navigationBarTitleText": "我的",
+        "enablePullDownRefresh": true
       }
     },
     {

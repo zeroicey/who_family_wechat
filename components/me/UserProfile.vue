@@ -195,7 +195,7 @@ const navigateToEdit = () => {
           margin-right: 3vw;
           width: 6vw;
           height: 6vw;
-          border-radius: 50%; // May or may not be desired for images
+          // border-radius: 50%; // May or may not be desired for images
           // background: linear-gradient(135deg, #07c160, #39e28c); // Background for text icons, remove for images
           display: flex;
           align-items: center;

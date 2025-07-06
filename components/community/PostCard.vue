@@ -14,9 +14,9 @@
       </view>
     </view>
 
-    <view @click="$emit('click')">
+    <view>
       <!-- 内容区域 -->
-      <view class="post-content">
+      <view class="post-content" @click="$emit('click')">
         <text class="content-text">{{ post.content }}</text>
         <text v-if="isContentTruncated" class="view-more-text">... 点击查看全部</text>
       </view>
@@ -25,7 +25,8 @@
       <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
         <view v-for="(img, index) in images" :key="index" class="image-item"
           :class="{ 'image-item-single': images.length === 1 }">
-          <image :src="post.imgList[index]" mode="aspectFill" class="post-image" lazy-load="true" />
+          <image :src="post.imgList[index]" mode="aspectFill" class="post-image" lazy-load="true"
+            @tap="previewImage(index)" />
         </view>
       </view>
 
@@ -164,6 +165,13 @@ const imageLayoutClass = computed(() => {
   if (count === 3) return "image-triple";
   return "image-grid";
 });
+
+const previewImage = (currentIndex) => {
+  uni.previewImage({
+    urls: props.post.imgList,
+    current: currentIndex,
+  });
+};
 
 // 判断内容是否被截断（简单估算：超过约150个字符认为可能被截断）
 const isContentTruncated = computed(() => {
