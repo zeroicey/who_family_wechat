@@ -177,7 +177,7 @@ const viewDetail = (item) => {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 3.5vw 2vw;
+            padding: 1.5vw 1vw;
             border-bottom: 1px dashed #f0f0f0;
             margin-bottom: 1vw;
             border-radius: 2vw;

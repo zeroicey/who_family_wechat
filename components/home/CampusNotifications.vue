@@ -2,6 +2,7 @@
   <view class="campus-notifications">
     <view class="section-header">
       <text class="section-title">校园动态</text>
+      <text class="section-desc">{{ notifications.length }}条新动态</text>
     </view>
 
     <view class="notification-list">
@@ -134,6 +135,11 @@ const getTagColor = (type) => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 3vw;
+
+    .section-desc {
+      font-size: 3.5vw;
+      color: #666;
+    }
 
     .section-title {
       font-size: 4.5vw;

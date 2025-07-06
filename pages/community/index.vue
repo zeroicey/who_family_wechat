@@ -1,25 +1,11 @@
 <template>
   <view class="community-container">
-    <!-- 分类导航 -->
-    <view class="category-tabs">
-      <scroll-view scroll-x="true" class="tabs-scroll" show-scrollbar="false">
-        <view class="tabs-container">
-          <view v-for="(type, index) in types" :key="type.id" class="tab-item"
-            :class="{ active: currentType === type.name }" @click="changeCategory(type.name)">
-            {{ type.name }}
-          </view>
-        </view>
-      </scroll-view>
-    </view>
-
     <!-- 下拉刷新区域 -->
     <scroll-view class="posts-scroll" scroll-y refresher-enabled :refresher-triggered="refreshing"
       @refresherrefresh="onRefresh" @scrolltolower="loadMore" lower-threshold="0">
       <!-- 帖子列表 -->
       <view v-if="posts && posts.length > 0" class="posts-container">
-        <view v-for="post in posts" :key="post.id" class="post-wrapper">
-          <post-card :post="post" :isInMe="false" @click="viewPostDetail(post.id)" />
-        </view>
+        <post-card v-for="post in posts" :key="post.id" :post="post" :isInMe="false" @click="viewPostDetail(post.id)" />
       </view>
 
       <!-- 空状态 -->
@@ -178,15 +164,6 @@ const retryLoadMore = () => {
   executeLoadMore();
 };
 
-// 回到顶部
-const scrollToTop = () => {
-  // 实现回到顶部的逻辑
-  uni.pageScrollTo({
-    scrollTop: 0,
-    duration: 300,
-  });
-};
-
 // 查看帖子详情
 const viewPostDetail = (id) => {
   console.log("Viewing post detail:", id);
@@ -253,116 +230,15 @@ const onPublish = () => {
 <style scoped>
 /* 整体容器 */
 .community-container {
-  background-color: #ffffff;
+  background-color: #f8f8f8;
   min-height: 100vh;
   position: relative;
 }
 
-/* 顶部导航 */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #f0f0f0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-}
-
-.header-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-}
-
-.search-icon {
-  width: 24px;
-  height: 24px;
-  background-color: #e0e0e0;
-  border-radius: 50%;
-  margin-right: 16px;
-}
-
-.publish-btn {
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
-  color: white;
-  font-size: 14px;
-  padding: 6px 12px;
-  border-radius: 16px;
-}
-
-/* 分类导航 */
-.category-tabs {
-  background-color: #fff;
-  border-bottom: 1px solid #f0f0f0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  margin-top: 10px;
-}
-
-.tabs-scroll {
-  white-space: nowrap;
-}
-
-.tabs-container {
-  display: flex;
-  padding: 0 10px;
-}
-
-.tab-item {
-  flex-shrink: 0;
-  padding: 12px 16px;
-  font-size: 14px;
-  color: #666;
-  position: relative;
-  transition: all 0.3s ease;
-  border-radius: 8px;
-  margin: 4px 2px;
-}
-
-.tab-item:hover {
-  color: #6e8efb;
-  background-color: rgba(110, 142, 251, 0.05);
-}
-
-.tab-item.active {
-  color: #6e8efb;
-  font-weight: 600;
-  background-color: rgba(110, 142, 251, 0.08);
-}
-
-.tab-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 2px;
-  background-color: #6e8efb;
-  border-radius: 1px;
-}
-
 /* 帖子列表 */
 .posts-scroll {
-  height: calc(100vh - 60px);
+  height: 100vh;
   /* 视口高度减去分类导航的高度 */
-}
-
-.posts-container {
-  padding: 0 8px;
-}
-
-.post-wrapper {
-  border-bottom: 6px solid #f8f8f8;
-  /* padding-bottom: 6px; */
 }
 
 /* 空状态 */

@@ -2,6 +2,7 @@
   <view class="service-recommend">
     <view class="section-title">
       <text>推荐服务</text>
+      <text class="section-desc">超多服务等你来！</text>
     </view>
 
     <!-- 推荐服务卡片 -->
@@ -176,6 +177,11 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .section-desc {
+      font-size: 3.5vw;
+      color: #666;
+    }
 
     text {
       font-size: 4.5vw;
