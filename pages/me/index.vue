@@ -42,6 +42,14 @@ onMounted(async () => {
   console.log("posts", posts.value);
 });
 
+// 查看帖子详情
+const viewPostDetail = (id) => {
+  console.log("Viewing post detail:", id);
+  uni.navigateTo({
+    url: `/pages/community/detail?id=${id}`,
+  });
+};
+
 onPullDownRefresh(async () => {
   await store.dispatch("user/fetch_first_posts");
   await store.dispatch("user/wechat_login");

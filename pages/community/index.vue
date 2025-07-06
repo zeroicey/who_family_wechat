@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from "vue"; // 引入 onMounted 和 onUnmounted
+import { computed, ref, onMounted, onUnmounted } from "vue"; // 引入 onMounted 和 onUnmounted
 import { useStore } from "vuex";
 import PostCard from "@/components/community/PostCard.vue";
 import { onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app';
@@ -24,6 +24,15 @@ const posts = computed(() => store.getters["community/get_posts"]);
 
 // 下拉刷新与加载更多状态
 const isLongPress = ref(false); // 用于区分长按和单击
+let longPressTimer = null; // 用于长按后的延迟重置isLongPress
+
+// 组件卸载时清理定时器
+onUnmounted(() => {
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+    longPressTimer = null;
+  }
+});
 
 // 组件挂载后检查帖子是否为空
 onMounted(async () => {
