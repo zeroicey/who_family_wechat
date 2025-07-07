@@ -3,7 +3,6 @@
         <!-- 顶部区域：搜索、欢迎语、轮播图 -->
         <HomeHeader />
 
-
         <!-- 推荐服务区 -->
         <ServiceRecommend />
 

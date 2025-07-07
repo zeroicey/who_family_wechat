@@ -67,7 +67,7 @@ const navigateToEdit = () => {
 <style lang="scss" scoped>
 .profile-container {
   padding: 3vw 3vw 0;
-  background-color: #f8f9fa;
+  // background-color: #f8f9fa;
 
   .profile-card {
     width: 100%;
@@ -173,8 +173,7 @@ const navigateToEdit = () => {
     }
 
     .school-info-section {
-      padding: 3vw 4vw 4vw;
-      background-color: #fafafa;
+      padding: 1vw 3vw;
 
       .school-info-row {
         display: flex;
