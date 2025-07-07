@@ -108,8 +108,8 @@ const navigateTo = (url) => {
       width: 48%;
       background-color: #fff;
       border-radius: 4vw;
-      padding: 5vw;
-      margin-bottom: 2vw;
+      padding: 4vw;
+      // margin-bottom: 1vw;
       box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
       position: relative;
       overflow: hidden;

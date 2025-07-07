@@ -1,17 +1,8 @@
 <template>
   <view class="post-card">
-    <!-- 用户信息区域 -->
+    <!-- 标题区域 -->
     <view class="post-header">
-      <view class="user-info">
-        <view class="avatar">
-          <!-- 修改 src 绑定到 fetchedAvatarUrl -->
-          <image :src="fetchedAvatarUrl" class="avatar-image" />
-        </view>
-        <view class="user-details">
-          <text class="username">{{ post.username }}</text>
-          <text @click="$emit('click')" class="post-title">{{ post.title }}</text>
-        </view>
-      </view>
+      <text @click="$emit('click')" class="post-title">{{ post.title }}</text>
     </view>
 
     <view>
@@ -54,12 +45,16 @@
         <text class="action-text">{{ post.commentCount || 0 }}</text>
       </view>
 
+      <!-- 删除 -->
+      <view class="action-group" @click="handleDeleteClick">
+        <image class="action-icon" src="/static/images/community/trash.png" />
+      </view>
     </view>
   </view>
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch } from "vue"; // 引入 ref, onMounted, watch
+import { computed } from "vue";
 import { formatRelativeTime } from "@/utils/timeFormat.js";
 import { useStore } from "vuex";
 
@@ -73,40 +68,40 @@ const props = defineProps({
   },
 });
 
-// 创建一个 ref 来存储头像 URL
-const fetchedAvatarUrl = ref(''); // 初始可以设置一个默认头像或空字符串
-
-// 异步获取头像的函数
-const fetchAvatar = async () => {
-  if (props.post && props.post.avaterId && props.post.username) {
-    try {
-      const url = await store.dispatch("community/fetch_post_user_avatar", {
-        avatarId: props.post.avaterId,
-        name: props.post.username,
-      });
-      fetchedAvatarUrl.value = url; // 更新 ref
-    } catch (error) {
-      console.error("Failed to fetch avatar:", error);
-      // fetchedAvatarUrl.value = '/static/images/default-avatar.png'; // 加载失败可以设置一个默认头像
+const handleDeleteClick = async () => {
+  uni.showModal({
+    title: '确认删除',
+    content: '确定要删除这条动态吗？删除后无法恢复。',
+    confirmText: '删除',
+    cancelText: '取消',
+    confirmColor: '#ff4757',
+    success: async (res) => {
+      if (res.confirm) {
+        try {
+          await store.dispatch("user/delete_post", props.post.id);
+          uni.showToast({
+            title: '删除成功',
+            icon: 'success',
+            mask: true
+          });
+        } catch (error) {
+          console.error('删除失败:', error);
+          uni.showToast({
+            title: '删除失败',
+            icon: 'none',
+            mask: true
+          });
+        }
+      }
     }
-  }
-};
+  });
+}
 
 const handleLikeClick = () => {
   // 处理点赞逻辑
   const actionPrefix = props.post.isLike === 1 ? 'unlike' : 'like';
-  store.dispatch(`community/${actionPrefix}_post`, props.post.id);
+  store.dispatch(`user/${actionPrefix}_post`, props.post.id);
 };
-
-// 组件挂载时获取头像
-onMounted(async () => {
-  await fetchAvatar();
-});
-
-// 监听 post prop 的变化，如果 avaterId 或 username 变了，重新获取头像
-watch(() => [props.post.avaterId, props.post.username], () => {
-  fetchAvatar();
-}, { deep: true }); // deep: true 可能不是必需的，取决于 post 对象的结构和更新方式
 
 // 处理图片列表
 const images = computed(() => {
@@ -148,6 +143,7 @@ const isContentTruncated = computed(() => {
   margin: 0;
   position: relative;
   overflow: hidden;
+  border-radius: 12px;
 }
 
 /* 用户信息样式 */
@@ -158,56 +154,10 @@ const isContentTruncated = computed(() => {
   margin-bottom: 12px;
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 10px;
-  overflow: hidden;
-  /* 新增，确保图片不超出圆形边界 */
-}
-
-.avatar-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* 确保图片覆盖整个区域 */
-}
-
-.avatar-text {
-  color: white;
+.post-title {
   font-size: 18px;
   font-weight: bold;
-}
-
-.user-details {
-  display: flex;
-  flex-direction: column;
-}
-
-.username {
-  font-size: 16px;
-  font-weight: 600;
   color: #333;
-  margin-bottom: 2px;
-}
-
-.post-title {
-  font-size: 13px;
-  color: #888;
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .post-time {

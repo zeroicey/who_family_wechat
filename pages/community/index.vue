@@ -1,7 +1,7 @@
 <template>
   <view class="community-container">
     <view v-if="posts && posts.length > 0" class="posts-container">
-      <post-card v-for="post in posts" :key="post.id" :post="post" :isInMe="false" @click="viewPostDetail(post.id)" />
+      <post-card v-for="post in posts" :key="post.id" :post="post" @click="viewPostDetail(post.id)" />
     </view>
 
     <!-- 悬浮发布按钮 -->
