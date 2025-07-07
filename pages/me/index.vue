@@ -97,8 +97,8 @@ onReachBottom(async () => {
 
 .back-to-top {
   position: fixed;
-  right: 20rpx;
-  bottom: 50rpx;
+  right: 100rpx;
+  bottom: 240rpx;
   width: 80rpx;
   height: 80rpx;
   border-radius: 50%;
@@ -111,7 +111,7 @@ onReachBottom(async () => {
 }
 
 .back-to-top-icon {
-  width: 40rpx;
-  height: 40rpx;
+  width: 50rpx;
+  height: 50rpx;
 }
 </style>
