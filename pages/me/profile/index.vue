@@ -47,8 +47,7 @@
 
       <view class="form-item">
         <text class="label">年级</text>
-        <picker class="picker" mode="selector" :value="gradeIndex" :range="gradeOptions"
-          @change="onGradeChange">
+        <picker class="picker" mode="selector" :value="gradeIndex" :range="gradeOptions" @change="onGradeChange">
           <view class="picker-text">
             <text>{{ userProfile.grade }}</text>
           </view>
@@ -294,29 +293,6 @@ const saveProfile = async () => {
           align-items: center;
           font-size: 3.5vw;
           color: #333;
-        }
-      }
-
-      .phone-wrapper {
-        flex: 1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .phone-text {
-          font-size: 3.5vw;
-          color: #333;
-        }
-
-        .change-btn {
-          padding: 1vw 3vw;
-          background-color: #f5f5f5;
-          border-radius: 3vw;
-
-          .btn-text {
-            font-size: 3vw;
-            color: #666;
-          }
         }
       }
 

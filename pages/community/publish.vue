@@ -12,7 +12,8 @@
 
     <view class="form-item">
       <text class="form-label">类型</text>
-      <picker class="form-picker" @change="bindPickerChange" :value="typeIndex" :range="typeArray" range-key="name">
+      <picker class="form-picker" @change="bindPickerChange" :value="typeIndex" :range="typeArray" mode="selector"
+        range-key="name">
         <view class="picker-display">{{ typeArray[typeIndex] ? typeArray[typeIndex].name : '请选择类型' }}</view>
       </picker>
     </view>
@@ -187,114 +188,91 @@ const submitPost = async () => {
 
 <style lang="scss" scoped>
 .publish-container {
-  padding: 24rpx;
-  background-color: #f7f8fa; // 更柔和的背景色
+  padding: 30rpx;
+  background-color: #f9f9f9;
   min-height: 100vh;
   box-sizing: border-box;
 }
 
 .form-item {
   background-color: #ffffff;
-  padding: 24rpx 30rpx;
-  border-radius: 16rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.03); // 调整阴影使其更柔和
+  padding: 30rpx;
+  border-radius: 20rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.05);
 }
 
 .form-label {
   display: block;
-  font-size: 30rpx; // 稍微增大标签字号
-  color: #323233; // 深灰色，更易读
-  margin-bottom: 16rpx;
-  font-weight: 600; // 加粗标签
+  font-size: 28rpx; /* 调整字体大小 */
+  color: #666; /* 调整颜色 */
+  margin-bottom: 15rpx; /* 调整下边距 */
+  font-weight: normal; /* 取消加粗 */
 }
 
 .form-input,
-.form-textarea,
-.form-picker .picker-display {
-  font-size: 28rpx;
+.form-textarea {
+  width: 100%;
+  font-size: 30rpx;
   color: #333;
+  background-color: #fff; /* 改为白色背景 */
+  border: none; /* 移除边框 */
+  border-bottom: 1px solid #f0f0f0; /* 添加底部边框 */
+  border-radius: 0; /* 移除圆角 */
+  padding: 0; /* 移除统一的内边距，下面分别设置 */
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &::placeholder {
+    color: #b8b8b8;
+  }
+
+  &:focus {
+    border-bottom-color: #007aff; /* 聚焦时改变底部边框颜色 */
+    box-shadow: none; /* 移除阴影 */
+  }
 }
 
 .form-input {
-  width: 100%;
-  height: 88rpx; // 增加高度
-  border: 1px solid #ebedf0; // 更浅的边框色
-  border-radius: 12rpx; // 更大的圆角
-  padding: 0 24rpx;
-  box-sizing: border-box;
-
-  &::placeholder {
-    color: #c8c9cc;
-  }
+  height: 80rpx; /* 给输入框一个固定的高度 */
 }
 
 .form-textarea {
-  width: 100%;
-  height: 300rpx;
-  /* 增加内容表单的高度 */
-  border: 1px solid #ebedf0;
-  border-radius: 12rpx;
-  padding: 24rpx;
-  box-sizing: border-box;
-  line-height: 1.6; // 增加行高，提升可读性
-
-  &::placeholder {
-    color: #c8c9cc;
-  }
+  height: 280rpx;
+  line-height: 1.6;
+  padding: 20rpx 0; /* 单独为文本域设置内边距 */
 }
 
 .form-picker {
-  width: 100%;
-  height: 88rpx;
-  border: 1px solid #ebedf0;
-  border-radius: 12rpx;
-  padding: 0 24rpx;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  position: relative; // 为箭头定位
+  background-color: #f7f8fa;
+  border: 1px solid #f0f0f0;
+  border-radius: 16rpx;
+  padding: 24rpx;
 
   .picker-display {
-    flex: 1;
-  }
-
-  // 可以添加一个向下的箭头图标
-  &::after {
-    content: "";
-    position: absolute;
-    right: 24rpx;
-    top: 50%;
-    transform: translateY(-50%) rotate(45deg);
-    width: 12rpx;
-    height: 12rpx;
-    border-right: 2rpx solid #969799;
-    border-bottom: 2rpx solid #969799;
+    font-size: 30rpx;
+    color: #333;
   }
 }
 
 .image-uploader {
   .image-preview-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20rpx; // 使用gap来控制间距
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20rpx;
   }
 
   .image-preview-item,
   .add-image-btn {
-    width: calc((100% - 60rpx) / 4); // 动态计算宽度，一行4个，考虑gap
-    padding-bottom: calc((100% - 60rpx) / 4); // 保持正方形
-    height: 0; // 与padding-bottom配合实现正方形
-    border-radius: 12rpx;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 16rpx;
     position: relative;
     overflow: hidden;
   }
 
   .image-preview-item {
     .preview-image {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -302,63 +280,54 @@ const submitPost = async () => {
 
     .delete-icon {
       position: absolute;
-      top: 8rpx;
-      right: 8rpx;
-      width: 40rpx;
-      height: 40rpx;
-      background-color: rgba(0, 0, 0, 0.6);
+      top: 10rpx;
+      right: 10rpx;
+      width: 44rpx;
+      height: 44rpx;
+      background-color: rgba(0, 0, 0, 0.5);
       color: white;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 28rpx;
+      font-size: 30rpx;
       line-height: 1;
       z-index: 10;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
   }
 
   .add-image-btn {
-    border: 2rpx dashed #dcdee0;
-    // display: flex; // 移除 flex 布局，改用绝对定位子元素
-    // justify-content: center;
-    // align-items: center;
+    border: 2rpx dashed #dcdfe6;
     background-color: #f7f8fa;
-    position: relative; // 父元素需要相对定位，以便子元素绝对定位
-    // 确保 add-image-btn 自身是正方形并且有明确的尺寸，这在之前的代码中已经通过
-    // width: calc((100% - 60rpx) / 4);
-    // padding-bottom: calc((100% - 60rpx) / 4);
-    // height: 0;
-    // 实现
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     .add-icon {
-      font-size: 70rpx; // 可以适当调整加号大小
-      color: #b0b0b0;
-      font-weight: 200; // 可以尝试移除或调整
-      position: absolute; // 使用绝对定位
-      top: 50%; // 定位到父容器的垂直中心
-      left: 50%; // 定位到父容器的水平中心
-      transform: translate(-50%,
-          -50%); // 将自身向左上角移动自身宽高的一半，实现精确居中
-      // line-height: 1; // 在绝对定位下，line-height 的影响较小，可以保留或移除
+      font-size: 60rpx;
+      color: #b8b8b8;
+      font-weight: 300;
     }
   }
 }
 
 .publish-button {
-  background-color: #1989fa; // 鲜艳的蓝色
+  background: linear-gradient(45deg, #007aff, #00c6ff);
   color: white;
-  border-radius: 44rpx; // 更圆润的按钮
-  font-size: 32rpx;
-  font-weight: 500;
-  height: 88rpx;
-  line-height: 88rpx;
+  border-radius: 50rpx;
+  font-size: 34rpx;
+  font-weight: bold;
+  height: 100rpx;
+  line-height: 100rpx;
   padding: 0;
-  margin-top: 60rpx;
-  box-shadow: 0 4rpx 8rpx rgba(25, 137, 250, 0.2);
+  margin-top: 80rpx;
+  box-shadow: 0 8rpx 20rpx rgba(0, 122, 255, 0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
 
   &:active {
-    background-color: #0d6efd;
+    transform: scale(0.98);
+    box-shadow: 0 4rpx 10rpx rgba(0, 122, 255, 0.2);
   }
 }
 </style>

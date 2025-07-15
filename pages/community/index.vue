@@ -39,6 +39,7 @@ onMounted(async () => {
   if (!posts.value || posts.value.length === 0) {
     await store.dispatch("community/fetch_first_posts");
   }
+  await store.dispatch("community/fetch_post_types");
 });
 
 onPullDownRefresh(async () => {
