@@ -150,12 +150,6 @@
       "style": {
         "navigationBarTitleText": "个人资料"
       }
-    },
-    {
-      "path": "pages/me/profile/phone",
-      "style": {
-        "navigationBarTitleText": "绑定手机"
-      }
     }
   ],
   "globalStyle": {

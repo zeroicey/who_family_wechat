@@ -29,19 +29,6 @@
         </picker>
         <image class="form-item-icon" src="/static/images/profile/gender.png"></image>
       </view>
-
-      <!-- <view class="form-item">
-        <text class="label">手机号</text>
-        <view class="phone-wrapper">
-          <text class="phone-text">{{
-            maskPhone(userProfile.phone) || "未绑定"
-          }}</text>
-          <view class="change-btn" @click="navigateToChangePhone">
-            <text class="btn-text">更换</text>
-          </view>
-        </view>
-        <image class="form-item-icon" src="/static/images/profile/phone.png"></image>
-      </view> -->
     </view>
 
     <!-- 学校信息表单组 -->
@@ -60,7 +47,12 @@
 
       <view class="form-item">
         <text class="label">年级</text>
-        <input class="input" v-model="userProfile.grade" placeholder="请输入年级" />
+        <picker class="picker" mode="selector" :value="gradeIndex" :range="gradeOptions"
+          @change="onGradeChange">
+          <view class="picker-text">
+            <text>{{ userProfile.grade }}</text>
+          </view>
+        </picker>
         <image class="form-item-icon" src="/static/images/profile/grade.png"></image>
       </view>
     </view>
@@ -94,11 +86,20 @@ const avatarUrl = computed(() => store.getters["user/get_user_avatar_url"]);
 // 性别选项
 const genderOptions = ["男", "女"];
 
+// 年级选项
+const gradeOptions = ["大一", "大二", "大三", "大四"];
+
 // 用户资料
 const userProfile = reactive({
   ...userInfo.value,
   phone: userInfo.value.phone || "",
   bio: userInfo.value.bio || "",
+  grade: gradeOptions.includes(userInfo.value.grade) ? userInfo.value.grade : '大一',
+});
+
+const gradeIndex = computed(() => {
+  const index = gradeOptions.indexOf(userProfile.grade);
+  return index === -1 ? 0 : index;
 });
 
 // 选择头像
@@ -137,17 +138,10 @@ const onGenderChange = (e) => {
   userProfile.gender = genderOptions[selectedIndex];
 };
 
-// 手机号脱敏显示
-const maskPhone = (phone) => {
-  if (!phone || phone.length < 11) return phone;
-  return phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
-};
-
-// 跳转到更换手机号页面
-const navigateToChangePhone = () => {
-  uni.navigateTo({
-    url: "/pages/me/profile/phone",
-  });
+// 年级选择变化
+const onGradeChange = (e) => {
+  const selectedIndex = parseInt(e.detail.value, 10);
+  userProfile.grade = gradeOptions[selectedIndex];
 };
 
 // 保存用户资料
@@ -174,21 +168,30 @@ const saveProfile = async () => {
     title: "保存中...",
   });
 
-  await store.dispatch("user/update_user_info", userProfile);
-  await store.dispatch("community/fetch_first_posts");
-  await store.dispatch("user/fetch_first_posts");
+  try {
+    await store.dispatch("user/update_user_info", userProfile);
+    await store.dispatch("community/fetch_first_posts");
+    await store.dispatch("user/fetch_first_posts");
 
-  uni.hideLoading();
+    uni.hideLoading();
 
-  uni.showToast({
-    title: "保存成功",
-    icon: "success",
-    duration: 1700,
-  });
+    uni.showToast({
+      title: "保存成功",
+      icon: "success",
+      duration: 1700,
+    });
 
-  uni.switchTab({
-    url: '/pages/me/index'
-  });
+    uni.switchTab({
+      url: '/pages/me/index'
+    });
+  } catch (error) {
+    uni.hideLoading();
+    uni.showToast({
+      title: "保存失败，请稍后再试",
+      icon: "none",
+      duration: 2000,
+    });
+  }
 };
 </script>
 
