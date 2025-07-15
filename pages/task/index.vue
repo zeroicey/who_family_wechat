@@ -28,11 +28,11 @@
             </view>
 
             <!-- 任务项 -->
-            <view v-for="task in tasks" :key="task.id" class="task-item" :class="{ 'completed-item': task.status === '已完成' }">
+                        <view v-for="task in tasks" :key="task.id" class="task-item" :class="{ 'completed-item': task.status === '已完成' }" @click="showTaskDetail(task)">
                 <view class="task-content">
                     <!-- 状态图标 -->
                     <view class="status-icon" :class="{ 'completed': task.status === '已完成' }"
-                        @click="toggleTaskStatus(task)">
+                        @click.stop="toggleTaskStatus(task)">
                         <text v-if="task.status === '已完成'" class="check-icon">✓</text>
                     </view>
 
@@ -43,11 +43,35 @@
                 </view>
 
                 <!-- 删除按钮 -->
-                <view class="delete-btn" @click="deleteTask(task.id)">
+                <view class="delete-btn" @click.stop="deleteTask(task.id)">
                     <text class="delete-icon">×</text> <!-- 使用更简洁的删除图标 -->
                 </view>
             </view>
         </scroll-view>
+
+        <!-- 任务详情模态框 -->
+        <view v-if="isModalVisible" class="modal-overlay" @click="closeModal">
+            <view class="modal-content" @click.stop>
+                <view class="modal-header">
+                    <text class="modal-title">任务详情</text>
+                    <text class="close-btn" @click="closeModal">×</text>
+                </view>
+                <view class="modal-body">
+                    <view class="detail-item">
+                        <text class="detail-label">内容:</text>
+                        <text class="detail-value">{{ selectedTask.title }}</text>
+                    </view>
+                    <view class="detail-item">
+                        <text class="detail-label">状态:</text>
+                        <text class="detail-value">{{ selectedTask.status }}</text>
+                    </view>
+                    <view class="detail-item">
+                        <text class="detail-label">创建时间:</text>
+                        <text class="detail-value">{{ selectedTask.createTime }}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
 </template>
 
@@ -59,6 +83,8 @@ const store = useStore();
 const tasks = computed(() => store.getters['task/get_tasks']);
 const newTaskTitle = ref('');
 const scrollHeight = ref('calc(100vh - 280rpx)'); // 重新调整高度，考虑激励语区域
+const isModalVisible = ref(false);
+const selectedTask = ref(null);
 
 // 激励语句数组
 const motivationalQuotes = [
@@ -80,6 +106,18 @@ const motivationalQuotes = [
 ];
 
 // 随机激励语句
+// 显示任务详情
+const showTaskDetail = (task) => {
+    selectedTask.value = task;
+    isModalVisible.value = true;
+};
+
+// 关闭模态框
+const closeModal = () => {
+    isModalVisible.value = false;
+    selectedTask.value = null;
+};
+
 const randomMotivation = computed(() => {
     const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
     return motivationalQuotes[randomIndex];
@@ -177,6 +215,70 @@ const addNewTask = async () => {
 </script>
 
 <style lang="scss" scoped>
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 40rpx;
+    border-radius: 20rpx;
+    width: 80%;
+    max-width: 600rpx;
+    box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30rpx;
+    padding-bottom: 20rpx;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #333;
+}
+
+.close-btn {
+    font-size: 50rpx; // 增大图标
+    color: #999;
+    cursor: pointer;
+    padding: 10rpx; // 增大点击区域
+}
+
+.modal-body {
+    font-size: 30rpx;
+}
+
+.detail-item {
+    display: flex;
+    margin-bottom: 20rpx;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #555;
+    width: 150rpx;
+}
+
+.detail-value {
+    color: #333;
+    flex: 1;
+    word-break: break-all;
+}
 .task-container {
     height: 100vh;
     background-color: #f4f6f8; // 更柔和的背景色
@@ -302,6 +404,7 @@ const addNewTask = async () => {
     border-radius: 16rpx; // 统一圆角大小
     box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.07); // 调整阴影使其更柔和
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
 
     &:active {
         transform: translateY(2rpx);
@@ -320,8 +423,8 @@ const addNewTask = async () => {
         overflow: hidden; // 防止内容溢出
 
         .status-icon {
-            width: 40rpx; // 调整图标大小
-            height: 40rpx;
+            width: 50rpx; // 增大点击区域
+            height: 50rpx;
             border: 2rpx solid #ced4da; // 调整边框颜色
             border-radius: 50%;
             display: flex;
@@ -337,7 +440,7 @@ const addNewTask = async () => {
 
                 .check-icon {
                     color: #ffffff;
-                    font-size: 22rpx;
+                    font-size: 30rpx; // 增大图标
                     font-weight: bold;
                 }
             }
@@ -361,7 +464,7 @@ const addNewTask = async () => {
     }
 
     .delete-btn {
-        padding: 8rpx 12rpx; // 调整内边距
+        padding: 15rpx; // 增大点击区域
         margin-left: 15rpx; // 增加左边距
         border-radius: 50%;
         transition: background-color 0.2s ease;
@@ -374,7 +477,7 @@ const addNewTask = async () => {
         }
 
         .delete-icon {
-            font-size: 30rpx;
+            font-size: 40rpx; // 增大图标
             color: #dc3545; // 醒目的删除图标颜色
             font-weight: bold;
         }
