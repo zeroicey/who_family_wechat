@@ -4,6 +4,7 @@
 
 // 导入配置
 import { BASE_URL, DEV_BASE_URL, TIMEOUT, CURRENT_ENV, ENV } from "./config";
+import store from "@/store";
 
 /**
  * 请求拦截器
@@ -26,10 +27,7 @@ const responseInterceptor = (response) => {
   if (response.statusCode === 200) {
     return response.data;
   } else if (response.statusCode === 401) {
-    // token过期，跳转到登录页
-    uni.navigateTo({
-      url: "/pages/login",
-    });
+    store.dispatch("user/wechat_login")
     return Promise.reject("登录已过期，请重新登录");
   } else {
     return Promise.reject(response.data || "服务器异常");

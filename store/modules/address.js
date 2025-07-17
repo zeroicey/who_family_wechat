@@ -1,7 +1,10 @@
-import { getRemoteStorageSync, setRemoteStorageSync } from "../../utils/remoteStorage";
+import {
+  getRemoteStorageSync,
+  setRemoteStorageSync,
+} from "../../utils/remoteStorage";
 
 const state = {
-  addresses: getRemoteStorageSync("addresses") || [],
+  addresses: [],
 };
 
 const getters = {
@@ -107,7 +110,7 @@ const mutations = {
 
 const actions = {
   async load_addresses({ commit }) {
-    const addresses = await getRemoteStorageSync("addresses") || [];
+    const addresses = (await getRemoteStorageSync("addresses")) || [];
     commit("set_addresses", addresses);
     console.log("[地址模块] 地址加载成功");
   },

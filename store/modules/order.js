@@ -1,7 +1,10 @@
-import { getRemoteStorageSync, setRemoteStorageSync } from "../../utils/remoteStorage";
+import {
+  getRemoteStorageSync,
+  setRemoteStorageSync,
+} from "../../utils/remoteStorage";
 
 const state = {
-  orders: getRemoteStorageSync("orders") || [],
+  orders: [],
 };
 
 const getters = {
@@ -31,7 +34,7 @@ const mutations = {
       status: "待支付", // '待支付', '待完成', '已完成', '已取消'
       ...orderPayload,
     };
-    console.log(state.orders)
+    console.log(state.orders);
     state.orders.unshift(newOrder);
     setRemoteStorageSync("orders", state.orders);
   },
@@ -59,7 +62,7 @@ const mutations = {
 
 const actions = {
   async load_orders({ commit }) {
-    const orders = await getRemoteStorageSync("orders") || [];
+    const orders = (await getRemoteStorageSync("orders")) || [];
     commit("set_orders", orders);
     console.log("[订单模块] 订单加载成功");
   },
