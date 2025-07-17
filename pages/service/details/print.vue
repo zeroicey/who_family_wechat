@@ -1,6 +1,6 @@
 <template>
 	<view class="print-details-page">
-		<image class="service-image" src="/static/images/print.png" mode="aspectFill"></image>
+		<image class="service-image" src="https://api.hcyj.xyz/images/dnfw.png" mode="aspectFill"></image>
 
 		<view class="service-intro-card">
 			<text class="title">戴拿打印站 | 校园全能文印管家</text>

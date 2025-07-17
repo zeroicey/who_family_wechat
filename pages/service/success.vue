@@ -13,7 +13,7 @@
         <view class="card-container">
             <view class="contact-card">
                 <text class="contact-title">联系商家，跟进订单状态</text>
-                <image class="qr-code" src="/static/images/daina_wechat.png" mode="aspectFit"></image>
+                <image class="qr-code" src="https://api.hcyj.xyz/images/dnwx.png" mode="aspectFit"></image>
                 <view class="wechat-info">
                     <text>微信号：Dianasyxl18024113874</text>
                     <button class="copy-btn" @click="copyWechat">复制</button>
