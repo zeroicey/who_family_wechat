@@ -1,5 +1,7 @@
+import { getRemoteStorageSync, setRemoteStorageSync } from "../../utils/remoteStorage";
+
 const state = {
-  addresses: uni.getStorageSync("addresses") || [],
+  addresses: getRemoteStorageSync("addresses") || [],
 };
 
 const getters = {
@@ -13,7 +15,7 @@ const getters = {
 const mutations = {
   set_addresses(state, addresses) {
     state.addresses = addresses;
-    uni.setStorageSync("addresses", state.addresses);
+    setRemoteStorageSync("addresses", state.addresses);
   },
 
   add_address(state, addressPayload) {
@@ -40,7 +42,7 @@ const mutations = {
     }
 
     state.addresses.unshift(newAddress);
-    uni.setStorageSync("addresses", state.addresses);
+    setRemoteStorageSync("addresses", state.addresses);
   },
 
   update_address(state, updatedAddress) {
@@ -68,7 +70,7 @@ const mutations = {
         state.addresses[0].isDefault = true;
       }
 
-      uni.setStorageSync("addresses", state.addresses);
+      setRemoteStorageSync("addresses", state.addresses);
     }
   },
 
@@ -92,20 +94,20 @@ const mutations = {
     ) {
       state.addresses[0].isDefault = true;
     }
-    uni.setStorageSync("addresses", state.addresses);
+    setRemoteStorageSync("addresses", state.addresses);
   },
 
   set_default_address(state, addressId) {
     state.addresses.forEach((address) => {
       address.isDefault = address.id === addressId;
     });
-    uni.setStorageSync("addresses", state.addresses);
+    setRemoteStorageSync("addresses", state.addresses);
   },
 };
 
 const actions = {
-  load_addresses({ commit }) {
-    const addresses = uni.getStorageSync("addresses") || [];
+  async load_addresses({ commit }) {
+    const addresses = await getRemoteStorageSync("addresses") || [];
     commit("set_addresses", addresses);
     console.log("[地址模块] 地址加载成功");
   },

@@ -15,7 +15,6 @@
                 </view>
             </view>
             <view v-else class="empty-state">
-                <image class="empty-icon" src="/static/images/me/order_empty.png" mode="aspectFit"></image>
                 <text class="empty-text">暂无相关订单</text>
             </view>
         </scroll-view>

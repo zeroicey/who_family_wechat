@@ -17,12 +17,12 @@ export const setRemoteStorageSync = (key, value) => {
  */
 export const getRemoteStorageSync = async (key) => {
     const res = await apiGetItem(key);
-    console.log(res)
     if (res && res.data && res.data.value) {
         try {
             return JSON.parse(res.data.value);
         } catch (e) {
             return res.data.value;
+
         }
     }
     return null;

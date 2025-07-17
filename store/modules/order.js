@@ -1,5 +1,7 @@
+import { getRemoteStorageSync, setRemoteStorageSync } from "../../utils/remoteStorage";
+
 const state = {
-  orders: uni.getStorageSync("orders") || [],
+  orders: getRemoteStorageSync("orders") || [],
 };
 
 const getters = {
@@ -18,7 +20,7 @@ const getters = {
 const mutations = {
   set_orders(state, orders) {
     state.orders = orders;
-    uni.setStorageSync("orders", state.orders);
+    // setRemoteStorageSync("orders", state.orders);
   },
 
   add_order(state, orderPayload) {
@@ -29,8 +31,9 @@ const mutations = {
       status: "待支付", // '待支付', '待完成', '已完成', '已取消'
       ...orderPayload,
     };
+    console.log(state.orders)
     state.orders.unshift(newOrder);
-    uni.setStorageSync("orders", state.orders);
+    setRemoteStorageSync("orders", state.orders);
   },
 
   update_order(state, updatedOrder) {
@@ -44,19 +47,19 @@ const mutations = {
         updatedAt: new Date().toISOString(),
       };
       state.orders.splice(index, 1, newOrder);
-      uni.setStorageSync("orders", state.orders);
+      setRemoteStorageSync("orders", state.orders);
     }
   },
 
   delete_order(state, orderId) {
     state.orders = state.orders.filter((order) => order.id !== orderId);
-    uni.setStorageSync("orders", state.orders);
+    setRemoteStorageSync("orders", state.orders);
   },
 };
 
 const actions = {
-  load_orders({ commit }) {
-    const orders = uni.getStorageSync("orders") || [];
+  async load_orders({ commit }) {
+    const orders = await getRemoteStorageSync("orders") || [];
     commit("set_orders", orders);
     console.log("[订单模块] 订单加载成功");
   },

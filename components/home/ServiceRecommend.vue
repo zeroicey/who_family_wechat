@@ -116,30 +116,6 @@ const fetchRecommendServices = async () => {
   }
 };
 
-// 获取热门服务数据
-const fetchHotServices = async () => {
-  try {
-    // 调用Vuex获取热门服务数据
-    await store.dispatch('home/fetchToolList');
-    const toolData = store.getters['home/getToolList'];
-
-    if (toolData && toolData.length > 0) {
-      // 取前5个工具作为热门服务
-      hotServices.value = toolData.slice(0, 5).map(tool => {
-        return {
-          id: tool.id,
-          name: tool.name,
-          icon: tool.icon || getServiceColor(tool.id % 5),
-          url: tool.url || `/pages/tool/detail?id=${tool.id}`
-        };
-      });
-    }
-  } catch (error) {
-    console.error('获取热门服务失败', error);
-    // 失败时不显示提示，因为这是二级功能
-  }
-};
-
 // 获取服务图标颜色
 // 为每个图标生成不同的颜色
 const getServiceColor = (index) => {
@@ -164,7 +140,6 @@ const navigateToService = (item) => {
 // 组件挂载时获取数据
 onMounted(() => {
   fetchRecommendServices();
-  fetchHotServices();
 });
 </script>
 
