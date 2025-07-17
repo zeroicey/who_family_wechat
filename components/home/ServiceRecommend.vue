@@ -61,7 +61,7 @@ const fetchRecommendServices = async () => {
           id: 1,
           title: '代拿快递服务',
           description: '校内快递专人代取，省时省力，专注于更重要的事。',
-          imageUrl: 'https://api.hcyj.xyz/images/dngg.png',
+          imageUrl: 'https://api.hcyj.xyz/images/dngg.jpg',
           price: '¥3起',
           rating: 4.8,
           orders: 1580,

@@ -1,6 +1,6 @@
 <template>
 	<view class="express-details-page">
-		<image class="service-image" src="https://api.hcyj.xyz/images/dngg.png" mode="aspectFill"></image>
+		<image class="service-image" src="https://api.hcyj.xyz/images/dngg.jpg" mode="aspectFill"></image>
 
 		<view class="service-intro-card">
 			<text class="title">闪电速递，使命必达</text>
