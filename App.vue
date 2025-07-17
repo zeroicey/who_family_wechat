@@ -5,6 +5,7 @@ export default {
 		console.log('App Launch')
 		await store.dispatch("user/wechat_login")
 		await store.dispatch("recruit/fetch_first_recruits")
+		await store.dispatch("community/fetch_first_posts")
 	},
 	onShow: function () {
 		console.log('App Show')
