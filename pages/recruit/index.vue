@@ -1,19 +1,12 @@
 <template>
   <view class="recruit-page">
     <!-- 顶部分类栏 -->
-    <CategoryTabs :selected-type-index="selectedTypeIndex" @select-type="selectType" />
+    <!-- <CategoryTabs :selected-type-index="selectedTypeIndex" @select-type="selectType" /> -->
 
     <!-- 招聘列表 -->
-    <scroll-view 
-      class="recruit-list" 
-      scroll-y="true" 
-      @scrolltolower="loadMore" 
-      :lower-threshold="50"
-      refresher-enabled="true"
-      :refresher-triggered="isRefreshing"
-      @refresherrefresh="onRefresh"
-      refresher-background="#f5f5f5"
-    >
+    <scroll-view class="recruit-list" scroll-y="true" @scrolltolower="loadMore" :lower-threshold="50"
+      refresher-enabled="true" :refresher-triggered="isRefreshing" @refresherrefresh="onRefresh"
+      refresher-background="#f5f5f5">
       <view class="list-container">
         <RecruitCard v-for="recruit in filteredRecruits" :key="recruit.id" :recruit="recruit" @click="goToDetail" />
 
@@ -76,18 +69,18 @@ const selectType = (index) => {
 // scroll-view下拉刷新
 const onRefresh = async () => {
   console.log('scroll-view下拉刷新触发');
-  
+
   try {
     isRefreshing.value = true;
-    
+
     // 重新获取第一页数据
     await store.dispatch('recruit/fetch_first_recruits');
-    
+
     // 重置加载状态
     noMoreData.value = false;
-    
+
     console.log('scroll-view刷新成功');
-    
+
     uni.showToast({
       title: '刷新成功',
       icon: 'success',
