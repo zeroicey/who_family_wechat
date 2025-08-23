@@ -1,4 +1,5 @@
 import request from "./request";
+import { checkImg, checkText } from "./check";
 
 export const fetchPosts = async () => {
   return request.get("/community/recommend-post");
@@ -59,6 +60,10 @@ export const deleteSecondComment = async (commentId) => {
 };
 
 export const publishPreparePost = async (post) => {
+  const checkRes = await checkText(post);
+  if (checkRes.code !== 200) {
+    return checkRes;
+  }
   return request.post("/community/prepare-post", post);
 };
 
@@ -71,24 +76,56 @@ export const fetchPostTypes = async () => {
 };
 
 export const uploadImage = async (requestUrl, imagePath) => {
-  uni.getFileSystemManager().readFile({
-    filePath: imagePath,
-    success: (res) => {
-      uni.request({
-        url: requestUrl,
-        method: "PUT",
-        data: res.data,
-        header: {
-          "Content-Type": "application/octet-stream",
-        },
-        success: ({ data, statusCode, header }) => {
-          console.log("图片上传成功", data, statusCode, header);
-        },
-        fail: (error) => {
-          console.log("图片上传失败", error);
-        },
-      });
-    },
+  // 先检测图片内容
+  const checkResult = await new Promise((resolve, reject) => {
+    uni.getFileSystemManager().readFile({
+      filePath: imagePath,
+      encoding: "base64",
+      success: async (res) => {
+        try {
+          const checkRes = await checkImg("data:image/png;base64," + res.data);
+          resolve(checkRes);
+        } catch (error) {
+          reject(error);
+        }
+      },
+      fail: (error) => {
+        reject(new Error("读取文件失败: " + error.errMsg));
+      }
+    });
+  });
+
+  // 如果检测失败，抛出错误，不进行上传
+  if (checkResult.code !== 200) {
+    throw new Error("图片检测失败，无法上传");
+  }
+
+  // 检测通过，进行上传
+  return new Promise((resolve, reject) => {
+    uni.getFileSystemManager().readFile({
+      filePath: imagePath,
+      success: (res) => {
+        uni.request({
+          url: requestUrl,
+          method: "PUT",
+          data: res.data,
+          header: {
+            "Content-Type": "application/octet-stream",
+          },
+          success: ({ data, statusCode, header }) => {
+            console.log("图片上传成功", data, statusCode, header);
+            resolve({ data, statusCode, header });
+          },
+          fail: (error) => {
+            console.log("图片上传失败", error);
+            reject(new Error("图片上传失败: " + error.errMsg));
+          },
+        });
+      },
+      fail: (error) => {
+        reject(new Error("读取文件失败: " + error.errMsg));
+      }
+    });
   });
 };
 
