@@ -60,7 +60,7 @@ const dateText = computed(() => {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const weekDay = ['日', '一', '二', '三', '四', '五', '六'][date.getDay()];
-  return `${month}月${day}日 · 星期${weekDay}`;
+  return `${month}.${day} · 星期${weekDay}`;
 });
 
 // 轮播图数据
