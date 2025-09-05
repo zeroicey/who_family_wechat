@@ -34,6 +34,10 @@ export const fetchSecondMoreComments = async (commentId, lastCommentId) => {
 };
 
 export const addFirstComment = async (commentData) => {
+  const checkRes = await checkText({ commentData });
+  if (checkRes.code !== 200) {
+    return checkRes;
+  }
   return request.post("/community/post-comment", {
     id: commentData.postId,
     content: commentData.content,
@@ -41,6 +45,10 @@ export const addFirstComment = async (commentData) => {
 };
 
 export const addSecondComment = async (replyData) => {
+  const checkRes = await checkText({ replyData });
+  if (checkRes.code !== 200) {
+    return checkRes;
+  }
   return request.post("/community/post-comment-reply", {
     id: replyData.commentId,
     content: replyData.content,
@@ -91,7 +99,7 @@ export const uploadImage = async (requestUrl, imagePath) => {
       },
       fail: (error) => {
         reject(new Error("读取文件失败: " + error.errMsg));
-      }
+      },
     });
   });
 
@@ -124,7 +132,7 @@ export const uploadImage = async (requestUrl, imagePath) => {
       },
       fail: (error) => {
         reject(new Error("读取文件失败: " + error.errMsg));
-      }
+      },
     });
   });
 };

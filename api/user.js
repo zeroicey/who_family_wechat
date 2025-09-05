@@ -1,5 +1,6 @@
 import { getRandomAvatarUrl } from "@/utils/randomData";
 import request from "./request";
+import { checkImg, checkText } from "./check";
 
 export const fetchPosts = async () => {
   return request.get("/community/self-post");
@@ -15,6 +16,10 @@ export const wechatLogin = async () => {
   });
 
   const random_name = await getRandomName();
+  const checkRes = await checkText({ random_name });
+  if (checkRes.code !== 200) {
+    return checkRes;
+  }
 
   const code = res.code;
   return request.post("/login/wechat-login", {
@@ -27,6 +32,10 @@ export const wechatLogin = async () => {
 };
 
 export const updateUserInfo = async (userInfo) => {
+  const checkRes = await checkText(userInfo);
+  if (checkRes.code !== 200) {
+    return checkRes;
+  }
   return request.put("/user/userInfo", userInfo);
 };
 
@@ -72,8 +81,13 @@ export const getAvatarUrl = async (id, name) => {
 };
 
 export const updateUserAvatar = async (avatarBase64) => {
+  const avatar = "data:image/png;base64," + avatarBase64;
+  const checkRes = await checkImg(avatar);
+  if (checkRes.code !== 200) {
+    return checkRes;
+  }
   return request.put("/user/avatar", {
-    avatar: "data:image/png;base64," + avatarBase64,
+    avatar,
   });
 };
 
