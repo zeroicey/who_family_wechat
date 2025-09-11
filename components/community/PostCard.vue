@@ -25,7 +25,15 @@
       <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
         <view v-for="(img, index) in images" :key="index" class="image-item"
           :class="{ 'image-item-single': images.length === 1 }">
+          <!-- 占位图片，在实际图片加载完成前显示 -->
+          <view v-if="!imageLoadedStates[index]" class="image-placeholder">
+            <image src="/static/images/placeholder.svg" mode="aspectFit" class="placeholder-image" />
+          </view>
+          <!-- 实际图片 -->
           <image :src="post.imgList[index]" mode="aspectFill" class="post-image" lazy-load="true"
+            :style="{ opacity: imageLoadedStates[index] ? 1 : 0 }"
+            @load="onImageLoad(index)"
+            @error="onImageError(index)"
             @tap="previewImage(index)" />
         </view>
       </view>
@@ -76,6 +84,9 @@ const props = defineProps({
 // 创建一个 ref 来存储头像 URL
 const fetchedAvatarUrl = ref(''); // 初始可以设置一个默认头像或空字符串
 
+// 图片加载状态管理
+const imageLoadedStates = ref({});
+
 // 异步获取头像的函数
 const fetchAvatar = async () => {
   if (props.post && props.post.avaterId && props.post.username) {
@@ -98,15 +109,21 @@ const handleLikeClick = () => {
   store.dispatch(`community/${actionPrefix}_post`, props.post.id);
 };
 
-// 组件挂载时获取头像
+// 组件挂载时获取头像和初始化图片状态
 onMounted(async () => {
   await fetchAvatar();
+  initImageLoadStates();
 });
 
 // 监听 post prop 的变化，如果 avaterId 或 username 变了，重新获取头像
 watch(() => [props.post.avaterId, props.post.username], () => {
   fetchAvatar();
 }, { deep: true }); // deep: true 可能不是必需的，取决于 post 对象的结构和更新方式
+
+// 监听图片列表变化，重新初始化加载状态
+watch(() => props.post.imgList, () => {
+  initImageLoadStates();
+}, { deep: true });
 
 // 处理图片列表
 const images = computed(() => {
@@ -133,6 +150,28 @@ const previewImage = (currentIndex) => {
     urls: props.post.imgList,
     current: currentIndex,
   });
+};
+
+// 图片加载成功处理
+const onImageLoad = (index) => {
+  imageLoadedStates.value[index] = true;
+};
+
+// 图片加载失败处理
+const onImageError = (index) => {
+  console.warn(`Image at index ${index} failed to load`);
+  imageLoadedStates.value[index] = true; // 即使失败也隐藏占位图
+};
+
+// 初始化图片加载状态
+const initImageLoadStates = () => {
+  const states = {};
+  if (props.post.imgList && props.post.imgList.length > 0) {
+    props.post.imgList.forEach((_, index) => {
+      states[index] = false;
+    });
+  }
+  imageLoadedStates.value = states;
 };
 
 // 判断内容是否被截断（简单估算：超过约150个字符认为可能被截断）
@@ -270,10 +309,17 @@ const isContentTruncated = computed(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
+}
+
+.placeholder-image {
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
 }
 
 /* 单图样式 */

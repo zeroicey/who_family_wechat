@@ -16,10 +16,6 @@ export const wechatLogin = async () => {
   });
 
   const random_name = await getRandomName();
-  const checkRes = await checkText({ random_name });
-  if (checkRes.code !== 200) {
-    return checkRes;
-  }
 
   const code = res.code;
   return request.post("/login/wechat-login", {
