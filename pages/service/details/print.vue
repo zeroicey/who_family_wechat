@@ -3,14 +3,14 @@
 		<image class="service-image" src="https://api.hcyj.xyz/images/dnfw.png" mode="aspectFill"></image>
 
 		<view class="service-intro-card">
-		<text class="title">校园打印服务 | 便捷文印助手</text>
-		<text class="subtitle">快速便民，打印服务触手可及！</text>
-		<view class="tags">
-			<text class="tag">快速出稿</text>
-			<text class="tag">多点可取</text>
-			<text class="tag">学生优惠</text>
+			<text class="title">校园打印服务 | 便捷文印助手</text>
+			<text class="subtitle">快速便民，打印服务触手可及！</text>
+			<view class="tags">
+				<text class="tag">快速出稿</text>
+				<text class="tag">多点可取</text>
+				<text class="tag">学生优惠</text>
+			</view>
 		</view>
-	</view>
 
 		<view class="service-area-notice">
 			<view class="notice-header">
@@ -48,20 +48,16 @@
 			<view class="form-item">
 				<text class="label">服务方式</text>
 				<view class="service-type-selector">
-					<view 
-						class="service-option" 
-						:class="{ active: serviceType === 'pickup' }"
-						@click="serviceType = 'pickup'"
-					>
-						<uni-icons type="person-filled" size="16" :color="serviceType === 'pickup' ? '#007aff' : '#999'"></uni-icons>
+					<view class="service-option" :class="{ active: serviceType === 'pickup' }"
+						@click="serviceType = 'pickup'">
+						<uni-icons type="person-filled" size="16"
+							:color="serviceType === 'pickup' ? '#007aff' : '#999'"></uni-icons>
 						<text>自己上门取件</text>
 					</view>
-					<view 
-						class="service-option" 
-						:class="{ active: serviceType === 'delivery' }"
-						@click="serviceType = 'delivery'"
-					>
-						<uni-icons type="paperplane-filled" size="16" :color="serviceType === 'delivery' ? '#007aff' : '#999'"></uni-icons>
+					<view class="service-option" :class="{ active: serviceType === 'delivery' }"
+						@click="serviceType = 'delivery'">
+						<uni-icons type="paperplane-filled" size="16"
+							:color="serviceType === 'delivery' ? '#007aff' : '#999'"></uni-icons>
 						<text>派送服务</text>
 					</view>
 				</view>
@@ -153,6 +149,20 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { onShow } from '@dcloudio/uni-app';
+import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+
+onShareAppMessage(() => {
+	return {
+		title: '互成一家 | 校园打印服务',
+		path: '/pages/service/details/print',
+		imageUrl: 'https://api.hcyj.xyz/images/dnfw.png'
+	}
+})
+
+onShareTimeline(() => ({
+	title: '互成一家 | 校园打印服务',
+	imageUrl: 'https://api.hcyj.xyz/images/dnfw.png'
+}))
 
 const store = useStore();
 
