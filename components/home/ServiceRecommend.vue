@@ -57,18 +57,18 @@ const fetchRecommendServices = async () => {
 
     const serviceData =
       [
+        // {
+        //   id: 1,
+        //   title: '代拿快递服务',
+        //   description: '校内快递专人代取，省时省力，专注于更重要的事。',
+        //   imageUrl: 'https://api.hcyj.xyz/images/dngg.jpg',
+        //   price: '¥3起',
+        //   rating: 4.8,
+        //   orders: 1580,
+        //   url: '/pages/service/details/express'
+        // },
         {
           id: 1,
-          title: '代拿快递服务',
-          description: '校内快递专人代取，省时省力，专注于更重要的事。',
-          imageUrl: 'https://api.hcyj.xyz/images/dngg.jpg',
-          price: '¥3起',
-          rating: 4.8,
-          orders: 1580,
-          url: '/pages/service/details/express'
-        },
-        {
-          id: 2,
           title: '远程打印服务',
           description: '宿舍也能轻松打印！手机一键上传，即刻获取文件。',
           imageUrl: 'https://api.hcyj.xyz/images/dnfw.png',
@@ -76,6 +76,15 @@ const fetchRecommendServices = async () => {
           rating: 4.9,
           orders: 2350,
           url: '/pages/service/details/print'
+        },
+        {
+          id: 2,
+          title: '查询课表服务',
+          description: '查询当前学期的课表，方便你及时了解自己的课程安排。',
+          imageUrl: 'https://api.hcyj.xyz/images/gdfw.jpg',
+          rating: 4.8,
+          orders: 1580,
+          url: ''
         },
         {
           id: 3,
