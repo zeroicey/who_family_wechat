@@ -16,8 +16,14 @@
       <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
         <view v-for="(img, index) in images" :key="index" class="image-item"
           :class="{ 'image-item-single': images.length === 1 }">
+          <!-- 占位图片，在实际图片加载完成前显示 -->
+          <view v-if="!imageLoadedStates[index]" class="image-placeholder">
+            <image src="/static/images/placeholder.svg" mode="aspectFit" class="placeholder-image" />
+          </view>
+          <!-- 实际图片 -->
           <image :src="post.imgList[index]" mode="aspectFill" class="post-image" lazy-load="true"
-            @tap="previewImage(index)" />
+            :style="{ opacity: imageLoadedStates[index] ? 1 : 0 }" @load="onImageLoad(index)"
+            @error="onImageError(index)" @tap="previewImage(index)" />
         </view>
       </view>
 
@@ -54,7 +60,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import { formatRelativeTime } from "@/utils/timeFormat.js";
 import { useStore } from "vuex";
 
@@ -67,6 +73,9 @@ const props = defineProps({
     required: true,
   },
 });
+
+// 图片加载状态管理
+const imageLoadedStates = ref({});
 
 const handleDeleteClick = async () => {
   uni.showModal({
@@ -134,6 +143,38 @@ const previewImage = (currentIndex) => {
 const isContentTruncated = computed(() => {
   return props.post.content && props.post.content.length > 150;
 });
+
+// 图片加载成功处理
+const onImageLoad = (index) => {
+  imageLoadedStates.value[index] = true;
+};
+
+// 图片加载失败处理
+const onImageError = (index) => {
+  console.warn(`Image at index ${index} failed to load`);
+  imageLoadedStates.value[index] = true; // 即使失败也隐藏占位图
+};
+
+// 初始化图片加载状态
+const initImageLoadStates = () => {
+  const states = {};
+  if (props.post.imgList && props.post.imgList.length > 0) {
+    props.post.imgList.forEach((_, index) => {
+      states[index] = false;
+    });
+  }
+  imageLoadedStates.value = states;
+};
+
+// 组件挂载时初始化图片状态
+onMounted(() => {
+  initImageLoadStates();
+});
+
+// 监听图片列表变化，重新初始化加载状态
+watch(() => props.post.imgList, () => {
+  initImageLoadStates();
+}, { deep: true });
 </script>
 
 <style scoped>
@@ -220,10 +261,17 @@ const isContentTruncated = computed(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
+}
+
+.placeholder-image {
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
 }
 
 /* 单图样式 */
