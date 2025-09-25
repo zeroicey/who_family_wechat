@@ -30,7 +30,20 @@ import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import CategoryTabs from '@/components/recruit/CategoryTabs.vue';
 import RecruitCard from '@/components/recruit/RecruitCard.vue';
+import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 
+onShareAppMessage(() => {
+  return {
+    title: '互成一家小程序',
+    path: '/pages/home/index',
+    imageUrl: '/static/images/logo.png'
+  }
+})
+
+onShareTimeline(() => ({
+  title: '互成一家小程序',
+  imageUrl: '/static/images/logo.png'
+}))
 const store = useStore();
 
 // 响应式数据

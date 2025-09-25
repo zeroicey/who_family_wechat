@@ -33,6 +33,20 @@ import { useStore } from "vuex";
 import { computed, onMounted, ref } from "vue"; // 引入 onMounted 和 onUnmounted
 import MyPostCard from "@/components/me/MyPostCard.vue";
 import { onReachBottom, onPullDownRefresh, onPageScroll } from '@dcloudio/uni-app';
+import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+
+onShareAppMessage(() => {
+  return {
+    title: '互成一家小程序',
+    path: '/pages/home/index',
+    imageUrl: '/static/images/logo.png'
+  }
+})
+
+onShareTimeline(() => ({
+  title: '互成一家小程序',
+  imageUrl: '/static/images/logo.png'
+}))
 
 const store = useStore();
 

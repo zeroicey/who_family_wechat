@@ -23,6 +23,21 @@ import ServiceRecommend from '@/components/home/ServiceRecommend.vue';
 import HomeHeader from '@/components/home/HomeHeader.vue';
 import CampusNotifications from '@/components/home/CampusNotifications.vue';
 import RecruitmentCard from '@/components/home/RecruitmentCard.vue';
+
+import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+
+onShareAppMessage(() => {
+  return {
+    title: '互成一家小程序',
+    path: '/pages/home/index',
+    imageUrl: '/static/images/logo.png'
+  }
+})
+
+onShareTimeline(() => ({
+  title: '互成一家小程序',
+  imageUrl: '/static/images/logo.png'
+}))
 </script>
 
 <style lang="scss" scoped>

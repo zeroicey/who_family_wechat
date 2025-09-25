@@ -16,7 +16,20 @@ import { computed, ref, onMounted, onUnmounted } from "vue"; // 引入 onMounted
 import { useStore } from "vuex";
 import PostCard from "@/components/community/PostCard.vue";
 import { onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app';
+import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 
+onShareAppMessage(() => {
+  return {
+    title: '互成一家小程序',
+    path: '/pages/home/index',
+    imageUrl: '/static/images/logo.png'
+  }
+})
+
+onShareTimeline(() => ({
+  title: '互成一家小程序',
+  imageUrl: '/static/images/logo.png'
+}))
 const store = useStore();
 
 // 获取帖子数据
