@@ -73,8 +73,20 @@
 			</view>
 
 			<view class="form-item">
-				<text class="label">打印份数</text>
-				<input class="input-field" type="number" v-model.number="printCopies" placeholder="请输入份数" />
+				<text class="label">上传文件</text>
+				<view class="file-uploader" @click="chooseFile">
+					<view v-if="!selectedFile" class="file-placeholder">
+						<uni-icons type="upload" size="24" color="#007aff"></uni-icons>
+						<text class="placeholder-text">点击选择文件 (支持 PDF、DOCX 等)</text>
+					</view>
+					<view v-else class="file-selected">
+						<uni-icons type="paperclip" size="20" color="#28a745"></uni-icons>
+						<text class="file-name">{{ selectedFile.name }}</text>
+						<view class="delete-file" @click.stop="removeFile">
+							<uni-icons type="close" size="16" color="#dc3545"></uni-icons>
+						</view>
+					</view>
+				</view>
 			</view>
 
 			<view class="form-item" v-if="serviceType === 'pickup'">
@@ -167,7 +179,7 @@ onShareTimeline(() => ({
 const store = useStore();
 
 const selectedAddress = computed(() => store.getters['address/get_default_address']);
-const printCopies = ref(1);
+const selectedFile = ref(null);
 const phoneNumber = ref('');
 const serviceType = ref('delivery'); // 默认选择派送服务
 
@@ -177,7 +189,53 @@ const selectAddress = () => {
 	});
 };
 
+const chooseFile = () => {
+	uni.chooseMessageFile({
+		count: 1,
+		type: 'file',
+		extension: ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'ppt', 'pptx'],
+		success: (res) => {
+			console.log('选择的文件:', res.tempFiles[0]);
+			const file = res.tempFiles[0];
+			selectedFile.value = {
+				name: file.name,
+				path: file.path,
+				size: file.size,
+				type: file.type
+			};
+			uni.showToast({
+				title: '文件选择成功',
+				icon: 'success'
+			});
+		},
+		fail: (err) => {
+			console.error('文件选择失败:', err);
+			uni.showToast({
+				title: '文件选择失败',
+				icon: 'none'
+			});
+		}
+	});
+};
+
+const removeFile = () => {
+	selectedFile.value = null;
+	uni.showToast({
+		title: '文件已移除',
+		icon: 'success'
+	});
+};
+
 const placeOrder = async () => {
+	// 验证是否已选择文件
+	if (!selectedFile.value) {
+		uni.showToast({
+			title: '请先选择要打印的文件',
+			icon: 'none'
+		});
+		return;
+	}
+
 	// 如果选择派送服务，需要验证收货地址
 	if (serviceType.value === 'delivery' && !selectedAddress.value) {
 		uni.showToast({
@@ -200,7 +258,10 @@ const placeOrder = async () => {
 		type: 'print',
 		data: {
 			serviceType: serviceType.value,
-			copies: printCopies.value
+			fileName: selectedFile.value.name,
+			fileSize: selectedFile.value.size,
+			fileType: selectedFile.value.type,
+			filePath: selectedFile.value.path
 		}
 	};
 
@@ -440,6 +501,73 @@ onShow(() => {
 				text-align: right;
 				font-size: 30rpx;
 				color: #333;
+			}
+
+			.file-uploader {
+				flex: 1;
+				margin-left: 20rpx;
+
+				.file-placeholder {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 30rpx 20rpx;
+					border: 2rpx dashed #007aff;
+					border-radius: 12rpx;
+					background-color: #f8f9ff;
+					transition: all 0.3s ease;
+
+					&:active {
+						background-color: #e8f0ff;
+						border-color: #0056cc;
+					}
+
+					.placeholder-text {
+						font-size: 26rpx;
+						color: #007aff;
+						margin-left: 10rpx;
+					}
+				}
+
+				.file-selected {
+					display: flex;
+					align-items: center;
+					padding: 20rpx;
+					background-color: #f0f9ff;
+					border: 1rpx solid #28a745;
+					border-radius: 12rpx;
+					position: relative;
+
+					.file-name {
+						flex: 1;
+						font-size: 28rpx;
+						color: #333;
+						margin-left: 10rpx;
+						margin-right: 40rpx;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
+
+					.delete-file {
+						position: absolute;
+						right: 15rpx;
+						top: 50%;
+						transform: translateY(-50%);
+						width: 32rpx;
+						height: 32rpx;
+						background-color: rgba(220, 53, 69, 0.1);
+						border-radius: 50%;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						transition: all 0.3s ease;
+
+						&:active {
+							background-color: rgba(220, 53, 69, 0.2);
+						}
+					}
+				}
 			}
 		}
 	}
