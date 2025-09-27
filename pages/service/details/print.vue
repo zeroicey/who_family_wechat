@@ -1,6 +1,25 @@
 <template>
 	<view class="print-details-page">
-		<image class="service-image" src="https://api.hcyj.xyz/images/dnfw.png" mode="aspectFill"></image>
+		<!-- 服务未开启遮罩 -->
+		<view v-if="isServiceOpen === false" class="service-closed-overlay">
+			<view class="service-closed-modal">
+				<view class="modal-icon">
+					<text class="icon">🚫</text>
+				</view>
+				<view class="modal-title">打印服务暂未开启</view>
+				<view class="modal-content">
+					<text class="service-time">服务开启时间：周一至周五 8:00-18:00</text>
+					<text class="service-note">请在服务时间内使用打印功能</text>
+				</view>
+				<view class="modal-actions">
+					<button class="back-home-btn" @click="goToHome">返回主页</button>
+				</view>
+			</view>
+		</view>
+
+		<!-- 原有内容 -->
+		<view v-else class="content">
+			<image class="service-image" src="https://api.hcyj.xyz/images/dnfw.png" mode="aspectFill"></image>
 
 		<view class="service-intro-card">
 			<text class="title">校园打印服务 | 便捷文印助手</text>
@@ -18,6 +37,18 @@
 				<text class="notice-title">服务范围说明</text>
 			</view>
 			<text class="notice-text">仅限南海大学城区域内下单，超出范围无法提供相应服务请谅解，配送仅限广东东软学院校内以及小镇宿舍</text>
+		</view>
+
+		<view class="price-card">
+			<view class="card-header">
+				<uni-icons type="wallet" size="24" color="#ffc107"></uni-icons>
+				<text class="card-title">打印价格</text>
+			</view>
+			<view class="price-content">
+				<text v-if="priceText" class="price-text">{{ priceText }}</text>
+				<text v-else-if="priceLoading" class="loading-text">价格加载中...</text>
+				<text v-else class="error-text">价格获取失败，请稍后重试</text>
+			</view>
 		</view>
 
 		<view class="service-perks-card">
@@ -154,6 +185,7 @@
 		<view class="action-bar">
 			<button class="order-button" @click="placeOrder">立即下单</button>
 		</view>
+		</view>
 	</view>
 </template>
 
@@ -179,6 +211,9 @@ onShareTimeline(() => ({
 const store = useStore();
 
 const selectedAddress = computed(() => store.getters['address/get_default_address']);
+const priceText = computed(() => store.getters['print/get_price_text']);
+const priceLoading = computed(() => store.getters['print/get_loading']);
+const isServiceOpen = computed(() => store.getters['print/get_is_open']);
 const selectedFile = ref(null);
 const phoneNumber = ref('');
 const serviceType = ref('delivery'); // 默认选择派送服务
@@ -288,8 +323,16 @@ const placeOrder = async () => {
 	}
 };
 
+const goToHome = () => {
+	uni.switchTab({
+		url: '/pages/home/index'
+	});
+};
+
 onShow(() => {
 	store.dispatch('address/load_addresses');
+	store.dispatch('print/fetch_print_price');
+	store.dispatch('print/fetch_print_is_open');
 });
 </script>
 
@@ -298,6 +341,85 @@ onShow(() => {
 	background-color: #f5f5f5;
 	min-height: 100vh;
 	padding-bottom: 120rpx;
+	position: relative;
+
+	/* 服务未开启遮罩样式 */
+	.service-closed-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 9999;
+	}
+
+	.service-closed-modal {
+		background-color: #ffffff;
+		border-radius: 16rpx;
+		padding: 60rpx 40rpx;
+		margin: 0 40rpx;
+		text-align: center;
+		box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+	}
+
+	.modal-icon {
+		margin-bottom: 30rpx;
+	}
+
+	.modal-icon .icon {
+		font-size: 80rpx;
+	}
+
+	.modal-title {
+		font-size: 36rpx;
+		font-weight: bold;
+		color: #333333;
+		margin-bottom: 30rpx;
+	}
+
+	.modal-content {
+		margin-bottom: 40rpx;
+	}
+
+	.service-time {
+		display: block;
+		font-size: 28rpx;
+		color: #666666;
+		margin-bottom: 16rpx;
+	}
+
+	.service-note {
+		display: block;
+		font-size: 24rpx;
+		color: #999999;
+	}
+
+	.modal-actions {
+		margin-top: 40rpx;
+	}
+
+	.back-home-btn {
+		background-color: #007aff;
+		color: #ffffff;
+		border: none;
+		border-radius: 8rpx;
+		padding: 24rpx 60rpx;
+		font-size: 32rpx;
+		font-weight: bold;
+	}
+
+	.back-home-btn:active {
+		background-color: #0056cc;
+	}
+
+	/* 原有样式 */
+	.content {
+		min-height: 100vh;
+	}
 
 	.service-image {
 		width: 100%;
@@ -600,6 +722,48 @@ onShow(() => {
 
 			.uni-icons {
 				margin-right: 15rpx;
+			}
+		}
+	}
+
+	.price-card {
+		background-color: #ffffff;
+		margin: 20rpx 30rpx;
+		padding: 30rpx;
+		border-radius: 20rpx;
+		box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+
+		.card-header {
+			display: flex;
+			align-items: center;
+			margin-bottom: 20rpx;
+
+			.card-title {
+				font-size: 32rpx;
+				font-weight: bold;
+				color: #333;
+				margin-left: 10rpx;
+			}
+		}
+
+		.price-content {
+			.price-text {
+				font-size: 28rpx;
+				color: #333;
+				line-height: 1.6;
+				display: block;
+			}
+
+			.loading-text {
+				font-size: 28rpx;
+				color: #999;
+				display: block;
+			}
+
+			.error-text {
+				font-size: 28rpx;
+				color: #dc3545;
+				display: block;
 			}
 		}
 	}
