@@ -50,11 +50,11 @@
 			<text class="label">打印份数</text>
 			<view class="count-selector">
 				<view class="count-button" @click="decreaseCount">
-					<uni-icons type="minus" size="16" color="#007aff"></uni-icons>
+					<uni-icons type="minus" size="24" color="#007aff"></uni-icons>
 				</view>
 				<text class="count-value">{{ printCount }}</text>
 				<view class="count-button" @click="increaseCount">
-					<uni-icons type="plus" size="16" color="#007aff"></uni-icons>
+					<uni-icons type="plus" size="24" color="#007aff"></uni-icons>
 				</view>
 			</view>
 		</view>
@@ -343,10 +343,6 @@ defineExpose({
 		padding: 25rpx 0;
 		border-bottom: 1rpx solid #f0f0f0;
 
-		&:last-child {
-			border-bottom: none;
-		}
-
 		.label {
 			font-size: 32rpx;
 			color: #333;
@@ -421,13 +417,11 @@ defineExpose({
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				border: 1rpx solid #007aff;
-				border-radius: 50%;
-				background-color: #ffffff;
+				background-color: transparent;
 				transition: all 0.3s ease;
 
 				&:active {
-					background-color: #f0f8ff;
+					opacity: 0.6;
 				}
 			}
 
@@ -519,9 +513,8 @@ defineExpose({
 	}
 
 	.action-bar {
-		margin-top: 40rpx;
-		padding-top: 30rpx;
-		border-top: 1rpx solid #f0f0f0;
+		margin-top: 30rpx;
+		padding-top: 20rpx;
 
 		.order-button {
 			width: 100%;
