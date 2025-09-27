@@ -19,7 +19,7 @@ export const fetchPrintIsOpen = async () => {
 /**
  * 上传打印订单
  * @param {Object} data - 打印订单数据
- * @param {string} data.type - 服务类型，如"派送服务"
+ * @param {string} data.type - 服务类型，如"派送服务 | 上门取件"
  * @param {string} data.address - 收货地址，如"广东东软学院 sovo 互成一家"
  * @param {string} data.name - 收货人姓名，如"王某某"
  * @param {string} data.phone - 联系电话，如"15812341234"
@@ -35,4 +35,8 @@ export const fetchPrintIsOpen = async () => {
  */
 export const uploadPrintOrder = async (data) => {
   return request.post("/print/order", data);
+};
+
+export const fetchPrintOrders = async () => {
+  return request.get(`/print/self-orders`);
 };

@@ -11,7 +11,6 @@
             <view v-if="filteredOrders.length > 0" class="order-list">
                 <view v-for="order in filteredOrders" :key="order.id" class="order-item">
                     <ExpressCard v-if="order.type === 'express'" :order="order" />
-                    <PrintCard v-if="order.type === 'print'" :order="order" />
                 </view>
             </view>
             <view v-else class="empty-state">
@@ -23,10 +22,8 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { onShow } from '@dcloudio/uni-app';
 import { useStore } from 'vuex';
 import ExpressCard from '@/components/order/ExpressCard.vue';
-import PrintCard from '@/components/order/PrintCard.vue';
 
 const store = useStore();
 const currentTab = ref(0);

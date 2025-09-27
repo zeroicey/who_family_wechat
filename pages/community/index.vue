@@ -109,10 +109,6 @@ const onPublish = () => {
       const tempFilePaths = res.tempFilePaths;
       let url = "/pages/community/publish";
       if (tempFilePaths && tempFilePaths.length > 0) {
-        // 将数组转换为逗号分隔的字符串以便通过URL传递，或者考虑其他更健壮的传递方式如Vuex或event bus
-        // 为了简单起见，这里用逗号分隔的字符串，但需要注意URL长度限制
-        // 更推荐的方式是存到pinia/vuex或者uni.$emit, uni.$on
-        // 这里我们先用 query 参数，后续可以优化
         const imageQuery = encodeURIComponent(JSON.stringify(tempFilePaths));
         url = `/pages/community/publish?images=${imageQuery}`;
       }
