@@ -38,7 +38,7 @@ import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 onShareAppMessage(() => {
 	return {
 		title: '互成一家 | 校园打印服务',
-		path: '/pages/service/details/print',
+		path: '/pages/service/print/index',
 		imageUrl: 'https://api.hcyj.xyz/images/dnfw.png'
 	}
 })
