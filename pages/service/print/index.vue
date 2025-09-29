@@ -76,14 +76,14 @@ const defaultPhoneNumber = computed(() => {
 // 生命周期函数
 onShow(async () => {
 	try {
+		// 检查打印服务是否开启
+		await store.dispatch('print/check_service_open');
+
 		// 加载地址列表
 		await store.dispatch('address/load_addresses');
 
 		// 获取打印价格
 		await store.dispatch('print/fetch_print_price');
-
-		// 检查打印服务是否开启
-		await store.dispatch('print/check_service_open');
 
 		// 初始化打印表单的手机号
 		if (printFormRef.value && printFormRef.value.initializePhoneNumber) {
