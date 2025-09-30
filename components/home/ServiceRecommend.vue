@@ -154,7 +154,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .service-recommend {
-  padding: 1vw 5vw;
+  padding: 0 5vw;
 
   .section-title {
     margin-bottom: 3vw;

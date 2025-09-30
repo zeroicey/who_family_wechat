@@ -75,7 +75,7 @@ const viewDetail = (item) => {
 
 <style lang="scss" scoped>
 .recruitment-container {
-    margin: 3vw 5vw;
+    margin: 5vw 5vw;
     padding: 4vw;
     background-color: #ffffff;
     border-radius: 4vw;
