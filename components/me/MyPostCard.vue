@@ -235,15 +235,13 @@ watch(() => props.post.imgList, () => {
   margin: 10px 0;
   display: flex;
   flex-wrap: wrap;
+  gap: 3px; /* 使用gap替代margin，更精确控制间距 */
 }
 
 .image-item {
   position: relative;
-  width: calc(33.33% - 4px);
-  height: 0;
-  padding-bottom: calc(33.33% - 4px);
-  margin: 2px;
   overflow: hidden;
+  border-radius: 6px; /* 添加圆角，更符合微信设计 */
 }
 
 .post-image {
@@ -265,38 +263,45 @@ watch(() => props.post.imgList, () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .placeholder-image {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   opacity: 0.5;
 }
 
-/* 单图样式 */
+/* 单图样式 - 参考微信朋友圈，最大宽度约为屏幕的60%，高度自适应但有最大限制 */
 .image-single .image-item {
-  width: 100%;
-  padding-bottom: 50%;
-  margin: 2px auto;
+  width: 200px; /* 固定宽度，约为手机屏幕的60% */
+  height: 200px; /* 正方形显示，更紧凑 */
+  max-width: 60vw; /* 响应式最大宽度 */
+  max-height: 300px; /* 最大高度限制 */
 }
 
-/* 双图样式 */
+/* 双图样式 - 每张图片稍小一些 */
 .image-double .image-item {
-  width: calc(50% - 4px);
-  padding-bottom: calc(50% - 4px);
+  width: calc(50% - 1.5px); /* 减去gap的一半 */
+  height: 120px; /* 固定高度，更紧凑 */
 }
 
-/* 三图样式 */
-.image-triple .image-item {
-  width: calc(33.33% - 4px);
-  padding-bottom: calc(33.33% - 4px);
+/* 三图样式 - 第一张图片占一行，下面两张并排 */
+.image-triple .image-item:first-child {
+  width: 100%;
+  height: 120px;
+  margin-bottom: 3px;
 }
 
-/* 四图网格样式 */
+.image-triple .image-item:not(:first-child) {
+  width: calc(50% - 1.5px);
+  height: 120px;
+}
+
+/* 四图及以上网格样式 - 2x2网格 */
 .image-grid .image-item {
-  width: calc(50% - 4px);
-  padding-bottom: calc(50% - 4px);
+  width: calc(50% - 1.5px);
+  height: 100px; /* 减小高度，更紧凑 */
 }
 
 /* 底部操作区域样式 */

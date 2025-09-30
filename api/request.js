@@ -22,13 +22,68 @@ const requestInterceptor = (config) => {
   return config;
 };
 
-const responseInterceptor = (response) => {
+// 用于存储正在进行的登录请求，避免重复登录
+let isRefreshing = false;
+let failedQueue = [];
+
+// 处理队列中的请求
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  
+  failedQueue = [];
+};
+
+const responseInterceptor = async (response, originalConfig) => {
   // 这里可以对响应结果进行统一处理
   if (response.statusCode === 200) {
     return response.data;
   } else if (response.statusCode === 401) {
-    store.dispatch("user/wechat_login")
-    return Promise.reject("登录已过期，请重新登录");
+    // 如果正在刷新token，将请求加入队列
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        failedQueue.push({ resolve, reject });
+      }).then(() => {
+        // 重新发起原请求
+        return request(originalConfig.method, originalConfig.url, originalConfig.data, originalConfig);
+      });
+    }
+
+    isRefreshing = true;
+
+    try {
+      // 使用store中的wechat_login action进行登录
+      await store.dispatch("user/wechat_login");
+      
+      // 获取新的token
+      const newToken = uni.getStorageSync("token");
+      
+      // 处理队列中的请求
+      processQueue(null, newToken);
+      
+      // 重新发起原请求
+      return request(originalConfig.method, originalConfig.url, originalConfig.data, originalConfig);
+    } catch (error) {
+      // 登录失败，处理队列中的请求
+      processQueue(error, null);
+      
+      // 清除本地token
+      uni.removeStorageSync("token");
+      
+      // 跳转到登录页面
+      uni.reLaunch({
+        url: '/pages/login'
+      });
+      
+      return Promise.reject("登录已过期，请重新登录");
+    } finally {
+      isRefreshing = false;
+    }
   } else {
     return Promise.reject(response.data || "服务器异常");
   }
@@ -58,9 +113,9 @@ const request = (method, url, data = {}, options = {}) => {
   return new Promise((resolve, reject) => {
     uni.request({
       ...interceptedConfig,
-      success: (res) => {
+      success: async (res) => {
         try {
-          const result = responseInterceptor(res);
+          const result = await responseInterceptor(res, config);
           resolve(result);
         } catch (error) {
           reject(error);
