@@ -3,10 +3,6 @@
     <!-- 标题区域 -->
     <view class="post-header">
       <text @click="$emit('click')" class="post-title">{{ post.title }}</text>
-      <!-- 分享按钮 -->
-      <view class="share-button" @click="handleShareClick">
-        <uni-icons type="redo" size="20" color="#888"></uni-icons>
-      </view>
     </view>
 
     <view>
@@ -109,11 +105,6 @@ const handleDeleteClick = async () => {
   });
 }
 
-const handleShareClick = () => {
-  // 处理分享逻辑，先打印当前标题
-  console.log('分享帖子标题:', props.post.title);
-};
-
 const handleLikeClick = () => {
   // 处理点赞逻辑
   const actionPrefix = props.post.isLike === 1 ? 'unlike' : 'like';
@@ -201,19 +192,6 @@ watch(() => props.post.imgList, () => {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 12px;
-}
-
-.share-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.share-button:active {
-  background-color: #f0f0f0;
 }
 
 .post-title {

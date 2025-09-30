@@ -12,10 +12,6 @@
           <text @click="$emit('click')" class="post-title">{{ post.title }}</text>
         </view>
       </view>
-      <!-- 分享按钮 -->
-      <view class="share-button" @click="handleShareClick">
-        <uni-icons type="redo" size="20" color="#888"></uni-icons>
-      </view>
     </view>
 
     <view>
@@ -110,11 +106,6 @@ const handleLikeClick = () => {
   store.dispatch(`community/${actionPrefix}_post`, props.post.id);
 };
 
-const handleShareClick = () => {
-  // 处理分享逻辑，先打印当前标题
-  console.log('分享帖子标题:', props.post.title);
-};
-
 // 组件挂载时获取头像和初始化图片状态
 onMounted(async () => {
   await fetchAvatar();
@@ -206,19 +197,6 @@ const isContentTruncated = computed(() => {
 .user-info {
   display: flex;
   align-items: center;
-}
-
-.share-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.share-button:active {
-  background-color: #f0f0f0;
 }
 
 .avatar {
