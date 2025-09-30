@@ -3,6 +3,10 @@
     <!-- 标题区域 -->
     <view class="post-header">
       <text @click="$emit('click')" class="post-title">{{ post.title }}</text>
+      <!-- 分享按钮 -->
+      <view class="share-button" @click="handleShareClick">
+        <uni-icons type="redo" size="20" color="#888"></uni-icons>
+      </view>
     </view>
 
     <view>
@@ -33,27 +37,26 @@
       <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
       <!-- 查看 -->
       <view class="action-group">
-
-        <image class="action-icon" src="/static/images/community/view.png" />
+        <uni-icons type="eye" size="20" color="#888" class="action-icon"></uni-icons>
         <text class="action-text">{{ post.viewCount || 0 }}</text>
       </view>
 
       <!-- 点赞 -->
       <view class="action-group" @click="handleLikeClick">
-        <image class="action-icon"
-          :src="post.isLike === 1 ? '/static/images/community/liked.png' : '/static/images/community/like.png'" />
+        <uni-icons :type="post.isLike === 1 ? 'heart-filled' : 'heart'" size="20"
+          :color="post.isLike === 1 ? '#ff6b6b' : '#888'" class="action-icon"></uni-icons>
         <text class="action-text">{{ post.likeCount || 0 }}</text>
       </view>
 
       <!-- 评论 -->
       <view class="action-group" @click="$emit('click')">
-        <image class="action-icon" src="/static/images/community/comment.png" />
+        <uni-icons type="chat" size="20" color="#888" class="action-icon"></uni-icons>
         <text class="action-text">{{ post.commentCount || 0 }}</text>
       </view>
 
       <!-- 删除 -->
       <view class="action-group" @click="handleDeleteClick">
-        <image class="action-icon" src="/static/images/community/trash.png" />
+        <uni-icons type="trash" size="20" color="#ff4757" class="action-icon"></uni-icons>
       </view>
     </view>
   </view>
@@ -105,6 +108,11 @@ const handleDeleteClick = async () => {
     }
   });
 }
+
+const handleShareClick = () => {
+  // 处理分享逻辑，先打印当前标题
+  console.log('分享帖子标题:', props.post.title);
+};
 
 const handleLikeClick = () => {
   // 处理点赞逻辑
@@ -195,6 +203,19 @@ watch(() => props.post.imgList, () => {
   margin-bottom: 12px;
 }
 
+.share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.share-button:active {
+  background-color: #f0f0f0;
+}
+
 .post-title {
   font-size: 18px;
   font-weight: bold;
@@ -235,13 +256,15 @@ watch(() => props.post.imgList, () => {
   margin: 10px 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 3px; /* 使用gap替代margin，更精确控制间距 */
+  gap: 3px;
+  /* 使用gap替代margin，更精确控制间距 */
 }
 
 .image-item {
   position: relative;
   overflow: hidden;
-  border-radius: 6px; /* 添加圆角，更符合微信设计 */
+  border-radius: 6px;
+  /* 添加圆角，更符合微信设计 */
 }
 
 .post-image {
@@ -274,16 +297,22 @@ watch(() => props.post.imgList, () => {
 
 /* 单图样式 - 参考微信朋友圈，最大宽度约为屏幕的60%，高度自适应但有最大限制 */
 .image-single .image-item {
-  width: 200px; /* 固定宽度，约为手机屏幕的60% */
-  height: 200px; /* 正方形显示，更紧凑 */
-  max-width: 60vw; /* 响应式最大宽度 */
-  max-height: 300px; /* 最大高度限制 */
+  width: 200px;
+  /* 固定宽度，约为手机屏幕的60% */
+  height: 200px;
+  /* 正方形显示，更紧凑 */
+  max-width: 60vw;
+  /* 响应式最大宽度 */
+  max-height: 300px;
+  /* 最大高度限制 */
 }
 
 /* 双图样式 - 每张图片稍小一些 */
 .image-double .image-item {
-  width: calc(50% - 1.5px); /* 减去gap的一半 */
-  height: 120px; /* 固定高度，更紧凑 */
+  width: calc(50% - 1.5px);
+  /* 减去gap的一半 */
+  height: 120px;
+  /* 固定高度，更紧凑 */
 }
 
 /* 三图样式 - 第一张图片占一行，下面两张并排 */
@@ -301,7 +330,8 @@ watch(() => props.post.imgList, () => {
 /* 四图及以上网格样式 - 2x2网格 */
 .image-grid .image-item {
   width: calc(50% - 1.5px);
-  height: 100px; /* 减小高度，更紧凑 */
+  height: 100px;
+  /* 减小高度，更紧凑 */
 }
 
 /* 底部操作区域样式 */
@@ -318,24 +348,19 @@ watch(() => props.post.imgList, () => {
 .action-group {
   display: flex;
   align-items: center;
-  /* 垂直居中对齐图标和文本 */
+  justify-content: center;
 }
 
-/* 不再需要 .action-item 的特定布局，因为元素直接在 .post-footer 中 */
-/* 如果之前有 .action-item 的样式，可以移除或注释掉 */
-
 .action-icon {
-  width: 16px;
-  /* 调整图标大小 */
-  height: 16px;
-  /* 调整图标大小 */
-  margin-right: 10px;
-  /* 图标和其右侧数字的间距 */
+  display: flex;
+  align-items: center;
+  margin-right: 6px;
 }
 
 .action-text {
   font-size: 16px;
   color: #888;
+  line-height: 1;
 }
 
 /* 确保最后一个 action-text 没有右边距，避免不必要的空白 */

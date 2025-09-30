@@ -98,11 +98,12 @@ const navigateTo = (url) => {
 <style lang="scss" scoped>
 .core-functions {
   padding: 2vw 2vw;
+  margin: 1vw 0;
 
   .function-cards {
     display: flex;
     justify-content: space-between;
-    gap: 5px;
+    gap: 10px;
 
     .function-card {
       width: 48%;

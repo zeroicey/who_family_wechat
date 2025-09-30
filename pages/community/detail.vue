@@ -24,7 +24,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { onLoad } from "@dcloudio/uni-app";
+import { onLoad, onShareAppMessage, onShareTimeline } from "@dcloudio/uni-app";
 import PostAuthorInfo from "@/components/community/detail/PostAuthorInfo.vue";
 import PostContentDisplay from "@/components/community/detail/PostContentDisplay.vue";
 import PostImagesGrid from "@/components/community/detail/PostImagesGrid.vue";
@@ -51,6 +51,23 @@ onLoad(async (options) => {
     uni.showToast({ title: "帖子ID无效", icon: "none" });
   }
 });
+
+onShareAppMessage(() => {
+  return {
+    title: `互成一家 | ${post.value?.title}` || '互成一家 | 社区',
+    path: `/pages/community/detail?id=${postId.value}`,
+    imageUrl: (post.value?.imgList && post.value.imgList.length > 0)
+      ? post.value.imgList[0]
+      : '/static/images/logo.png'
+  }
+})
+
+onShareTimeline(() => ({
+  title: `互成一家 | post.value?.title` || '互成一家小程序',
+  imageUrl: (post.value?.imgList && post.value.imgList.length > 0)
+    ? post.value.imgList[0]
+    : '/static/images/logo.png'
+}))
 </script>
 
 <style lang="scss" scoped>
