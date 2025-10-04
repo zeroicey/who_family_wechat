@@ -1,13 +1,5 @@
 <template>
   <view class="publish-container">
-    <view class="form-item title-item">
-      <input class="form-input" type="text" v-model="title" placeholder="✨ 给你的动态起个有趣的标题吧~" maxlength="99" />
-      <button class="publish-button" @click="submitPost">发布</button>
-    </view>
-
-    <view class="form-item content-item">
-      <textarea class="form-textarea" v-model="content" placeholder="💭 今天有什么想分享的呢？可以是生活趣事、学习心得、美食推荐...让大家看到不一样的你！✨" maxlength="10000" />
-    </view>
 
     <view class="form-item image-item">
       <view class="image-uploader">
@@ -21,6 +13,16 @@
           </view>
         </view>
       </view>
+    </view>
+
+    <view class="form-item title-item">
+      <input class="form-input" type="text" v-model="title" placeholder="✨ 给你的动态起个有趣的标题吧~" maxlength="99" />
+      <button class="publish-button" @click="submitPost">发布</button>
+    </view>
+
+    <view class="form-item content-item">
+      <textarea class="form-textarea" v-model="content" placeholder="💭 今天有什么想分享的呢？可以是生活趣事、学习心得、美食推荐...让大家看到不一样的你！✨"
+        maxlength="10000" />
     </view>
   </view>
 </template>
