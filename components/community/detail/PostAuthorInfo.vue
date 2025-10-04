@@ -68,11 +68,8 @@ watch(() => [props.post.avaterId, props.post.username], () => {
 .post-author-info-card {
   display: flex;
   align-items: center;
-  padding: 24rpx;
-  background-color: #ffffff;
-  margin: 20rpx 20rpx 0 20rpx; /* 调整外边距，底部为0，与内容卡片连接 */
-  border-radius: 16rpx 16rpx 0 0; /* 只有上方圆角 */
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+  padding: 0;
+  margin-bottom: 24rpx;
 }
 
 .author-avatar {

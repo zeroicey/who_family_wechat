@@ -1,20 +1,20 @@
 <template>
   <view class="post-detail-container">
     <view class="scroll-view-content">
-      <!-- 帖子作者信息 -->
-      <post-author-info v-if="post" :post="post" />
-
-      <!-- 帖子内容 -->
-      <post-content-display v-if="post" :post="post" />
-
-      <!-- 帖子图片 -->
-      <post-images-grid v-if="post" :image-list="post.imgList" />
-
-      <!-- 帖子统计信息 -->
-      <post-stats-bar v-if="post" :post="post" />
-
-      <!-- 分割线 -->
-      <view class="divider"></view>
+      <!-- 合并的帖子卡片 -->
+      <view class="post-card" v-if="post">
+        <!-- 帖子作者信息 -->
+        <post-author-info :post="post" />
+        
+        <!-- 帖子内容 -->
+        <post-content-display :post="post" />
+        
+        <!-- 帖子图片 -->
+        <post-images-grid :image-list="post.imgList" />
+        
+        <!-- 帖子统计信息 -->
+        <post-stats-bar :post="post" />
+      </view>
 
       <!-- 评论区 -->
       <comment-section v-if="postId" :postId="postId" />
@@ -80,17 +80,19 @@ onShareTimeline(() => ({
 
 .scroll-view-content {
   flex: 1;
+  padding: 24rpx;
   padding-bottom: 120rpx;
   /* 为底部评论输入栏预留空间 (如果添加的话) */
 }
 
-.divider {
-  height: 1px;
-  /* 改为1px细线 */
-  background-color: #e0e0e0;
-  /* 更柔和的分割线颜色 */
-  margin: 30rpx 24rpx;
-  /* 上下间距调整，左右与卡片内容对齐 */
+/* 合并的帖子卡片样式 */
+.post-card {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+  border: 1px solid #f0f0f0;
 }
 
 /* 底部评论输入栏样式 (可选) */

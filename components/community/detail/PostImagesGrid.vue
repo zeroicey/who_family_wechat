@@ -45,11 +45,8 @@ const previewImage = (currentIndex) => {
 .post-images-grid-container {
   display: grid;
   gap: 8rpx;
-  padding: 20rpx; // 内边距
-  background-color: #ffffff;
-  margin: 20rpx; // 外边距统一
-  border-radius: 16rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+  padding: 0;
+  margin-bottom: 24rpx;
 
   .image-item {
     position: relative;

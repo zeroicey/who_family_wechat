@@ -16,12 +16,8 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .post-content-card {
-  padding: 24rpx; // 调整内边距
-  background-color: #ffffff;
-  margin: 0 20rpx; // 左右边距与作者信息一致，上下无外边距
-  border-radius: 0 0 16rpx 16rpx; // 只有下方圆角
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
-  // 移除 margin-top: -16rpx; 和 padding-top: 30rpx;
+  padding: 0;
+  margin-bottom: 24rpx;
 }
 
 .post-title {

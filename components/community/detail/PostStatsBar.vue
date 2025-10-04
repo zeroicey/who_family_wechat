@@ -56,11 +56,8 @@ const handleLikeClick = () => {
   justify-content: space-around;
   /* 使项目均匀分布 */
   align-items: center;
-  padding: 20rpx;
-  background-color: #ffffff;
-  margin: 20rpx; // 外边距
-  border-radius: 16rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+  padding: 0;
+  margin-bottom: 0;
 }
 
 .stats-group {

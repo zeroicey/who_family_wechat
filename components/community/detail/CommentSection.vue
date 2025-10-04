@@ -1,7 +1,5 @@
 <template>
   <view class="comment-section-container">
-    <view class="section-title">全部评论</view>
-
     <!-- 评论输入框 -->
     <view class="comment-input-container">
       <!-- 回复提示 -->
@@ -253,20 +251,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .comment-section-container {
-  padding: 24rpx;
+  padding: 32rpx;
   background-color: #ffffff;
-  margin: 20rpx;
   border-radius: 16rpx;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
-}
-
-.section-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 24rpx;
-  padding-bottom: 16rpx;
-  border-bottom: 1px solid #f0f0f0;
 }
 
 .comment-list {
@@ -286,7 +274,6 @@ onMounted(() => {
   margin: 16rpx 0;
   background-color: #f8f9fa;
   border-radius: 8rpx;
-  border: 1px solid #e9ecef;
 
   text {
     color: #6c757d;
@@ -301,7 +288,6 @@ onMounted(() => {
 .comment-input-container {
   margin-bottom: 24rpx;
   padding-bottom: 24rpx;
-  border-bottom: 1px solid #f0f0f0;
 }
 
 .reply-target {
@@ -366,27 +352,37 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 80rpx;
-  padding: 0 30rpx; /* 稍微增加左右padding，让文字更舒展 */
-  background: linear-gradient(135deg, #6e8efb, #a777e3); /* 更改为蓝紫色渐变 */
+  padding: 0 30rpx;
+  /* 稍微增加左右padding，让文字更舒展 */
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  /* 更改为蓝紫色渐变 */
   color: white;
-  border: none; /* 确保没有边框 */
+  border: none;
+  /* 确保没有边框 */
   border-radius: 40rpx;
-  font-size: 28rpx; /* 稍微增大字体 */
-  font-weight: bold; /* 加粗字体 */
-  box-shadow: 0 4rpx 12rpx rgba(110, 142, 251, 0.3); /* 调整阴影颜色以匹配新的背景色 */
+  font-size: 28rpx;
+  /* 稍微增大字体 */
+  font-weight: bold;
+  /* 加粗字体 */
+  box-shadow: 0 4rpx 12rpx rgba(110, 142, 251, 0.3);
+  /* 调整阴影颜色以匹配新的背景色 */
   transition: all 0.2s ease;
   text-align: center;
-  line-height: 80rpx; /* 确保文字垂直居中 */
+  line-height: 80rpx;
+  /* 确保文字垂直居中 */
 
   &:disabled {
-    background: #e9ecef; /* 调整禁用状态的背景色 */
-    color: #adb5bd; /* 调整禁用状态的文字颜色 */
+    background: #e9ecef;
+    /* 调整禁用状态的背景色 */
+    color: #adb5bd;
+    /* 调整禁用状态的文字颜色 */
     box-shadow: none;
   }
 
   &:not(:disabled):active {
     transform: translateY(2rpx);
-    box-shadow: 0 2rpx 8rpx rgba(110, 142, 251, 0.4); /* 调整激活状态的阴影颜色 */
+    box-shadow: 0 2rpx 8rpx rgba(110, 142, 251, 0.4);
+    /* 调整激活状态的阴影颜色 */
   }
 }
 </style>
