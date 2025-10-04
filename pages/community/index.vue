@@ -136,7 +136,7 @@ const onPublish = () => {
 .posts-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2px;
 }
 
 /* 悬浮发布按钮 */

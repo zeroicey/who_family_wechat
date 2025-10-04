@@ -1,5 +1,5 @@
 <template>
-  <view class="post-card">
+  <view class="post-card" @click="$emit('click')">
     <!-- 用户信息区域 -->
     <view class="post-header">
       <view class="user-info">
@@ -9,20 +9,20 @@
         </view>
         <view class="user-details">
           <text class="username">{{ post.username }}</text>
-          <text @click="$emit('click')" class="post-title">{{ post.title }}</text>
+          <text class="post-title">{{ post.title }}</text>
         </view>
       </view>
     </view>
 
     <view>
       <!-- 内容区域 -->
-      <view class="post-content" @click="$emit('click')">
+      <view class="post-content">
         <text class="content-text">{{ post.content }}</text>
         <text v-if="isContentTruncated" class="view-more-text">... 点击查看全部</text>
       </view>
 
       <!-- 图片区域 -->
-      <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass">
+      <view v-if="images.length > 0" class="image-container" :class="imageLayoutClass" @click.stop>
         <view v-for="(img, index) in images" :key="index" class="image-item"
           :class="{ 'image-item-single': images.length === 1 }">
           <!-- 占位图片，在实际图片加载完成前显示 -->
@@ -47,14 +47,14 @@
       </view>
 
       <!-- 点赞 -->
-      <view class="action-group" @click="handleLikeClick">
+      <view class="action-group" @click.stop="handleLikeClick">
         <uni-icons :type="post.isLike === 1 ? 'heart-filled' : 'heart'" size="20"
           :color="post.isLike === 1 ? '#ff6b6b' : '#888'" class="action-icon"></uni-icons>
         <text class="action-text">{{ post.likeCount || 0 }}</text>
       </view>
 
       <!-- 评论 -->
-      <view class="action-group" @click="$emit('click')">
+      <view class="action-group">
         <uni-icons type="chat" size="20" color="#888" class="action-icon"></uni-icons>
         <text class="action-text">{{ post.commentCount || 0 }}</text>
       </view>
@@ -180,7 +180,7 @@ const isContentTruncated = computed(() => {
 <style scoped>
 .post-card {
   background-color: #ffffff;
-  padding: 16px;
+  padding: 8px 16px;
   margin: 0;
   position: relative;
   overflow: hidden;
@@ -363,8 +363,6 @@ const isContentTruncated = computed(() => {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
 }
 
 .action-group {
