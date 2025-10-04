@@ -1,25 +1,15 @@
 <template>
   <view class="publish-container">
-    <view class="form-item">
-      <text class="form-label">标题</text>
-      <input class="form-input" type="text" v-model="title" placeholder="请输入标题" maxlength="99" />
+    <view class="form-item title-item">
+      <input class="form-input" type="text" v-model="title" placeholder="✨ 给你的动态起个有趣的标题吧~" maxlength="99" />
+      <button class="publish-button" @click="submitPost">发布</button>
     </view>
 
-    <view class="form-item">
-      <text class="form-label">内容</text>
-      <textarea class="form-textarea" v-model="content" placeholder="分享新鲜事..." maxlength="10000" />
+    <view class="form-item content-item">
+      <textarea class="form-textarea" v-model="content" placeholder="💭 今天有什么想分享的呢？可以是生活趣事、学习心得、美食推荐...让大家看到不一样的你！✨" maxlength="10000" />
     </view>
 
-    <view class="form-item">
-      <text class="form-label">类型</text>
-      <picker class="form-picker" @change="bindPickerChange" :value="typeIndex" :range="typeArray" mode="selector"
-        range-key="name">
-        <view class="picker-display">{{ typeArray[typeIndex] ? typeArray[typeIndex].name : '请选择类型' }}</view>
-      </picker>
-    </view>
-
-    <view class="form-item">
-      <text class="form-label">图片上传 (最多4张)</text>
+    <view class="form-item image-item">
       <view class="image-uploader">
         <view class="image-preview-list">
           <view v-for="(image, index) in imageList" :key="index" class="image-preview-item">
@@ -32,8 +22,6 @@
         </view>
       </view>
     </view>
-
-    <button class="publish-button" @click="submitPost">发布动态</button>
   </view>
 </template>
 
@@ -46,13 +34,6 @@ const store = useStore();
 
 const title = ref("");
 const content = ref("");
-const typeArray = computed(() => {
-  const types = store.getters["community/get_post_types"];
-  // 确保 types 是一个数组并且包含对象，如果直接是字符串数组，则需要转换
-  // 假设 store 返回的已经是 [{id:1, name: '日常分享'}, ...]
-  return Array.isArray(types) ? types : [];
-});
-const typeIndex = ref(0);
 const imageList = ref([]); // 存储本地图片路径或上传后的URL
 
 onLoad((options) => {
@@ -69,9 +50,7 @@ onLoad((options) => {
 });
 
 
-const bindPickerChange = (e) => {
-  typeIndex.value = e.detail.value;
-};
+
 
 const chooseImage = () => { // 此函数现在用于在发布页面补充图片
   if (imageList.value.length >= 4) {
@@ -136,7 +115,7 @@ const submitPost = async () => {
   const postData = {
     title: title.value,
     content: content.value,
-    type: typeArray.value[typeIndex.value] ? typeArray.value[typeIndex.value].name : '', // 获取选中类型的名称
+    type: '好物推荐', // 固定传递"好物推荐"类型
     // images: uploadedImageUrls, // 如果你的后端需要图片URL列表
     imgCount: imagePaths.length,
   };
@@ -165,7 +144,6 @@ const submitPost = async () => {
     title.value = "";
     content.value = "";
     imageList.value = [];
-    typeIndex.value = 0;
 
     await store.dispatch("community/fetch_first_posts");
     await store.dispatch("user/fetch_first_posts");
@@ -188,72 +166,61 @@ const submitPost = async () => {
 
 <style lang="scss" scoped>
 .publish-container {
-  padding: 30rpx;
   background-color: #f9f9f9;
-  min-height: 100vh;
+  height: 100vh;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 30rpx;
 }
 
 .form-item {
-  background-color: #ffffff;
-  padding: 30rpx;
-  border-radius: 20rpx;
   margin-bottom: 30rpx;
-  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.05);
 }
 
-.form-label {
-  display: block;
-  font-size: 28rpx; /* 调整字体大小 */
-  color: #666; /* 调整颜色 */
-  margin-bottom: 15rpx; /* 调整下边距 */
-  font-weight: normal; /* 取消加粗 */
+.form-item.title-item {
+  height: 80rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
 }
+
+.form-item.content-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-item.image-item {
+  height: 200rpx;
+  flex-shrink: 0;
+}
+
+
 
 .form-input,
 .form-textarea {
   width: 100%;
   font-size: 30rpx;
   color: #333;
-  background-color: #fff; /* 改为白色背景 */
-  border: none; /* 移除边框 */
-  border-bottom: 1px solid #f0f0f0; /* 添加底部边框 */
-  border-radius: 0; /* 移除圆角 */
-  padding: 0; /* 移除统一的内边距，下面分别设置 */
   box-sizing: border-box;
-  transition: border-color 0.3s, box-shadow 0.3s;
-
-  &::placeholder {
-    color: #b8b8b8;
-  }
-
-  &:focus {
-    border-bottom-color: #007aff; /* 聚焦时改变底部边框颜色 */
-    box-shadow: none; /* 移除阴影 */
-  }
 }
 
 .form-input {
-  height: 80rpx; /* 给输入框一个固定的高度 */
+  height: 80rpx;
+  flex: 1;
+  /* 给输入框一个固定的高度，并让它占据剩余空间 */
 }
 
 .form-textarea {
-  height: 280rpx;
+  flex: 1;
   line-height: 1.6;
-  padding: 20rpx 0; /* 单独为文本域设置内边距 */
+  padding: 20rpx 0;
+  resize: none;
 }
 
-.form-picker {
-  background-color: #f7f8fa;
-  border: 1px solid #f0f0f0;
-  border-radius: 16rpx;
-  padding: 24rpx;
 
-  .picker-display {
-    font-size: 30rpx;
-    color: #333;
-  }
-}
 
 .image-uploader {
   .image-preview-list {
@@ -313,21 +280,23 @@ const submitPost = async () => {
 }
 
 .publish-button {
-  background: linear-gradient(45deg, #007aff, #00c6ff);
+  background: #007aff;
   color: white;
-  border-radius: 50rpx;
-  font-size: 34rpx;
-  font-weight: bold;
-  height: 100rpx;
-  line-height: 100rpx;
-  padding: 0;
-  margin-top: 80rpx;
-  box-shadow: 0 8rpx 20rpx rgba(0, 122, 255, 0.25);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  height: 60rpx;
+  padding: 0 24rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 
   &:active {
-    transform: scale(0.98);
-    box-shadow: 0 4rpx 10rpx rgba(0, 122, 255, 0.2);
+    background: #0056cc;
+    transform: scale(0.95);
   }
 }
 </style>

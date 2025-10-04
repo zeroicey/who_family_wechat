@@ -180,7 +180,7 @@ const isContentTruncated = computed(() => {
 <style scoped>
 .post-card {
   background-color: #ffffff;
-  padding: 8px 16px;
+  padding: 16px 16px 8px;
   margin: 0;
   position: relative;
   overflow: hidden;
