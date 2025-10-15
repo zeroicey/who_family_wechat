@@ -10,16 +10,7 @@
             <PrintCard v-if="order.type === 'print'" :order="order" />
         </view>
 
-        <view class="card-container">
-            <view class="contact-card">
-                <text class="contact-title">联系商家，跟进订单状态</text>
-                <image class="qr-code" src="https://api.hcyj.xyz/images/dnwx.png" mode="aspectFit"></image>
-                <view class="wechat-info">
-                    <text>微信号：Dianasyxl18024113874</text>
-                    <button class="copy-btn" @click="copyWechat">复制</button>
-                </view>
-            </view>
-        </view>
+
 
         <view class="footer-actions">
             <button class="btn back-home-btn" @click="backHome">返回首页</button>
@@ -62,17 +53,7 @@ const backHome = () => {
     });
 };
 
-const copyWechat = () => {
-    uni.setClipboardData({
-        data: 'Dianasyxl18024113874',
-        success: function () {
-            uni.showToast({
-                title: '微信号已复制',
-                icon: 'success'
-            });
-        }
-    });
-};
+
 </script>
 
 <style lang="scss" scoped>
@@ -113,46 +94,7 @@ const copyWechat = () => {
     }
 }
 
-.contact-card {
-    background-color: #ffffff;
-    border-radius: 20rpx;
-    padding: 30rpx;
-    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
-    text-align: center;
-}
 
-.contact-title {
-    font-size: 32rpx;
-    font-weight: bold;
-    color: #333;
-    display: block;
-    margin-bottom: 20rpx;
-}
-
-.qr-code {
-    width: 300rpx;
-    height: 300rpx;
-    margin: 0 auto 20rpx;
-}
-
-.wechat-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 28rpx;
-    color: #555;
-}
-
-.copy-btn {
-    margin-top: 20rpx;
-    font-size: 24rpx;
-    padding: 5rpx 20rpx;
-    background-color: #007aff;
-    color: #ffffff;
-    border-radius: 30rpx;
-    line-height: 1.5;
-}
 
 .footer-actions {
     position: fixed;
