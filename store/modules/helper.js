@@ -193,7 +193,7 @@ const actions = {
 
   // 打字机效果
   async start_typewriter_effect({ commit }, { messageIndex, fullContent }) {
-    const typingSpeed = 50; // 打字速度（毫秒）
+    const typingSpeed = 20; // 打字速度（毫秒）- 从50ms减少到20ms，提升流式传输速度
     let currentIndex = 0;
     
     return new Promise((resolve) => {
@@ -218,7 +218,7 @@ const actions = {
       };
       
       // 开始打字
-      setTimeout(typeNextChar, 300); // 延迟300ms开始
+      setTimeout(typeNextChar, 100); // 延迟100ms开始 - 从300ms减少到100ms，更快响应
     });
   },
   
