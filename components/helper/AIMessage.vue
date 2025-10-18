@@ -8,9 +8,20 @@
     <view class="message-content">
       <view class="ai-name">校助手</view>
       <view class="message-bubble">
-        <text class="message-text">{{ content }}</text>
-        <!-- 打字时显示光标 -->
-        <view v-if="isTyping" class="typing-cursor">|</view>
+        <!-- 如果没有内容且正在思考，显示思考动画 -->
+        <view v-if="!content && isTyping" class="thinking-animation">
+          <view class="thinking-text">正在思考</view>
+          <view class="thinking-dots">
+            <view class="dot"></view>
+            <view class="dot"></view>
+            <view class="dot"></view>
+          </view>
+        </view>
+        <!-- 有内容时显示文字和光标 -->
+        <view v-else class="message-content-wrapper">
+          <!-- 将光标直接嵌入到文本中 -->
+          <text class="message-text">{{ content }}<text v-if="isTyping && content" class="typing-cursor">|</text></text>
+        </view>
       </view>
     </view>
   </view>
@@ -82,14 +93,56 @@ defineProps({
         word-break: break-all;
       }
       
+      /* 思考动画 */
+      .thinking-animation {
+        display: flex;
+        align-items: center;
+        color: #999999;
+        font-size: 24rpx;
+        
+        .thinking-text {
+          margin-right: 12rpx;
+        }
+        
+        .thinking-dots {
+          display: flex;
+          align-items: center;
+          
+          .dot {
+            width: 6rpx;
+            height: 6rpx;
+            border-radius: 50%;
+            background-color: #999999;
+            margin: 0 2rpx;
+            animation: thinking 1.4s infinite ease-in-out;
+            
+            &:nth-child(1) {
+              animation-delay: 0s;
+            }
+            
+            &:nth-child(2) {
+              animation-delay: 0.2s;
+            }
+            
+            &:nth-child(3) {
+              animation-delay: 0.4s;
+            }
+          }
+        }
+      }
+      
+      /* 消息内容包装器 */
+      .message-content-wrapper {
+        display: flex;
+        align-items: flex-end;
+      }
+      
       /* 打字光标 */
       .typing-cursor {
-        display: inline-block;
         color: #333333;
         font-size: 26rpx;
         line-height: 1.4;
         animation: blink 1s infinite;
-        margin-left: 2rpx;
       }
       
       /* 消息气泡尾巴 */
@@ -104,6 +157,18 @@ defineProps({
         border-top: 16rpx solid transparent;
       }
     }
+  }
+}
+
+/* 思考动画关键帧 */
+@keyframes thinking {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-8rpx);
+    opacity: 1;
   }
 }
 

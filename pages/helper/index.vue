@@ -98,6 +98,9 @@ const onSendMessage = async (content) => {
   if (!content.trim()) return
   
   try {
+    // 立即清空输入框
+    store.dispatch('helper/update_input_value', '')
+    
     // 通过store发送消息
     await store.dispatch('helper/send_message', content.trim())
     

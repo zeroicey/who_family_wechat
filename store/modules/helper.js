@@ -98,6 +98,10 @@ const actions = {
         content: userMessage
       });
       
+      // 立即添加AI思考状态消息
+      commit('add_ai_message_with_typewriter', '');
+      const messageIndex = state.messageList.length - 1;
+      
       // 设置AI回复状态为加载中
       commit('set_ai_replying', true);
       
@@ -105,41 +109,37 @@ const actions = {
       const result = await sendMessageToAI(userMessage);
       
       if (result.success && result.message) {
-        // 添加AI消息并开始打字机效果
-        commit('add_ai_message_with_typewriter', result.message);
-        const messageIndex = state.messageList.length - 1;
-        
         // 开始打字机动画
         await this.dispatch('helper/start_typewriter_effect', {
           messageIndex,
           fullContent: result.message
         });
       } else {
-        // 添加错误消息
-        commit('add_message', {
-          type: 'ai',
-          content: '抱歉，我暂时无法回复，请稍后再试。'
+        // 更新为错误消息
+        commit('update_typewriter_content', {
+          index: messageIndex,
+          content: result.message || '抱歉，我现在无法回复，请稍后再试。'
         });
+        commit('finish_typewriter', messageIndex);
       }
-      
-      return {
-        success: result.success,
-        message: result.message
-      };
-      
     } catch (error) {
       console.error('发送消息失败:', error);
       
-      // 添加错误消息
-      commit('add_message', {
-        type: 'ai',
-        content: '抱歉，我暂时无法回复，请稍后再试。'
-      });
-      
-      return {
-        success: false,
-        message: '发送失败'
-      };
+      // 如果已经添加了AI消息，更新为错误内容
+      const messageIndex = state.messageList.length - 1;
+      if (state.messageList[messageIndex] && state.messageList[messageIndex].type === 'ai') {
+        commit('update_typewriter_content', {
+          index: messageIndex,
+          content: '网络连接异常，请检查网络后重试。'
+        });
+        commit('finish_typewriter', messageIndex);
+      } else {
+        // 否则添加新的错误消息
+        commit('add_message', {
+          type: 'ai',
+          content: '网络连接异常，请检查网络后重试。'
+        });
+      }
     } finally {
       // 重置AI回复状态
       commit('set_ai_replying', false);
