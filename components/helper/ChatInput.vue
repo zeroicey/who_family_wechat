@@ -17,37 +17,39 @@
   </view>
 </template>
 
-<script>
-export default {
-  name: 'ChatInput',
-  props: {
-    value: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {
-      inputValue: this.value
-    }
-  },
-  watch: {
-    value(newVal) {
-      this.inputValue = newVal
-    }
-  },
-  methods: {
-    onInput(e) {
-      this.inputValue = e.detail.value
-      this.$emit('input', e.detail.value)
-    },
-    onSend() {
-      if (this.inputValue.trim()) {
-        this.$emit('send', this.inputValue.trim())
-        this.inputValue = ''
-        this.$emit('input', '')
-      }
-    }
+<script setup>
+import { ref, watch } from 'vue'
+
+// 定义props
+const props = defineProps({
+  value: {
+    type: String,
+    default: ''
+  }
+})
+
+// 定义emits
+const emit = defineEmits(['input', 'send'])
+
+// 响应式数据
+const inputValue = ref(props.value)
+
+// 监听props变化
+watch(() => props.value, (newVal) => {
+  inputValue.value = newVal
+})
+
+// 方法
+const onInput = (e) => {
+  inputValue.value = e.detail.value
+  emit('input', e.detail.value)
+}
+
+const onSend = () => {
+  if (inputValue.value.trim()) {
+    emit('send', inputValue.value.trim())
+    inputValue.value = ''
+    emit('input', '')
   }
 }
 </script>

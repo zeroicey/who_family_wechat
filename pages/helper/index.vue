@@ -53,103 +53,96 @@
   </view>
 </template>
 
-<script>
+<script setup>
+import { ref, nextTick, onMounted } from 'vue'
 import ChatInput from '@/components/helper/ChatInput.vue'
 import UserMessage from '@/components/helper/UserMessage.vue'
 import AiMessage from '@/components/helper/AiMessage.vue'
 
-export default {
-  name: 'HelperIndex',
-  components: {
-    ChatInput,
-    UserMessage,
-    AiMessage
-  },
-  data() {
-    return {
-      inputValue: '',
-      scrollTop: 0,
-      scrollIntoView: '',
-      statusBarHeight: 0,
-      // Mock聊天数据
-      messageList: [
-        { type: 'ai', content: '我是校助手，有什么问题？' },
-        { type: 'user', content: '图书馆开放时间？' },
-        { type: 'ai', content: '夏季8:00-22:00，冬季8:30-21:30' }
-      ]
-    }
-  },
-  onLoad() {
-    // 获取系统信息，设置状态栏高度
-    const systemInfo = uni.getSystemInfoSync()
-    this.statusBarHeight = systemInfo.statusBarHeight || 0
-    
-    // 页面加载时滚动到底部
-    this.$nextTick(() => {
-      this.scrollToBottom()
-    })
-  },
-  methods: {
-    onInputChange(value) {
-      this.inputValue = value
-    },
-    
-    onSendMessage(content) {
-      // 添加用户消息
-      this.messageList.push({
-        type: 'user',
-        content: content
-      })
-      
-      // 清空输入框
-      this.inputValue = ''
-      
-      // 滚动到底部
-      this.$nextTick(() => {
-        this.scrollToBottom()
-      })
-      
-      // 模拟AI回复（延迟1秒）
-      setTimeout(() => {
-        this.simulateAiReply(content)
-      }, 1000)
-    },
-    
-    simulateAiReply(userMessage) {
-      // 简单的模拟回复逻辑
-      let aiReply = '我正在为您查询相关信息，请稍等...'
-      
-      if (userMessage.includes('图书馆')) {
-        aiReply = '图书馆开放时间：周一至周日 8:00-22:00，节假日可能有调整。'
-      } else if (userMessage.includes('食堂') || userMessage.includes('餐厅')) {
-        aiReply = '学校共有3个食堂：东食堂、西食堂、中心食堂，营业时间6:30-21:00。'
-      } else if (userMessage.includes('课表') || userMessage.includes('课程')) {
-        aiReply = '您可以在教务系统查看个人课表，或者告诉我您的学号，我帮您查询。'
-      } else if (userMessage.includes('天气')) {
-        aiReply = '今天天气晴朗，温度18-25℃，适合户外活动。'
-      }
-      
-      // 添加AI回复
-      this.messageList.push({
-        type: 'ai',
-        content: aiReply
-      })
-      
-      // 滚动到底部
-      this.$nextTick(() => {
-        this.scrollToBottom()
-      })
-    },
-    
-    scrollToBottom() {
-      this.scrollIntoView = 'msg-' + this.messageList.length
-    },
-    
-    onMenuClick() {
-      // 菜单按钮点击事件，暂时留空
-      console.log('菜单按钮被点击')
-    }
+// 响应式数据
+const inputValue = ref('')
+const scrollTop = ref(0)
+const scrollIntoView = ref('')
+const statusBarHeight = ref(0)
+
+// Mock聊天数据
+const messageList = ref([
+  { type: 'ai', content: '我是校助手，有什么问题？' },
+  { type: 'user', content: '图书馆开放时间？' },
+  { type: 'ai', content: '夏季8:00-22:00，冬季8:30-21:30' }
+])
+
+// 页面加载
+onMounted(() => {
+  // 获取系统信息，设置状态栏高度
+  const systemInfo = uni.getSystemInfoSync()
+  statusBarHeight.value = systemInfo.statusBarHeight || 0
+  
+  // 页面加载时滚动到底部
+  nextTick(() => {
+    scrollToBottom()
+  })
+})
+
+// 方法
+const onInputChange = (value) => {
+  inputValue.value = value
+}
+
+const onSendMessage = (content) => {
+  // 添加用户消息
+  messageList.value.push({
+    type: 'user',
+    content: content
+  })
+  
+  // 清空输入框
+  inputValue.value = ''
+  
+  // 滚动到底部
+  nextTick(() => {
+    scrollToBottom()
+  })
+  
+  // 模拟AI回复（延迟1秒）
+  setTimeout(() => {
+    simulateAiReply(content)
+  }, 1000)
+}
+
+const simulateAiReply = (userMessage) => {
+  // 简单的模拟回复逻辑
+  let aiReply = '我正在为您查询相关信息，请稍等...'
+  
+  if (userMessage.includes('图书馆')) {
+    aiReply = '图书馆开放时间：周一至周日 8:00-22:00，节假日可能有调整。'
+  } else if (userMessage.includes('食堂') || userMessage.includes('餐厅')) {
+    aiReply = '学校共有3个食堂：东食堂、西食堂、中心食堂，营业时间6:30-21:00。'
+  } else if (userMessage.includes('课表') || userMessage.includes('课程')) {
+    aiReply = '您可以在教务系统查看个人课表，或者告诉我您的学号，我帮您查询。'
+  } else if (userMessage.includes('天气')) {
+    aiReply = '今天天气晴朗，温度18-25℃，适合户外活动。'
   }
+  
+  // 添加AI回复
+  messageList.value.push({
+    type: 'ai',
+    content: aiReply
+  })
+  
+  // 滚动到底部
+  nextTick(() => {
+    scrollToBottom()
+  })
+}
+
+const scrollToBottom = () => {
+  scrollIntoView.value = 'msg-' + messageList.value.length
+}
+
+const onMenuClick = () => {
+  // 菜单按钮点击事件，暂时留空
+  console.log('菜单按钮被点击')
 }
 </script>
 

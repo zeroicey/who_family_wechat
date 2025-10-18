@@ -6,17 +6,15 @@
   </view>
 </template>
 
-<script>
-export default {
-  name: 'UserMessage',
-  props: {
-    content: {
-      type: String,
-      required: true,
-      default: ''
-    }
+<script setup>
+// 定义props
+defineProps({
+  content: {
+    type: String,
+    required: true,
+    default: ''
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
