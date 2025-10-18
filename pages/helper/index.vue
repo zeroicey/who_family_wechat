@@ -31,6 +31,13 @@
             :content="message.content"
             :isTyping="message.isTyping || false"
           />
+          <!-- 预设问题组件 - 只在第一条AI消息后显示 -->
+          <PresetQuestions
+            v-if="message.type === 'ai' && message.showPresetQuestions && index === 0"
+            :questions="presetQuestions"
+            :showQuestions="messageList.length === 1"
+            @questionClick="onPresetQuestionClick"
+          />
           <!-- 用户消息 -->
           <UserMessage 
             v-else-if="message.type === 'user'" 
@@ -60,6 +67,7 @@ import { useStore } from 'vuex'
 import ChatInput from '@/components/helper/ChatInput.vue'
 import UserMessage from '@/components/helper/UserMessage.vue'
 import AiMessage from '@/components/helper/AiMessage.vue'
+import PresetQuestions from '@/components/helper/PresetQuestions.vue'
 
 // 使用Vuex store
 const store = useStore()
@@ -73,6 +81,7 @@ const statusBarHeight = ref(0)
 const messageList = computed(() => store.getters['helper/get_message_list'])
 const inputValue = computed(() => store.getters['helper/get_input_value'])
 const isAIReplying = computed(() => store.getters['helper/is_ai_replying'])
+const presetQuestions = computed(() => store.getters['helper/get_preset_questions'])
 
 // 页面加载
 onMounted(() => {
@@ -117,6 +126,16 @@ const onSendMessage = async (content) => {
       title: '发送失败，请重试',
       icon: 'none'
     })
+  }
+}
+
+// 预设问题点击处理
+const onPresetQuestionClick = async (question) => {
+  try {
+    // 发送预设问题
+    await onSendMessage(question.content)
+  } catch (error) {
+    console.error('发送预设问题失败:', error)
   }
 }
 
