@@ -80,9 +80,12 @@ onMounted(() => {
   const systemInfo = uni.getSystemInfoSync()
   statusBarHeight.value = systemInfo.statusBarHeight || 0
   
-  // 页面加载时滚动到底部
+  // 页面加载时不自动滚动，让用户看到默认消息
+  // 只有当消息列表长度大于1时才滚动到底部（说明有新消息）
   nextTick(() => {
-    scrollToBottom()
+    if (messageList.value.length > 1) {
+      scrollToBottom()
+    }
   })
   
   // 检查AI服务状态
@@ -220,7 +223,8 @@ const onMenuClick = () => {
     
     .message-list {
       min-height: 100%;
-      padding-top: 20rpx;
+      padding-top: 40rpx; // 增加顶部内边距，确保默认消息不被遮挡
+      padding-bottom: 20rpx; // 增加底部内边距
     }
     
     .scroll-anchor {
