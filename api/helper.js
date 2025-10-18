@@ -9,11 +9,10 @@ const SILICONFLOW_TOKEN = 'sk-xmddxeqqcaeatgxwkbukioyqnoxhpaubhaojmlmfmxxwjosg'
 /**
  * 发送消息给AI助手
  * @param {string} message 用户消息
- * @returns {Promise} AI回复
+ * @returns {Promise} AI回复结果
  */
 export const sendMessageToAI = async (message) => {
   try {
-    // 使用uni.request发起请求
     const response = await new Promise((resolve, reject) => {
       uni.request({
         url: SILICONFLOW_API_URL,
@@ -40,7 +39,7 @@ export const sendMessageToAI = async (message) => {
           top_p: 0.7,
           frequency_penalty: 0.5
         },
-        timeout: 30000, // 30秒超时
+        timeout: 30000,
         success: (res) => {
           resolve(res)
         },

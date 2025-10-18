@@ -9,6 +9,8 @@
       <view class="ai-name">校助手</view>
       <view class="message-bubble">
         <text class="message-text">{{ content }}</text>
+        <!-- 打字时显示光标 -->
+        <view v-if="isTyping" class="typing-cursor">|</view>
       </view>
     </view>
   </view>
@@ -21,6 +23,10 @@ defineProps({
     type: String,
     required: true,
     default: ''
+  },
+  isTyping: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -76,6 +82,16 @@ defineProps({
         word-break: break-all;
       }
       
+      /* 打字光标 */
+      .typing-cursor {
+        display: inline-block;
+        color: #333333;
+        font-size: 26rpx;
+        line-height: 1.4;
+        animation: blink 1s infinite;
+        margin-left: 2rpx;
+      }
+      
       /* 消息气泡尾巴 */
       &::before {
         content: '';
@@ -88,6 +104,16 @@ defineProps({
         border-top: 16rpx solid transparent;
       }
     }
+  }
+}
+
+/* 光标闪烁动画 */
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
   }
 }
 </style>

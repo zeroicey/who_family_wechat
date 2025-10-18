@@ -29,6 +29,7 @@
           <AiMessage 
             v-if="message.type === 'ai'" 
             :content="message.content"
+            :isTyping="message.isTyping || false"
           />
           <!-- 用户消息 -->
           <UserMessage 
