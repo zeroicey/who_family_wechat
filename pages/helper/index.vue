@@ -156,17 +156,18 @@ const onMenuClick = () => {
   background: #F5F5F7;
   display: flex;
   flex-direction: column;
+  overflow: hidden; // 禁用页面滚动
   
   .custom-header {
     background: #F5F5F7;
     padding: 20rpx 30rpx;
     border-bottom: 1rpx solid #E5E5E7;
-    position: sticky;
-    top: 0;
+    position: relative; // 改为relative，避免sticky导致的滚动问题
     z-index: 100;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0; // 防止header被压缩
     
     .header-left {
       width: 80rpx;
@@ -211,6 +212,7 @@ const onMenuClick = () => {
   .chat-content {
     flex: 1;
     background: #F5F5F7;
+    overflow: hidden; // 确保scroll-view内部滚动
     
     .message-list {
       min-height: 100%;
@@ -222,14 +224,15 @@ const onMenuClick = () => {
     }
     
     .bottom-placeholder {
-      height: 120rpx; // 为输入框留出空间
+      height: 140rpx; // 增加底部占位高度，为输入框留出更多空间
     }
   }
 }
 
-/* 全局页面样式 */
+/* 全局页面样式 - 禁用页面滚动 */
 page {
   background: #F5F5F7;
   height: 100%;
+  overflow: hidden; // 禁用页面级别的滚动
 }
 </style>

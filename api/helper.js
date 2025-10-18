@@ -59,9 +59,13 @@ export const sendMessageToAI = async (message) => {
     
     // 检查响应格式
     if (data.choices && data.choices.length > 0) {
+      // 获取AI回复内容并清理前后空行和空格
+      const rawContent = data.choices[0].message.content || '';
+      const cleanedContent = rawContent.trim();
+      
       return {
         success: true,
-        message: data.choices[0].message.content,
+        message: cleanedContent,
         usage: data.usage
       }
     } else {

@@ -57,10 +57,13 @@ const onSend = () => {
 <style lang="scss" scoped>
 .chat-input-container {
   position: fixed;
-  bottom: 10px;
-  left: 15px;
-  right: 15px;
+  bottom: 0; // 改为贴底显示
+  left: 0;
+  right: 0;
   z-index: 999;
+  padding: 10rpx 15rpx 10rpx 15rpx; // 添加内边距
+  background: rgba(245, 245, 247, 0.95); // 添加背景色，避免透明导致的视觉问题
+  backdrop-filter: blur(10px);
   
   .input-wrapper {
     background: rgba(255, 255, 255, 0.9);
