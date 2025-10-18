@@ -132,7 +132,8 @@
     {
       "path": "pages/helper/index",
       "style": {
-        "navigationBarTitleText": "助手"
+        "navigationBarTitleText": "助手",
+        "navigationStyle": "custom"
       }
     }
   ],
