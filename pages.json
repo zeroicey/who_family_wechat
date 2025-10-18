@@ -128,6 +128,12 @@
       "style": {
         "navigationBarTitleText": "个人资料"
       }
+    },
+    {
+      "path": "pages/helper/index",
+      "style": {
+        "navigationBarTitleText": "助手"
+      }
     }
   ],
   "globalStyle": {
@@ -152,6 +158,12 @@
         "iconPath": "/static/images/tabbar/community.png",
         "selectedIconPath": "/static/images/tabbar/community-active.png",
         "text": "社区"
+      },
+      {
+        "pagePath": "pages/helper/index",
+        "iconPath": "/static/images/tabbar/helper.png",
+        "selectedIconPath": "/static/images/tabbar/helper-active.png",
+        "text": "助手"
       },
       {
         "pagePath": "pages/recruit/index",
