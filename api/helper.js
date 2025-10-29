@@ -26,7 +26,7 @@ export const sendMessageToAI = async (message) => {
           messages: [
             {
               role: "system",
-              content: "你是一个校园AI助手，专门为大学生提供帮助。请用简洁、友好的语言回答问题，重点关注校园生活、学习、服务等相关内容。"
+              content: "你是一个校园AI助手，专门为大学生提供帮助。请用简洁、友好的语言回答问题，重点关注校园生活、学习、服务等相关内容。请直接返回原文本，不要返回markdown。"
             },
             {
               role: "user",

@@ -7,6 +7,12 @@
       }
     },
     {
+      "path": "pages/service/grade",
+      "style": {
+        "navigationBarTitleText": "成绩查询"
+      }
+    },
+    {
       "path": "pages/service/print/index",
       "style": {
         "navigationBarTitleText": "文件打印"
