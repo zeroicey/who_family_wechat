@@ -7,6 +7,12 @@
       }
     },
     {
+      "path": "pages/service/schedule",
+      "style": {
+        "navigationBarTitleText": "课表查询"
+      }
+    },
+    {
       "path": "pages/service/grade",
       "style": {
         "navigationBarTitleText": "成绩查询"

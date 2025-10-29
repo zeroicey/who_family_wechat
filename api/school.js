@@ -43,7 +43,7 @@ export const fetchSchoolGrades = async (studentNo, password, term) => {
 export const fetchSchoolCourses = async (studentNo, password, term, week) => {
   return new Promise((resolve, reject) => {
     uni.request({
-      url: "https://api.hcyj.xyz/yeciorez/neusoft/courses",
+      url: "https://api.hcyj.xyz/yeciorez/neusoft/schedule",
       method: "GET",
       data: {
         studentNo,

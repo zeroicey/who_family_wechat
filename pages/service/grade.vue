@@ -41,16 +41,8 @@
 						class="form-input" 
 						v-model="loginForm.password" 
 						placeholder="请输入教务系统密码"
-						:password="!showPassword"
-						type="text"
+						password
 					/>
-					<uni-icons 
-						:type="showPassword ? 'eye-slash' : 'eye'" 
-						size="20" 
-						color="#999"
-						@click="showPassword = !showPassword"
-						class="password-toggle"
-					></uni-icons>
 				</view>
 
 				<view class="form-item">
@@ -172,7 +164,6 @@ import { fetchSchoolGrades } from '@/api/school';
 // 响应式数据
 const isLoggedIn = ref(false);
 const loading = ref(false);
-const showPassword = ref(false);
 
 // 表单数据
 const loginForm = ref({
@@ -475,14 +466,6 @@ const resetForm = () => {
 					border-color: #007aff;
 					background-color: #fff;
 				}
-			}
-			
-			.password-toggle {
-				position: absolute;
-				right: 20rpx;
-				top: 50%;
-				transform: translateY(-50%);
-				margin-top: 35rpx;
 			}
 			
 			.form-picker {

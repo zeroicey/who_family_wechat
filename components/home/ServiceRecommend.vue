@@ -84,7 +84,7 @@ const fetchRecommendServices = async () => {
           imageUrl: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEECPRpAZAXQl3cBfhxDxuSt1AojYoeHQAC7iAAAtCQCFQvkTsfSeUnwjYE.jpg',
           rating: 4.8,
           orders: 1580,
-          url: ''
+          url: '/pages/service/schedule'
         },
         {
           id: 3,
