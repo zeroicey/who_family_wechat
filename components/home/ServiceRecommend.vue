@@ -81,7 +81,7 @@ const fetchRecommendServices = async () => {
           id: 2,
           title: '查询课表服务',
           description: '查询当前学期的课表，方便你及时了解自己的课程安排。',
-          imageUrl: 'https://api.hcyj.xyz/images/gdfw.jpg',
+          imageUrl: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEECPRpAZAXQl3cBfhxDxuSt1AojYoeHQAC7iAAAtCQCFQvkTsfSeUnwjYE.jpg',
           rating: 4.8,
           orders: 1580,
           url: ''
@@ -90,7 +90,7 @@ const fetchRecommendServices = async () => {
           id: 3,
           title: '查询成绩服务',
           description: '查询当前学期的成绩，方便你及时了解自己的学习情况。',
-          imageUrl: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEECPRpAZAXQl3cBfhxDxuSt1AojYoeHQAC7iAAAtCQCFQvkTsfSeUnwjYE.jpg',
+          imageUrl: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEECP5pAZDT2lKDbMs1BC1kkTo76bcj3AAC-CAAAtCQCFQGU12qYNcw8DYE.jpg',
           rating: 4.8,
           orders: 1580,
           url: '/pages/service/grade'
