@@ -118,22 +118,22 @@
 			<view class="schedule-content">
 				<view class="schedule-row" v-for="(period, index) in timePeriods" :key="index">
 					<view class="time-cell">
-						<text class="period-number">{{ index + 1 }}</text>
+						<text class="period-number">{{ (index * 2 + 1) + '-' + (index * 2 + 2) }}</text>
 						<text class="time-range">{{ period }}</text>
 					</view>
 					<view class="course-cell" v-for="(day, dayIndex) in weekDays" :key="dayIndex">
 						<view 
 							class="course-item" 
-							v-if="shouldShowCourse(getCourseForSlot(index + 1, dayIndex + 1), index + 1)"
+							v-if="shouldShowCourse(getCourseForSlot(index * 2 + 1, dayIndex + 1), index * 2 + 1)"
 							:style="{ 
-								backgroundColor: getCourseColor(getCourseForSlot(index + 1, dayIndex + 1)),
-								gridRowEnd: `span ${getCourseSpan(getCourseForSlot(index + 1, dayIndex + 1), index + 1)}`
+								backgroundColor: getCourseColor(getCourseForSlot(index * 2 + 1, dayIndex + 1)),
+								gridRowEnd: `span ${getCourseSpan(getCourseForSlot(index * 2 + 1, dayIndex + 1), index * 2 + 1)}`
 							}"
 						>
-							<text class="course-name">{{ getCourseForSlot(index + 1, dayIndex + 1).name }}</text>
-							<text class="course-location">{{ getCourseForSlot(index + 1, dayIndex + 1).location }}</text>
-							<text class="course-teacher">{{ getCourseForSlot(index + 1, dayIndex + 1).teacher }}</text>
-							<text class="course-code">{{ getCourseForSlot(index + 1, dayIndex + 1).courseCode }}</text>
+							<text class="course-name">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).name }}</text>
+							<text class="course-location">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).location }}</text>
+							<text class="course-teacher">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).teacher }}</text>
+							<text class="course-code">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).courseCode }}</text>
 						</view>
 					</view>
 				</view>
@@ -231,11 +231,12 @@ const courses = ref([]);
 // 时间段和星期
 const weekDays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 const timePeriods = [
-	'08:00-09:40',
-	'10:00-11:40', 
-	'14:00-15:40',
-	'16:00-17:40',
-	'19:00-20:40'
+	'08:30-10:05',
+	'10:25-12:00', 
+	'14:00-15:35',
+	'15:55-17:30',
+	'18:30-20:05',
+	'20:25-22:00'
 ];
 
 // 课程颜色配置
