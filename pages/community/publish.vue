@@ -20,9 +20,24 @@
       <button class="publish-button" @click="submitPost">发布</button>
     </view>
 
+    <view class="divider-line"></view>
+
     <view class="form-item content-item">
       <textarea class="form-textarea" v-model="content" placeholder="💭 今天有什么想分享的呢？可以是生活趣事、学习心得、美食推荐...让大家看到不一样的你！✨"
         maxlength="10000" />
+    </view>
+
+    <!-- AI优化按钮 -->
+    <view class="ai-optimize-buttons">
+      <view v-if="showUndoButton" class="undo-btn" @click="undoOptimize">
+        <text class="undo-icon">↩</text>
+        <text class="undo-text">撤回优化</text>
+      </view>
+      <view class="ai-optimize-btn" @click="aiOptimize">
+        <text class="ai-icon" v-if="!isOptimizing">✨</text>
+        <text class="ai-text" v-if="!isOptimizing">AI润色</text>
+        <text class="ai-text" v-else>润色中...</text>
+      </view>
     </view>
   </view>
 </template>
@@ -31,12 +46,19 @@
 import { useStore } from "vuex";
 import { ref, computed } from "vue";
 import { onLoad } from "@dcloudio/uni-app"; // 引入 onLoad
+import { optimizePost } from "@/api/helper.js";
 
 const store = useStore();
 
 const title = ref("");
 const content = ref("");
 const imageList = ref([]); // 存储本地图片路径或上传后的URL
+
+// AI优化相关状态
+const isOptimizing = ref(false);
+const showUndoButton = ref(false);
+const originalTitle = ref("");
+const originalContent = ref("");
 
 onLoad((options) => {
   if (options && options.images) {
@@ -85,6 +107,66 @@ const previewImage = (index) => {
 
 const deleteImage = (index) => {
   imageList.value.splice(index, 1);
+};
+
+// AI优化内容
+const aiOptimize = async () => {
+  // 如果没有标题和内容，提示用户
+  if (!title.value.trim() && !content.value.trim()) {
+    uni.showToast({
+      title: "请先输入标题或内容",
+      icon: "none",
+    });
+    return;
+  }
+
+  // 保存原始内容以便撤回
+  originalTitle.value = title.value;
+  originalContent.value = content.value;
+
+  isOptimizing.value = true;
+
+  try {
+    const result = await optimizePost(title.value, content.value);
+
+    if (result.success) {
+      // 应用优化后的内容
+      title.value = result.title;
+      content.value = result.content;
+      showUndoButton.value = true;
+
+      uni.showToast({
+        title: "润色完成！",
+        icon: "success",
+        duration: 1500,
+      });
+    } else {
+      uni.showToast({
+        title: "润色失败，请重试",
+        icon: "none",
+      });
+    }
+  } catch (error) {
+    console.error("AI优化失败:", error);
+    uni.showToast({
+      title: "润色失败，请重试",
+      icon: "none",
+    });
+  } finally {
+    isOptimizing.value = false;
+  }
+};
+
+// 撤回优化
+const undoOptimize = () => {
+  title.value = originalTitle.value;
+  content.value = originalContent.value;
+  showUndoButton.value = false;
+  uni.showToast({
+    title: "已撤回",
+    icon: "none",
+    duration: 1000,
+  });
 };
 
 const submitPost = async () => {
@@ -220,6 +302,79 @@ const submitPost = async () => {
   line-height: 1.6;
   padding: 20rpx 0;
   resize: none;
+}
+
+// 分割线
+.divider-line {
+  height: 1rpx;
+  background: linear-gradient(to right, transparent, #e0e0e0, transparent);
+  margin: 10rpx 0;
+  flex-shrink: 0;
+}
+
+// AI优化按钮容器
+.ai-optimize-buttons {
+  position: fixed;
+  bottom: 40rpx;
+  right: 30rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  align-items: flex-end;
+  z-index: 100;
+}
+
+.ai-optimize-btn {
+  background: #5a6b7a;
+  border-radius: 50rpx;
+  padding: 20rpx 32rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.95);
+    background: #4a5b6a;
+  }
+
+  .ai-icon {
+    font-size: 32rpx;
+  }
+
+  .ai-text {
+    font-size: 28rpx;
+    color: white;
+    font-weight: 500;
+  }
+}
+
+.undo-btn {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2rpx solid #e0e0e0;
+  border-radius: 50rpx;
+  padding: 16rpx 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.92);
+    background: rgba(245, 245, 245, 0.95);
+  }
+
+  .undo-icon {
+    font-size: 28rpx;
+    color: #666;
+  }
+
+  .undo-text {
+    font-size: 24rpx;
+    color: #666;
+  }
 }
 
 

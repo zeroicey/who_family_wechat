@@ -84,6 +84,87 @@ export const sendMessageToAI = async (message) => {
 };
 
 /**
+ * AI优化帖子内容
+ * @param {string} title 原标题
+ * @param {string} content 原内容
+ * @returns {Promise} 优化后的标题和内容
+ */
+export const optimizePost = async (title, content) => {
+  try {
+    const response = await new Promise((resolve, reject) => {
+      uni.request({
+        url: SILICONFLOW_API_URL,
+        method: "POST",
+        header: {
+          Authorization: `Bearer ${SILICONFLOW_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          model: "Qwen/QwQ-32B",
+          messages: [
+            {
+              role: "system",
+              content:
+                "你是一个专业的内容编辑助手。请帮用户优化社区帖子的标题和内容，使其更加吸引人、表达更清晰、语气更友好。优化后的内容应该保持原意，但更加生动有趣。\n\n请严格按照以下JSON格式返回结果，不要包含任何其他内容：\n{\"title\":\"优化后的标题\",\"content\":\"优化后的内容\"}\n\n标题要简洁有力，控制在30字以内。内容要保持原意，让表达更流畅自然。",
+            },
+            {
+              role: "user",
+              content: `请帮我优化这篇帖子：\n\n标题：${title}\n\n内容：${content}`,
+            },
+          ],
+          stream: false,
+          max_tokens: 2000,
+          temperature: 0.8,
+          top_p: 0.9,
+        },
+        timeout: 30000,
+        success: (res) => {
+          resolve(res);
+        },
+        fail: (err) => {
+          reject(err);
+        },
+      });
+    });
+
+    if (response.statusCode !== 200) {
+      throw new Error(`HTTP error! status: ${response.statusCode}`);
+    }
+
+    const data = response.data;
+    if (data.choices && data.choices.length > 0) {
+      const rawContent = data.choices[0].message.content.trim();
+      // 尝试解析JSON
+      const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const result = JSON.parse(jsonMatch[0]);
+        return {
+          success: true,
+          title: result.title || title,
+          content: result.content || content,
+        };
+      }
+      // 如果解析失败，返回原始内容作为content
+      return {
+        success: true,
+        title: title,
+        content: rawContent,
+      };
+    } else {
+      throw new Error("Invalid response format");
+    }
+  } catch (error) {
+    console.error("AI优化失败:", error);
+    return {
+      success: false,
+      title: title,
+      content: content,
+      error: error.message,
+    };
+  }
+};
+
+/**
  * 获取AI助手状态
  * @returns {Promise} 服务状态
  */
