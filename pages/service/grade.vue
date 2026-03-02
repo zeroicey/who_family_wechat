@@ -158,8 +158,38 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { fetchSchoolGrades } from '@/api/school';
+
+// 存储键名
+const STORAGE_KEY = 'grade_credentials';
+
+// 从本地存储加载凭据
+const loadCredentials = () => {
+	const credentials = uni.getStorageSync(STORAGE_KEY);
+	if (credentials) {
+		loginForm.value.studentNo = credentials.studentNo || '';
+		loginForm.value.password = credentials.password || '';
+	}
+};
+
+// 保存凭据到本地存储
+const saveCredentials = () => {
+	uni.setStorageSync(STORAGE_KEY, {
+		studentNo: loginForm.value.studentNo,
+		password: loginForm.value.password
+	});
+};
+
+// 清除凭据
+const clearCredentials = () => {
+	uni.removeStorageSync(STORAGE_KEY);
+};
+
+// 页面加载时读取凭据
+onMounted(() => {
+	loadCredentials();
+});
 
 // 响应式数据
 const isLoggedIn = ref(false);
@@ -190,49 +220,6 @@ const currentTerm = ref('');
 // 成绩数据
 const grades = ref([]);
 
-// Mock数据
-const mockGrades = [
-	{
-		courseName: '高等数学A',
-		courseCode: 'MATH001',
-		score: 92,
-		credits: 4,
-		courseType: '必修',
-		gradePoint: 4.2
-	},
-	{
-		courseName: '大学英语',
-		courseCode: 'ENG001', 
-		score: 88,
-		credits: 3,
-		courseType: '必修',
-		gradePoint: 3.8
-	},
-	{
-		courseName: '程序设计基础',
-		courseCode: 'CS001',
-		score: 95,
-		credits: 4,
-		courseType: '必修',
-		gradePoint: 4.5
-	},
-	{
-		courseName: '线性代数',
-		courseCode: 'MATH002',
-		score: 85,
-		credits: 3,
-		courseType: '必修',
-		gradePoint: 3.5
-	},
-	{
-		courseName: '大学物理',
-		courseCode: 'PHY001',
-		score: 78,
-		credits: 3,
-		courseType: '必修',
-		gradePoint: 2.8
-	}
-];
 
 // 计算成绩统计
 const gradeStats = computed(() => {
@@ -317,6 +304,9 @@ const handleLogin = async () => {
 		
 		// 检查API返回结果
 		if (result && result.success && result.items && Array.isArray(result.items)) {
+			// 保存凭据到本地存储
+			saveCredentials();
+
 			// 转换API数据格式为页面所需格式
 			const convertedGrades = result.items.map(item => ({
 				id: item.rownum_ || Math.random().toString(36).substr(2, 9),

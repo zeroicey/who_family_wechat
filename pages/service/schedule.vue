@@ -158,8 +158,38 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { fetchSchoolCourses } from '@/api/school.js';
+
+// 存储键名
+const STORAGE_KEY = 'schedule_credentials';
+
+// 从本地存储加载凭据
+const loadCredentials = () => {
+	const credentials = uni.getStorageSync(STORAGE_KEY);
+	if (credentials) {
+		loginForm.value.studentNo = credentials.studentNo || '';
+		loginForm.value.password = credentials.password || '';
+	}
+};
+
+// 保存凭据到本地存储
+const saveCredentials = () => {
+	uni.setStorageSync(STORAGE_KEY, {
+		studentNo: loginForm.value.studentNo,
+		password: loginForm.value.password
+	});
+};
+
+// 清除凭据
+const clearCredentials = () => {
+	uni.removeStorageSync(STORAGE_KEY);
+};
+
+// 页面加载时读取凭据
+onMounted(() => {
+	loadCredentials();
+});
 
 // 数据处理函数
 const processCourseData = (courseData) => {
@@ -399,16 +429,19 @@ const handleLogin = async () => {
 		);
 		
 		if (result.success && result.items && result.items.length > 0) {
+			// 保存凭据到本地存储
+			saveCredentials();
+
 			// 处理课程数据
 			const courseData = result.items[0] || [];
 			const dateData = result.items[1] || [];
-			
+
 			// 转换数据格式
 			courses.value = processCourseData(courseData);
 			currentWeek.value = parseInt(loginForm.value.week);
 			weekIndex.value = currentWeek.value - 1; // 同步更新picker索引
 			isLoggedIn.value = true;
-			
+
 			uni.showToast({
 				title: '查询成功',
 				icon: 'success'
