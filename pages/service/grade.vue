@@ -311,14 +311,16 @@ const handleLogin = async () => {
 			loginForm.value.password,
 			loginForm.value.term
 		);
-		
-		// 检查API返回结果
-		if (result && result.success && result.items && Array.isArray(result.items)) {
+
+		// 检查API返回结果（兼容新旧格式）
+		const gradeData = result.data || result.items;
+
+		if (result && result.success && gradeData && Array.isArray(gradeData)) {
 			// 保存凭据到本地存储
 			saveCredentials();
 
 			// 转换API数据格式为页面所需格式
-			const convertedGrades = result.items.map(item => ({
+			const convertedGrades = gradeData.map(item => ({
 				id: item.rownum_ || Math.random().toString(36).substr(2, 9),
 				courseName: item.kcmc || '未知课程',
 				courseCode: item.kcbh || '',

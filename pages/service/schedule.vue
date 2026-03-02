@@ -365,12 +365,15 @@ const loadScheduleData = async () => {
 			loginForm.value.term,
 			loginForm.value.week
 		);
-		
-		if (response.success && response.items && response.items.length > 0) {
+
+		// 兼容新旧API格式（items 或 data）
+		const scheduleData = response.items || response.data;
+
+		if (response.success && scheduleData && scheduleData.length > 0) {
 			// 处理课程数据
-			const courseData = response.items[0] || [];
+			const courseData = scheduleData[0] || [];
 			courses.value = processCourseData(courseData);
-			
+
 			uni.showToast({
 				title: `第${currentWeek.value}周课表加载成功`,
 				icon: 'success',
@@ -437,14 +440,17 @@ const handleLogin = async () => {
 			loginForm.value.term,
 			loginForm.value.week
 		);
-		
-		if (result.success && result.items && result.items.length > 0) {
+
+		// 兼容新旧API格式（items 或 data）
+		const scheduleData = result.items || result.data;
+
+		if (result.success && scheduleData && scheduleData.length > 0) {
 			// 保存凭据到本地存储
 			saveCredentials();
 
 			// 处理课程数据
-			const courseData = result.items[0] || [];
-			const dateData = result.items[1] || [];
+			const courseData = scheduleData[0] || [];
+			const dateData = scheduleData[1] || [];
 
 			// 转换数据格式
 			courses.value = processCourseData(courseData);
