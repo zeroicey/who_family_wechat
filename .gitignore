@@ -3,3 +3,4 @@ manifest.json
 /unpackage
 /mock
 .trae/
+.claude/
