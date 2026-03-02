@@ -381,9 +381,9 @@ defineExpose({
 	align-items: center;
 	gap: 10rpx;
 	padding: 20rpx 24rpx;
-	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	background-color: #007aff;
 	border-radius: 50rpx;
-	box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+	box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.25);
 	pointer-events: auto;
 	z-index: 1001;
 	transition: all 300ms ease;
@@ -394,6 +394,7 @@ defineExpose({
 
 	&:active {
 		transform: scale(0.95);
+		background-color: #0066cc;
 	}
 
 	.btn-text {
@@ -405,10 +406,10 @@ defineExpose({
 
 @keyframes pulse {
 	0%, 100% {
-		box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+		box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.25);
 	}
 	50% {
-		box-shadow: 0 8rpx 40rpx rgba(102, 126, 234, 0.6);
+		box-shadow: 0 4rpx 24rpx rgba(0, 122, 255, 0.4);
 	}
 }
 
@@ -516,7 +517,7 @@ defineExpose({
 		.suggestion-icon {
 			width: 40rpx;
 			height: 40rpx;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			background-color: #007aff;
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
@@ -611,9 +612,8 @@ defineExpose({
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 8rpx;
-	height: 76rpx;
-	border-radius: 38rpx;
+	height: 80rpx;
+	border-radius: 12rpx;
 	font-size: 28rpx;
 	font-weight: 500;
 	border: none;
@@ -621,21 +621,19 @@ defineExpose({
 
 	&.secondary {
 		background-color: #f5f5f5;
-		color: #333;
+		color: #666;
 
 		&:active {
-			background-color: #ebebeb;
+			background-color: #e8e8e8;
 		}
 	}
 
 	&.primary {
-		background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
+		background-color: #007aff;
 		color: #fff;
-		box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.3);
 
 		&:active {
-			opacity: 0.85;
-			transform: scale(0.98);
+			background-color: #0066cc;
 		}
 	}
 }
