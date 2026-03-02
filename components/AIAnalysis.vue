@@ -2,6 +2,7 @@
 	<view class="ai-analysis-container">
 		<!-- 浮动按钮 -->
 		<view
+			v-if="!windowVisible"
 			class="ai-float-btn"
 			:class="{ 'btn-pulse': showPulse }"
 			@click="toggleWindow"
