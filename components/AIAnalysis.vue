@@ -7,11 +7,11 @@
 			@click="toggleWindow"
 		>
 			<uni-icons
-				:type="windowVisible ? 'close' : 'chatbubble-filled'"
+				type="chatbubble-filled"
 				:size="24"
 				color="#fff"
 			></uni-icons>
-			<text v-if="!windowVisible" class="btn-text">AI分析</text>
+			<text class="btn-text">AI分析</text>
 		</view>
 
 		<!-- AI分析浮窗 -->
@@ -124,12 +124,10 @@
 			<!-- 底部操作栏 -->
 			<template #footer>
 				<button class="footer-btn secondary" @click="handleCopy">
-					<uni-icons type="copy" size="16"></uni-icons>
-					<text>复制分析</text>
+					复制分析
 				</button>
 				<button class="footer-btn primary" @click="handleRefresh">
-					<uni-icons type="refresh" size="16"></uni-icons>
-					<text>重新分析</text>
+					重新分析
 				</button>
 			</template>
 		</FloatWindow>
@@ -614,23 +612,31 @@ defineExpose({
 	align-items: center;
 	justify-content: center;
 	gap: 8rpx;
-	height: 70rpx;
-	border-radius: 12rpx;
-	font-size: 26rpx;
+	height: 76rpx;
+	border-radius: 38rpx;
+	font-size: 28rpx;
+	font-weight: 500;
 	border: none;
+	transition: all 200ms;
 
 	&.secondary {
 		background-color: #f5f5f5;
-		color: #666;
+		color: #333;
+
+		&:active {
+			background-color: #ebebeb;
+		}
 	}
 
 	&.primary {
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
 		color: #fff;
-	}
+		box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.3);
 
-	&:active {
-		opacity: 0.8;
+		&:active {
+			opacity: 0.85;
+			transform: scale(0.98);
+		}
 	}
 }
 </style>
