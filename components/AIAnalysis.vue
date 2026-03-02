@@ -120,16 +120,6 @@
 					</view>
 				</view>
 			</view>
-
-			<!-- 底部操作栏 -->
-			<template #footer>
-				<button class="footer-btn secondary" @click="handleCopy">
-					复制分析
-				</button>
-				<button class="footer-btn primary" @click="handleRefresh">
-					重新分析
-				</button>
-			</template>
 		</FloatWindow>
 	</view>
 </template>
@@ -295,60 +285,6 @@ const handleOpen = () => {
 // 关闭浮窗
 const handleClose = () => {
 	emit('close');
-};
-
-// 复制分析结果
-const handleCopy = () => {
-	let copyText = `【AI${props.type === 'grade' ? '成绩' : '课表'}分析报告】\n\n`;
-	copyText += `总体评价：\n${analysisData.value.summary}\n\n`;
-
-	if (analysisData.value.highlights.length > 0) {
-		copyText += `数据亮点：\n`;
-		analysisData.value.highlights.forEach(item => {
-			copyText += `  • ${item.text}\n`;
-		});
-		copyText += `\n`;
-	}
-
-	if (analysisData.value.suggestions.length > 0) {
-		copyText += `提升建议：\n`;
-		analysisData.value.suggestions.forEach((item, index) => {
-			copyText += `${index + 1}. ${item.title}\n   ${item.description}\n`;
-		});
-		copyText += `\n`;
-	}
-
-	if (analysisData.value.warnings.length > 0) {
-		copyText += `注意事项：\n`;
-		analysisData.value.warnings.forEach(item => {
-			copyText += `  • ${item}\n`;
-		});
-	}
-
-	uni.setClipboardData({
-		data: copyText,
-		success: () => {
-			uni.showToast({
-				title: '复制成功',
-				icon: 'success'
-			});
-		}
-	});
-};
-
-// 重新分析
-const handleRefresh = () => {
-	loading.value = true;
-	loadingText.value = '正在重新分析...';
-
-	setTimeout(() => {
-		analysisData.value = generateMockAnalysis();
-		loading.value = false;
-		uni.showToast({
-			title: '分析完成',
-			icon: 'success'
-		});
-	}, 1000);
 };
 
 // 暴露方法
@@ -602,38 +538,6 @@ defineExpose({
 				font-size: 22rpx;
 				color: #999;
 			}
-		}
-	}
-}
-
-// 底部按钮
-.footer-btn {
-	flex: 1;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 80rpx;
-	border-radius: 12rpx;
-	font-size: 28rpx;
-	font-weight: 500;
-	border: none;
-	transition: all 200ms;
-
-	&.secondary {
-		background-color: #f5f5f5;
-		color: #666;
-
-		&:active {
-			background-color: #e8e8e8;
-		}
-	}
-
-	&.primary {
-		background-color: #007aff;
-		color: #fff;
-
-		&:active {
-			background-color: #0066cc;
 		}
 	}
 }
