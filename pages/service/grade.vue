@@ -154,12 +154,22 @@
 				<text>重新查询</text>
 			</button>
 		</view>
+
+		<!-- AI分析组件 -->
+		<AIAnalysis
+			v-if="isLoggedIn"
+			type="grade"
+			:data="grades"
+			window-title="AI成绩分析"
+			@analyze="handleAnalyze"
+		/>
 	</view>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { fetchSchoolGrades } from '@/api/school';
+import AIAnalysis from '@/components/AIAnalysis.vue';
 
 // 存储键名
 const STORAGE_KEY = 'grade_credentials';
@@ -365,6 +375,13 @@ const resetForm = () => {
 	};
 	termIndex.value = 0;
 	currentTerm.value = '';
+};
+
+// AI分析处理
+const handleAnalyze = (type) => {
+	console.log('触发AI分析:', type);
+	// 这里可以调用真实的AI分析API
+	// 目前使用mock数据展示
 };
 </script>
 

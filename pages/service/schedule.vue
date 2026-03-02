@@ -154,12 +154,22 @@
 				<text>重新查询</text>
 			</button>
 		</view>
+
+		<!-- AI分析组件 -->
+		<AIAnalysis
+			v-if="isLoggedIn"
+			type="schedule"
+			:data="courses"
+			window-title="AI课表分析"
+			@analyze="handleAnalyze"
+		/>
 	</view>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { fetchSchoolCourses } from '@/api/school.js';
+import AIAnalysis from '@/components/AIAnalysis.vue';
 
 // 存储键名
 const STORAGE_KEY = 'schedule_credentials';
@@ -481,6 +491,13 @@ const resetForm = () => {
 	termIndex.value = 0;
 	weekIndex.value = 0;
 	currentWeek.value = 1;
+};
+
+// AI分析处理
+const handleAnalyze = (type) => {
+	console.log('触发AI分析:', type);
+	// 这里可以调用真实的AI分析API
+	// 目前使用mock数据展示
 };
 </script>
 
