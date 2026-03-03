@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a uni-app based WeChat mini-program called "互成一家" (Campus Life Service), providing campus services for university students including community features, print services, recruitment, campus schedule/grade queries, and an AI assistant.
 
+**Target University**: Neusoft (大连东软信息学院) - The schedule/grade features integrate with Neusoft's academic system via `api/school.js`.
+
 ## Development Workflow
 
 **This project uses HBuilderX, not a standard npm-based workflow.**
@@ -18,7 +20,7 @@ This is a uni-app based WeChat mini-program called "互成一家" (Campus Life S
 ## Key Configuration Files
 
 - `pages.json`: Page routing configuration and tabBar setup. When adding new pages, register them here.
-- `api/config.js`: API base URL configuration (`BASE_URL` for production, `DEV_BASE_URL` for development)
+- `api/config.js`: API base URL configuration (`BASE_URL` for production, `DEV_BASE_URL` for development). Set `CURRENT_ENV` to switch environments.
 - `manifest.json`: WeChat mini-program AppID configuration (note: may be in project root depending on HBuilderX version)
 
 ## Architecture
@@ -44,7 +46,10 @@ Pattern when adding store modules:
 All API calls are in `api/` directory. The request module (`api/request.js`) provides:
 - Automatic token injection via `uni.getStorageSync("token")`
 - 401 handling with automatic token refresh using `store.dispatch("user/wechat_login")`
+- Request queuing to prevent duplicate login attempts
 - Standardized error handling
+
+**Exception**: `api/school.js` uses direct `uni.request()` calls for the Neusoft academic system APIs (grades, schedule). These bypass the request wrapper and don't include authentication tokens.
 
 When adding new API endpoints:
 1. Create/update file in `api/[feature].js`
@@ -85,14 +90,19 @@ Key service pages:
 
 ## AI Assistant Feature
 
-The AI helper (`pages/helper/index`) uses SiliconFlow API with the Qwen/QwQ-32B model. Configuration is in `api/helper.js` with:
+The AI helper (`pages/helper/index`) uses SiliconFlow API with the Qwen/QwQ-32B model. Configuration is in `api/helper.js`:
 - API endpoint: `https://api.siliconflow.cn/v1/chat/completions`
 - Model: `Qwen/QwQ-32B`
 - System prompt: AI assistant named "答答Novus" for campus services
+- Token is stored in `uni.getStorageSync("helperToken")`
+
+The AI supports conversation history management and role-based messaging.
 
 ## Important Notes
 
-- The project uses Vue 3 (`createSSRApp`) - check conditional compilation flags (`#ifdef VUE3`)
-- Token storage uses `uni.getStorageSync("token")` and `uni.setStorageSync()`
-- WeChat login flow: `uni.login()` -> backend `/login/wechat-login` -> store token
-- Image uploads use base64 encoding for avatars and content moderation via `api/check.js`
+- **Vue 3**: The project uses Vue 3 (`createSSRApp` in `main.js`). When writing components, check conditional compilation flags (`#ifdef VUE3`) for compatibility.
+- **Token storage**: Uses `uni.getStorageSync("token")` and `uni.setStorageSync()`
+- **WeChat login flow**: `uni.login()` -> backend `/login/wechat-login` -> store token
+- **Image uploads**: Use base64 encoding for avatars. Content moderation is handled via `api/check.js`
+- **TabBar pages**: Home, Community, Helper, Recruit, Me (configured in `pages.json`)
+- **Environment switching**: Edit `CURRENT_ENV` in `api/config.js` to toggle between `ENV.PROD` and `ENV.DEV`

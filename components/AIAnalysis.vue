@@ -19,7 +19,7 @@
 		<FloatWindow
 			v-model="windowVisible"
 			:title="windowTitle"
-			position="bottom-right"
+			position="center"
 			:width="windowWidth"
 			:max-height="maxWindowHeight"
 			:mask="true"
