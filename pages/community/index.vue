@@ -1,7 +1,31 @@
 <template>
   <view class="community-container">
-    <view v-if="posts && posts.length > 0" class="posts-container">
-      <post-card v-for="post in posts" :key="post.id" :post="post" @click="viewPostDetail(post.id)" />
+    <!-- 顶部导航栏 -->
+    <view class="nav-bar">
+      <view
+        v-for="tab in tabs"
+        :key="tab.value"
+        class="nav-item"
+        :class="{ active: currentTab === tab.value }"
+        @click="switchTab(tab.value)"
+      >
+        <image
+          class="nav-icon"
+          :class="{ 'icon-large': tab.value === 'errand' || tab.value === 'secondhand' }"
+          :src="tab.icon"
+          mode="aspectFit"
+        />
+        <text class="nav-text">{{ tab.label }}</text>
+        <view v-if="currentTab === tab.value" class="nav-indicator"></view>
+      </view>
+    </view>
+
+    <!-- 内容区域 -->
+    <view class="content-wrapper">
+      <dynamic v-if="currentTab === 'dynamic'" />
+      <errand v-else-if="currentTab === 'errand'" />
+      <second-hand v-else-if="currentTab === 'secondhand'" />
+      <rating v-else-if="currentTab === 'rating'" />
     </view>
 
     <!-- 悬浮发布按钮 -->
@@ -12,9 +36,12 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from "vue"; // 引入 onMounted 和 onUnmounted
+import { ref, onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
-import PostCard from "@/components/community/PostCard.vue";
+import Dynamic from "@/components/community/Dynamic.vue";
+import Errand from "@/components/community/Errand.vue";
+import SecondHand from "@/components/community/SecondHand.vue";
+import Rating from "@/components/community/Rating.vue";
 import { onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app';
 import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 
@@ -32,12 +59,25 @@ onShareTimeline(() => ({
 }))
 const store = useStore();
 
-// 获取帖子数据
-const posts = computed(() => store.getters["community/get_posts"]);
+// 当前选中的标签
+const currentTab = ref('dynamic');
+
+// 标签列表
+const tabs = [
+  { label: '动态', value: 'dynamic', icon: '/static/images/community/dynamic.svg' },
+  { label: '跑腿', value: 'errand', icon: '/static/images/community/errand.svg' },
+  { label: '二手', value: 'secondhand', icon: '/static/images/community/secondhand.svg' },
+  { label: '评分', value: 'rating', icon: '/static/images/community/rating.svg' }
+];
 
 // 下拉刷新与加载更多状态
 const isLongPress = ref(false); // 用于区分长按和单击
 let longPressTimer = null; // 用于长按后的延迟重置isLongPress
+
+// 切换标签
+const switchTab = (tab) => {
+  currentTab.value = tab;
+};
 
 // 组件卸载时清理定时器
 onUnmounted(() => {
@@ -47,11 +87,8 @@ onUnmounted(() => {
   }
 });
 
-// 组件挂载后检查帖子是否为空
+// 组件挂载后初始化数据
 onMounted(async () => {
-  if (!posts.value || posts.value.length === 0) {
-    await store.dispatch("community/fetch_first_posts");
-  }
   await store.dispatch("community/fetch_post_types");
 });
 
@@ -64,14 +101,6 @@ onPullDownRefresh(async () => {
 onReachBottom(async () => {
   await store.dispatch("community/fetch_more_posts");
 });
-
-// 查看帖子详情
-const viewPostDetail = (id) => {
-  console.log("Viewing post detail:", id);
-  uni.navigateTo({
-    url: `/pages/community/detail?id=${id}`,
-  });
-};
 
 // 发布新帖子 - 长按事件
 const onPublishLongPress = () => {
@@ -132,11 +161,69 @@ const onPublish = () => {
   position: relative;
 }
 
-/* 帖子列表 */
-.posts-container {
+/* 顶部导航栏 */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
   display: flex;
-  flex-direction: column;
-  gap: 7px;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20rpx 0;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10rpx 0;
+  cursor: pointer;
+  gap: 8rpx;
+}
+
+.nav-icon {
+  width: 44rpx;
+  height: 44rpx;
+  transition: transform 0.3s;
+}
+
+.nav-icon.icon-large {
+  width: 54rpx;
+  height: 54rpx;
+}
+
+.nav-item.active .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-text {
+  font-size: 24rpx;
+  color: #666;
+  transition: color 0.3s;
+}
+
+.nav-item.active .nav-text {
+  color: #00cc6a;
+  font-weight: 600;
+}
+
+.nav-indicator {
+  position: absolute;
+  bottom: 0;
+  width: 40rpx;
+  height: 6rpx;
+  background: linear-gradient(135deg, #00ff88, #00cc6a);
+  border-radius: 3rpx;
+}
+
+/* 内容区域 */
+.content-wrapper {
+  min-height: calc(100vh - 100rpx);
 }
 
 /* 悬浮发布按钮 */
