@@ -8,6 +8,7 @@ import recruit from "@/store/modules/recruit";
 import address from "@/store/modules/address";
 import print from "@/store/modules/print";
 import helper from "@/store/modules/helper";
+import errand from "@/store/modules/errand";
 
 // 根级别的 state
 const state = {
@@ -53,6 +54,7 @@ const store = createStore({
     address,
     print,
     helper,
+    errand,
   },
 });
 
