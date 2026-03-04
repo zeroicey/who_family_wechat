@@ -136,7 +136,7 @@ const onPublish = () => {
 .posts-container {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 7px;
 }
 
 /* 悬浮发布按钮 */
@@ -146,7 +146,7 @@ const onPublish = () => {
   bottom: 80px;
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  background: linear-gradient(135deg, #00ff88, #00cc6a);
   border-radius: 50%;
   display: flex;
   justify-content: center;

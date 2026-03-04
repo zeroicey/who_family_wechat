@@ -3,14 +3,24 @@
     <!-- 用户信息区域 -->
     <view class="post-header">
       <view class="user-info">
-        <view class="avatar">
-          <!-- 修改 src 绑定到 fetchedAvatarUrl -->
-          <image :src="fetchedAvatarUrl" class="avatar-image" />
+        <view class="avatar-wrapper">
+          <view class="avatar">
+            <!-- 修改 src 绑定到 fetchedAvatarUrl -->
+            <image :src="fetchedAvatarUrl" class="avatar-image" />
+          </view>
+          <!-- 用户标签 -->
+          <view class="user-brand">
+            <text class="brand-text">{{ userBrand }}</text>
+          </view>
         </view>
         <view class="user-details">
           <text class="username">{{ post.username }}</text>
-          <text class="post-title">{{ post.title }}</text>
+          <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
         </view>
+      </view>
+      <!-- 关注按钮 -->
+      <view class="follow-btn" @click.stop="handleFollowClick">
+        <text class="follow-text">{{ isFollowing ? '已关注' : '关注' }}</text>
       </view>
     </view>
 
@@ -39,26 +49,27 @@
     </view>
     <!-- 底部操作区域 -->
     <view class="post-footer">
-      <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
-      <!-- 查看 -->
-      <view class="action-group">
-        <uni-icons type="eye" size="20" color="#888" class="action-icon"></uni-icons>
-        <text class="action-text">{{ post.viewCount || 0 }}</text>
+      <!-- 左边：预览数 -->
+      <view class="footer-left">
+        <uni-icons type="eye" size="20" color="#999" class="action-icon"></uni-icons>
+        <text class="action-text">{{ displayViewCount }}</text>
       </view>
 
-      <!-- 点赞 -->
-      <view class="action-group" @click.stop="handleLikeClick">
-        <uni-icons :type="post.isLike === 1 ? 'heart-filled' : 'heart'" size="20"
-          :color="post.isLike === 1 ? '#ff6b6b' : '#888'" class="action-icon"></uni-icons>
-        <text class="action-text">{{ post.likeCount || 0 }}</text>
-      </view>
+      <!-- 右边：评论和点赞 -->
+      <view class="footer-right">
+        <!-- 评论 -->
+        <view class="action-group">
+          <uni-icons type="chat" size="20" color="#666" class="action-icon"></uni-icons>
+          <text class="action-text">{{ post.commentCount || 0 }}</text>
+        </view>
 
-      <!-- 评论 -->
-      <view class="action-group">
-        <uni-icons type="chat" size="20" color="#888" class="action-icon"></uni-icons>
-        <text class="action-text">{{ post.commentCount || 0 }}</text>
+        <!-- 点赞 -->
+        <view class="action-group" @click.stop="handleLikeClick">
+          <uni-icons :type="post.isLike === 1 ? 'heart-filled' : 'heart'" size="20"
+            :color="post.isLike === 1 ? '#ff6b6b' : '#666'" class="action-icon"></uni-icons>
+          <text class="action-text">{{ post.likeCount || 0 }}</text>
+        </view>
       </view>
-
     </view>
   </view>
 </template>
@@ -80,6 +91,9 @@ const props = defineProps({
 
 // 创建一个 ref 来存储头像 URL
 const fetchedAvatarUrl = ref(''); // 初始可以设置一个默认头像或空字符串
+
+// 关注状态管理 - 随机生成初始状态
+const isFollowing = ref(false);
 
 // 图片加载状态管理
 const imageLoadedStates = ref({});
@@ -106,10 +120,45 @@ const handleLikeClick = () => {
   store.dispatch(`community/${actionPrefix}_post`, props.post.id);
 };
 
+// 处理关注按钮点击
+const handleFollowClick = () => {
+  if (isFollowing.value) {
+    // 已关注，询问是否取关
+    uni.showModal({
+      title: '确认取关',
+      content: `确定要取消关注 ${props.post.username} 吗？`,
+      success: (res) => {
+        if (res.confirm) {
+          isFollowing.value = false;
+          uni.showToast({
+            title: '已取消关注',
+            icon: 'success',
+            duration: 1500
+          });
+        }
+      }
+    });
+  } else {
+    // 未关注，直接关注
+    isFollowing.value = true;
+    uni.showToast({
+      title: '关注成功',
+      icon: 'success',
+      duration: 1500
+    });
+  }
+};
+
 // 组件挂载时获取头像和初始化图片状态
 onMounted(async () => {
   await fetchAvatar();
   initImageLoadStates();
+
+  // 随机生成关注状态（30%概率已关注）
+  if (props.post && props.post.username) {
+    const seed = props.post.username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    isFollowing.value = (seed % 10) < 3; // 30%概率已关注
+  }
 });
 
 // 监听 post prop 的变化，如果 avaterId 或 username 变了，重新获取头像
@@ -175,6 +224,40 @@ const initImageLoadStates = () => {
 const isContentTruncated = computed(() => {
   return props.post.content && props.post.content.length > 150;
 });
+
+// 显示预览数，如果为0则生成随机数
+const displayViewCount = computed(() => {
+  const viewCount = props.post.viewCount || 0;
+  if (viewCount === 0) {
+    // 生成10-200之间的随机数
+    return Math.floor(Math.random() * 191) + 10;
+  }
+  return viewCount;
+});
+
+// 用户标签数组
+const brandTitles = [
+  '卷王', '躺平王', '摸鱼大师', '早八人', '夜猫子', '复习达人',
+  '课表杀手', 'DDL战士', '食堂VIP', '图书馆常驻', '运动健将',
+  '社团大佬', '宿舍躺王', '外卖达人', '校园百事通', '社交恐怖',
+  '萌新', '老油条', '传说', '工具人', '水课王', '干饭人',
+  '摸鱼专业户', '起床困难户', '拖延症晚期', '复习困难户'
+];
+
+// 根据用户名生成固定的随机标签
+const userBrand = computed(() => {
+  if (!props.post.username) return '萌新';
+
+  // 使用用户名的字符代码之和作为种子
+  let seed = 0;
+  for (let i = 0; i < props.post.username.length; i++) {
+    seed += props.post.username.charCodeAt(i);
+  }
+
+  // 根据种子选择标签，确保同一用户每次显示相同的标签
+  const index = seed % brandTitles.length;
+  return brandTitles[index];
+});
 </script>
 
 <style scoped>
@@ -199,6 +282,11 @@ const isContentTruncated = computed(() => {
   align-items: center;
 }
 
+.avatar-wrapper {
+  position: relative;
+  margin-right: 10px;
+}
+
 .avatar {
   width: 40px;
   height: 40px;
@@ -207,7 +295,6 @@ const isContentTruncated = computed(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
   overflow: hidden;
   /* 新增，确保图片不超出圆形边界 */
 }
@@ -237,19 +324,56 @@ const isContentTruncated = computed(() => {
   margin-bottom: 2px;
 }
 
-.post-title {
-  font-size: 13px;
-  color: #888;
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .post-time {
   font-size: 12px;
   color: #999;
-  align-self: center;
+}
+
+/* 用户标签样式 */
+.user-brand {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-8deg);
+  background-color: #ff9a56;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.brand-text {
+  font-size: 10px;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* 关注按钮样式 */
+.follow-btn {
+  background-color: #fff;
+  border: 1px solid #00cc6a;
+  padding: 6px 16px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.follow-text {
+  font-size: 13px;
+  color: #00cc6a;
+  font-weight: 500;
+}
+
+.brand-text {
+  font-size: 11px;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1;
 }
 
 /* 内容样式 */
@@ -361,25 +485,39 @@ const isContentTruncated = computed(() => {
 /* 底部操作区域样式 */
 .post-footer {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  padding-top: 8px;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 16px;
 }
 
 .action-group {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .action-icon {
-  margin-right: 6px;
+  margin-right: 4px;
   display: flex;
   align-items: center;
 }
 
 .action-text {
-  font-size: 16px;
-  color: #888;
+  font-size: 14px;
+  color: #999;
   line-height: 1;
 }
 </style>
