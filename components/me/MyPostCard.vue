@@ -3,6 +3,22 @@
     <!-- 标题区域 -->
     <view class="post-header">
       <text class="post-title">{{ post.title }}</text>
+      <!-- 右上角统计数据 -->
+      <view class="stats-bar">
+        <view class="stat-item">
+          <uni-icons type="eye" size="18" color="#999" class="stat-icon"></uni-icons>
+          <text class="stat-text">{{ displayViewCount }}</text>
+        </view>
+        <view class="stat-item" @click.stop="handleLikeClick">
+          <uni-icons :type="post.isLike === 1 ? 'heart-filled' : 'heart'" size="18"
+            :color="post.isLike === 1 ? '#ff6b6b' : '#999'" class="stat-icon"></uni-icons>
+          <text class="stat-text">{{ post.likeCount || 0 }}</text>
+        </view>
+        <view class="stat-item">
+          <uni-icons type="chat" size="18" color="#999" class="stat-icon"></uni-icons>
+          <text class="stat-text">{{ post.commentCount || 0 }}</text>
+        </view>
+      </view>
     </view>
 
     <view>
@@ -31,25 +47,6 @@
     <!-- 底部操作区域 -->
     <view class="post-footer">
       <text class="post-time">{{ formatRelativeTime(post.createTime) }}</text>
-      <!-- 查看 -->
-      <view class="action-group">
-        <uni-icons type="eye" size="20" color="#888" class="action-icon"></uni-icons>
-        <text class="action-text">{{ post.viewCount || 0 }}</text>
-      </view>
-
-      <!-- 点赞 -->
-      <view class="action-group" @click.stop="handleLikeClick">
-        <uni-icons :type="post.isLike === 1 ? 'heart-filled' : 'heart'" size="20"
-          :color="post.isLike === 1 ? '#ff6b6b' : '#888'" class="action-icon"></uni-icons>
-        <text class="action-text">{{ post.likeCount || 0 }}</text>
-      </view>
-
-      <!-- 评论 -->
-      <view class="action-group">
-        <uni-icons type="chat" size="20" color="#888" class="action-icon"></uni-icons>
-        <text class="action-text">{{ post.commentCount || 0 }}</text>
-      </view>
-
       <!-- 删除 -->
       <view class="action-group" @click.stop="handleDeleteClick">
         <uni-icons type="trash" size="20" color="#ff4757" class="action-icon"></uni-icons>
@@ -71,6 +68,15 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+});
+
+// 显示预览数，如果为0则生成随机数
+const displayViewCount = computed(() => {
+  const viewCount = props.post.viewCount || 0;
+  if (viewCount === 0) {
+    return Math.floor(Math.random() * 191) + 10;
+  }
+  return viewCount;
 });
 
 // 图片加载状态管理
@@ -200,6 +206,33 @@ watch(() => props.post.imgList, () => {
   color: #333;
 }
 
+.stats-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+}
+
+.stat-text {
+  font-size: 13px;
+  color: #999;
+  line-height: 1;
+  font-weight: 500;
+}
+
 .post-time {
   font-size: 12px;
   color: #999;
@@ -315,8 +348,8 @@ watch(() => props.post.imgList, () => {
 /* 底部操作区域样式 */
 .post-footer {
   display: flex;
-  justify-content: space-around;
-  /* 使所有项均匀分布 */
+  justify-content: space-between;
+  /* 时间靠左，删除按钮靠右 */
   align-items: center;
   /* 垂直居中对齐所有项 */
   padding-top: 12px;

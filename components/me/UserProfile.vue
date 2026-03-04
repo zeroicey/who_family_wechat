@@ -4,8 +4,12 @@
     <view class="profile-card" @tap="navigateToEdit">
       <view class="card-header">
         <view class="avatar-wrapper">
-          <image class="user-avatar" :src="avatarUrl" mode="aspectFill"></image>
           <view class="level-badge">Lv.{{ userInfo.level || 0 }}</view>
+          <image class="user-avatar" :src="avatarUrl" mode="aspectFill"></image>
+          <!-- 用户标签 -->
+          <view class="user-brand">
+            <text class="brand-text">{{ userBrand }}</text>
+          </view>
         </view>
         <view class="user-info">
           <text class="user-name">{{ userInfo.name || "用户" }}</text>
@@ -47,6 +51,30 @@ import { useStore } from "vuex";
 const store = useStore();
 const userInfo = computed(() => store.getters["user/get_user_info"]);
 const avatarUrl = computed(() => store.getters["user/get_user_avatar_url"]);
+
+// 用户标签数组
+const brandTitles = [
+  '卷王', '躺平王', '摸鱼大师', '早八人', '夜猫子', '复习达人',
+  '课表杀手', 'DDL战士', '食堂VIP', '图书馆常驻', '运动健将',
+  '社团大佬', '宿舍躺王', '外卖达人', '校园百事通', '社交恐怖',
+  '萌新', '老油条', '传说', '工具人', '水课王', '干饭人',
+  '摸鱼专业户', '起床困难户', '拖延症晚期', '复习困难户'
+];
+
+// 根据用户名生成固定的随机标签
+const userBrand = computed(() => {
+  const name = userInfo.value.name || '用户';
+
+  // 使用用户名的字符代码之和作为种子
+  let seed = 0;
+  for (let i = 0; i < name.length; i++) {
+    seed += name.charCodeAt(i);
+  }
+
+  // 根据种子选择标签，确保同一用户每次显示相同的标签
+  const index = seed % brandTitles.length;
+  return brandTitles[index];
+});
 
 const truncatedBio = computed(() => {
   const bio = userInfo.value.bio;
@@ -97,18 +125,10 @@ const navigateToEdit = () => {
         position: relative;
         margin-right: 3vw;
 
-        .user-avatar {
-          width: 16vw;
-          height: 16vw;
-          border-radius: 50%;
-          border: 0.4vw solid #e8f7ef;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
         .level-badge {
           position: absolute;
-          bottom: 0;
-          right: 0;
+          top: 0;
+          left: 0;
           background: linear-gradient(135deg, #ff9500, #ffba30);
           color: #fff;
           font-size: 2.2vw;
@@ -117,6 +137,37 @@ const navigateToEdit = () => {
           font-weight: bold;
           border: 0.3vw solid #fff;
           box-shadow: 0 2px 4px rgba(255, 149, 0, 0.3);
+          z-index: 2;
+        }
+
+        .user-avatar {
+          width: 16vw;
+          height: 16vw;
+          border-radius: 50%;
+          border: 0.4vw solid #e8f7ef;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-brand {
+          position: absolute;
+          bottom: -8px;
+          left: 50%;
+          transform: translateX(-50%) rotate(-8deg);
+          background-color: #ff9a56;
+          padding: 2px 8px;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          white-space: nowrap;
+          z-index: 1;
+
+          .brand-text {
+            font-size: 10px;
+            color: #fff;
+            font-weight: 600;
+            line-height: 1;
+          }
         }
       }
 
@@ -124,24 +175,23 @@ const navigateToEdit = () => {
         flex: 1;
 
         .user-name {
-          font-size: 4.8vw;
+          font-size: 5.5vw;
           font-weight: bold;
-          color: #2c3e50;
-          margin-bottom: 1vw;
+          color: #ffffff;
+          margin-bottom: 1.5vw;
           display: block;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .user-bio {
-          font-size: 3.2vw;
-          color: #7f8c8d;
+          font-size: 3.4vw;
+          color: rgba(255, 255, 255, 0.95);
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
-          line-height: 1.4;
-          background: linear-gradient(90deg, #2c3e50, #7f8c8d);
-          -webkit-background-clip: text;
-          color: transparent;
+          line-height: 1.5;
+          font-weight: 500;
         }
       }
 
@@ -179,8 +229,8 @@ const navigateToEdit = () => {
         display: flex;
         align-items: center;
         margin-top: 3vw;
-        padding-bottom: 1vw;
-        border-bottom: 1px dashed rgba(7, 193, 96, 0.1);
+        padding-bottom: 1.5vw;
+        border-bottom: 1px dashed rgba(7, 193, 96, 0.15);
 
         &:last-child {
           border-bottom: none;
@@ -203,17 +253,17 @@ const navigateToEdit = () => {
         }
 
         .info-label {
-          font-size: 3.2vw;
-          color: #95a5a6;
+          font-size: 3.4vw;
+          color: #07c160;
           width: 10vw;
-          font-weight: 500;
+          font-weight: 600;
         }
 
         .info-value {
-          font-size: 3.2vw;
-          color: #34495e;
+          font-size: 3.4vw;
+          color: #2c3e50;
           flex: 1;
-          font-weight: 500;
+          font-weight: 600;
         }
       }
     }

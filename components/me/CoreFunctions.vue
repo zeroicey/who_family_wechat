@@ -5,10 +5,7 @@
       <view class="function-card community-card" @tap="navigateTo('/pages/task/index')">
         <view class="card-header">
           <view class="card-content">
-            <view class="card-icon-container community-icon">
-              <view class="card-icon-bg"></view>
-              <text class="card-icon-text">待</text>
-            </view>
+            <image src="/static/images/me/task.svg" class="card-icon" mode="aspectFit"></image>
             <view class="card-info">
               <text class="card-title">任务待办</text>
               <text class="card-count">{{ todoData.count }} 项未完成</text>
@@ -28,13 +25,11 @@
       <view class="function-card focus-card" @tap="navigateTo('/pages/focus/index')">
         <view class="card-header">
           <view class="card-content">
-            <view class="card-icon-container focus-icon">
-              <view class="card-icon-bg"></view>
-              <text class="card-icon-text">专</text>
-            </view>
+            <image src="/static/images/me/focus.svg" class="card-icon" mode="aspectFit"></image>
             <view class="card-info">
               <text class="card-title">专注时刻</text>
               <text class="card-time">今日专注 {{ formatTime(todayFocusTime) }}</text>
+              <text class="card-motivational">{{ motivationalText }}</text>
             </view>
           </view>
         </view>
@@ -89,6 +84,28 @@ const formatTime = (minutes) => {
   return `${m}分钟`;
 };
 
+// 激励语列表
+const motivationalQuotes = [
+  '专注成就未来',
+  '心无旁骛行',
+  '深思促成长',
+  '不负好时光',
+  '专注最珍贵',
+  '每分钟都值',
+  '专注超自我',
+  '静心厚积发',
+  '专注是修行',
+  '坚持专注力'
+];
+
+// 根据当前时间选择激励语（每小时变化一次）
+const motivationalText = computed(() => {
+  const hour = new Date().getHours();
+  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+  const index = (hour + dayOfYear) % motivationalQuotes.length;
+  return motivationalQuotes[index];
+});
+
 // 页面跳转
 const navigateTo = (url) => {
   uni.navigateTo({ url });
@@ -131,44 +148,10 @@ const navigateTo = (url) => {
         display: flex;
         align-items: center;
 
-        .card-icon-container {
+        .card-icon {
           width: 10vw;
           height: 10vw;
-          border-radius: 50%;
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: center;
           margin-right: 4vw;
-
-          .card-icon-bg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-          }
-
-          .card-icon-text {
-            position: relative;
-            color: white;
-            font-size: 4.5vw;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-          }
-
-          &.community-icon {
-            .card-icon-bg {
-              background: linear-gradient(135deg, #1890ff, #36cfc9);
-              box-shadow: 0 3px 8px rgba(24, 144, 255, 0.3);
-            }
-          }
-
-          &.focus-icon {
-            .card-icon-bg {
-              background: linear-gradient(135deg, #fa8c16, #ffc53d);
-              box-shadow: 0 3px 8px rgba(250, 140, 22, 0.3);
-            }
-          }
         }
 
         .card-info {
@@ -193,6 +176,14 @@ const navigateTo = (url) => {
           .card-time {
             font-size: 3.2vw;
             color: #666;
+          }
+
+          .card-motivational {
+            font-size: 3.2vw;
+            color: #1890ff;
+            margin-top: 1.5vw;
+            font-weight: 500;
+            display: block;
           }
         }
       }
