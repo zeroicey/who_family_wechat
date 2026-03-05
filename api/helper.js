@@ -3,34 +3,15 @@
  * 使用 uni.request 调用阿里云 DashScope Qwen 模型（支持流式输出）
  */
 
+import { ENV } from './env.js'
+
 // DashScope API配置
 const DASHSCOPE_API_URL =
   "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
 
 // 获取 API Key
 const getAPIKey = () => {
-  // #ifdef H5
-  // H5 环境可以使用 import.meta.env 或 process.env
-  if (typeof process !== "undefined" && process.env?.DASHSCOPE_API_KEY) {
-    console.log("从 process.env 获取 API Key");
-    return process.env.DASHSCOPE_API_KEY;
-  }
-  if (
-    typeof import.meta !== "undefined" &&
-    import.meta.env?.DASHSCOPE_API_KEY
-  ) {
-    return import.meta.env.DASHSCOPE_API_KEY;
-  }
-  // #endif
-
-  // 从本地存储获取（支持所有平台）
-  const storageKey = uni.getStorageSync("DASHSCOPE_API_KEY");
-  if (storageKey) {
-    return storageKey;
-  }
-
-  // 默认配置（所有平台通用）
-  return "sk-5d79da76752b4fca953dbadcf01cbcad";
+  return ENV.DASHSCOPE_API_KEY
 };
 
 // 模型配置
@@ -49,14 +30,14 @@ const parseSSEChunk = (chunk) => {
   const messages = [];
 
   // SSE 格式: data: {...}\n\n
-  const lines = chunk.split('\n');
+  const lines = chunk.split("\n");
 
   for (const line of lines) {
-    if (line.startsWith('data: ')) {
+    if (line.startsWith("data: ")) {
       const data = line.substring(6).trim();
 
       // 跳过 [DONE] 标记
-      if (data === '[DONE]') {
+      if (data === "[DONE]") {
         continue;
       }
 
@@ -64,7 +45,7 @@ const parseSSEChunk = (chunk) => {
         const parsed = JSON.parse(data);
         messages.push(parsed);
       } catch (e) {
-        console.warn('解析 SSE 数据失败:', data, e);
+        console.warn("解析 SSE 数据失败:", data, e);
       }
     }
   }
@@ -80,10 +61,15 @@ const parseSSEChunk = (chunk) => {
  * @param {Function} onError - 错误回调函数 (error: Error) => void
  * @returns {Function} - 取消函数
  */
-export const sendMessageToAIStream = (message, onChunk, onComplete, onError) => {
+export const sendMessageToAIStream = (
+  message,
+  onChunk,
+  onComplete,
+  onError,
+) => {
   // 存储完整内容和缓冲区
-  let fullContent = '';
-  let buffer = '';
+  let fullContent = "";
+  let buffer = "";
   let isCompleted = false; // 完成标志，防止重复触发
 
   // 触发完成的内部函数
@@ -124,7 +110,7 @@ export const sendMessageToAIStream = (message, onChunk, onComplete, onError) => 
     enableChunked: true, // 启用分块传输（部分平台支持）
     success: (res) => {
       // 请求成功完成（作为兜底）
-      console.log('流式请求完成', res);
+      console.log("流式请求完成", res);
       triggerComplete();
     },
     fail: (err) => {
@@ -142,7 +128,7 @@ export const sendMessageToAIStream = (message, onChunk, onComplete, onError) => 
         // 可以在这里检查响应头
       });
     } catch (e) {
-      console.warn('onHeadersReceived 不支持:', e);
+      console.warn("onHeadersReceived 不支持:", e);
     }
   }
 
@@ -153,10 +139,10 @@ export const sendMessageToAIStream = (message, onChunk, onComplete, onError) => 
       requestTask.onChunkReceived((res) => {
         try {
           // 兼容不同平台的响应格式
-          let chunk = '';
+          let chunk = "";
           if (res.data) {
             // 微信小程序等平台
-            if (typeof TextDecoder !== 'undefined') {
+            if (typeof TextDecoder !== "undefined") {
               chunk = new TextDecoder().decode(res.data);
             } else {
               // 降级处理：假设 res.data 是字符串
@@ -172,12 +158,12 @@ export const sendMessageToAIStream = (message, onChunk, onComplete, onError) => 
           buffer += chunk;
 
           // 按双换行符分割 SSE 消息
-          const messages = buffer.split('\n\n');
-          buffer = messages.pop() || ''; // 保留最后一个不完整的消息
+          const messages = buffer.split("\n\n");
+          buffer = messages.pop() || ""; // 保留最后一个不完整的消息
 
           for (const msg of messages) {
             // 检查是否是 [DONE] 标记
-            if (msg.includes('data: [DONE]')) {
+            if (msg.includes("data: [DONE]")) {
               triggerComplete();
               return;
             }
@@ -196,14 +182,14 @@ export const sendMessageToAIStream = (message, onChunk, onComplete, onError) => 
             }
           }
         } catch (e) {
-          console.error('处理数据块失败:', e);
+          console.error("处理数据块失败:", e);
         }
       });
     } catch (e) {
-      console.warn('onChunkReceived 设置失败:', e);
+      console.warn("onChunkReceived 设置失败:", e);
     }
   } else {
-    console.warn('当前平台不支持 onChunkReceived，将使用非流式响应');
+    console.warn("当前平台不支持 onChunkReceived，将使用非流式响应");
   }
   // #endif
 
@@ -312,7 +298,7 @@ export const optimizePost = async (title, content) => {
             {
               role: "system",
               content:
-                "你是一个专业的内容编辑助手。请帮用户优化社区帖子的标题和内容，使其更加吸引人、表达更清晰、语气更友好。优化后的内容应该保持原意，但更加生动有趣。\n\n请严格按照以下JSON格式返回结果，不要包含任何其他内容：\n{\"title\":\"优化后的标题\",\"content\":\"优化后的内容\"}\n\n标题要简洁有力，控制在30字以内。内容要保持原意，让表达更流畅自然。",
+                '你是一个专业的内容编辑助手。请帮用户优化社区帖子的标题和内容，使其更加吸引人、表达更清晰、语气更友好。优化后的内容应该保持原意，但更加生动有趣。\n\n请严格按照以下JSON格式返回结果，不要包含任何其他内容：\n{"title":"优化后的标题","content":"优化后的内容"}\n\n标题要简洁有力，控制在30字以内。内容要保持原意，让表达更流畅自然。',
             },
             {
               role: "user",

@@ -5,4 +5,5 @@ manifest.json
 .trae/
 .claude/
 .env
+api/env.js
 node_modules/
