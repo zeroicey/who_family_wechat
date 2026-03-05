@@ -1,36 +1,23 @@
 <template>
-  <view class="ai-message-container">
-    <view class="avatar-container">
-      <image src="/static/images/ai.jpg" class="ai-avatar" />
+  <view class="ai-message-wrapper">
+    <view class="ai-header">
+      <image class="ai-avatar" src="/static/images/ai.jpg" mode="aspectFill" />
+      <text class="ai-name">答答Novus智能校园助手</text>
     </view>
-    <view class="message-content">
-      <view class="ai-name">答答Novus智能校园助手</view>
-      <view class="message-bubble">
-        <!-- 如果没有内容且正在思考，显示思考动画 -->
-        <view v-if="!content && isTyping" class="thinking-animation">
-          <view class="thinking-text">正在思考</view>
-          <view class="thinking-dots">
-            <view class="dot"></view>
-            <view class="dot"></view>
-            <view class="dot"></view>
-          </view>
-        </view>
-        <!-- 有内容时显示文字和光标 -->
-        <view v-else class="message-content-wrapper">
-          <!-- 将光标直接嵌入到文本中 -->
-          <text class="message-text">{{ content }}<text v-if="isTyping && content" class="typing-cursor">|</text></text>
-        </view>
-      </view>
+    <view class="ai-content">
+      <zero-markdown-view class="markdown-renderer" :markdown="processedContent" :aiMode="true" :themeColor="'#007AFF'"
+        :codeBgColor="'#2d2d2d'" />
+      <text v-if="isTyping && content" class="cursor">▋</text>
     </view>
   </view>
 </template>
 
 <script setup>
-// 定义props
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   content: {
     type: String,
-    required: true,
     default: ''
   },
   isTyping: {
@@ -38,143 +25,160 @@ defineProps({
     default: false
   }
 })
+
+const processedContent = computed(() => {
+  if (!props.content) return ''
+  const codeBlocks = props.content.match(/```[\s\S]*?```|```[\s\S]*?$/g) || []
+  const lastBlock = codeBlocks[codeBlocks.length - 1]
+  if (lastBlock && !lastBlock.endsWith('```')) {
+    return props.content + '\n'
+  }
+  return props.content
+})
 </script>
 
 <style lang="scss" scoped>
-.ai-message-container {
-  display: flex;
-  align-items: flex-start;
+.ai-message-wrapper {
   margin: 20rpx 30rpx;
+}
 
-  .avatar-container {
-    margin-right: 20rpx;
+.ai-header {
+  display: flex;
+  align-items: center;
 
-    .ai-avatar {
-      width: 60rpx;
-      height: 60rpx;
-      border-radius: 50%;
-    }
+  .ai-avatar {
+    width: 60rpx;
+    height: 60rpx;
+    border-radius: 50%;
+    margin-right: 12rpx;
+    flex-shrink: 0;
   }
 
-  .message-content {
+  .ai-name {
+    font-size: 22rpx;
+    color: #666;
+    font-weight: 500;
+  }
+}
+
+.ai-content {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+
+  .markdown-renderer {
     flex: 1;
-    max-width: calc(100% - 100rpx);
+    font-size: 24rpx;
+    line-height: 1.6;
+    color: #333;
 
-    .ai-name {
-      font-size: 22rpx;
-      color: #666;
-      margin-bottom: 8rpx;
-      margin-left: 4rpx;
+    :deep(.zero-markdown-view) {
+      font-size: 24rpx !important;
+      line-height: 1.6 !important;
     }
 
-    .message-bubble {
-      background: #F0F2F5;
-      border-radius: 8rpx 20rpx 20rpx 20rpx;
-      padding: 20rpx 24rpx;
-      position: relative;
-
-      .message-text {
-        color: #333333;
-        font-size: 26rpx;
-        line-height: 1.4;
-        word-wrap: break-word;
-        word-break: break-all;
-      }
-
-      /* 思考动画 */
-      .thinking-animation {
-        display: flex;
-        align-items: center;
-        color: #999999;
-        font-size: 24rpx;
-
-        .thinking-text {
-          margin-right: 12rpx;
-        }
-
-        .thinking-dots {
-          display: flex;
-          align-items: center;
-
-          .dot {
-            width: 6rpx;
-            height: 6rpx;
-            border-radius: 50%;
-            background-color: #999999;
-            margin: 0 2rpx;
-            animation: thinking 1.4s infinite ease-in-out;
-
-            &:nth-child(1) {
-              animation-delay: 0s;
-            }
-
-            &:nth-child(2) {
-              animation-delay: 0.2s;
-            }
-
-            &:nth-child(3) {
-              animation-delay: 0.4s;
-            }
-          }
-        }
-      }
-
-      /* 消息内容包装器 */
-      .message-content-wrapper {
-        display: flex;
-        align-items: flex-end;
-      }
-
-      /* 打字光标 */
-      .typing-cursor {
-        color: #333333;
-        font-size: 26rpx;
-        line-height: 1.4;
-        animation: blink 1s infinite;
-      }
-
-      /* 消息气泡尾巴 */
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -8rpx;
-        width: 0;
-        height: 0;
-        border-right: 16rpx solid #F0F2F5;
-        border-top: 16rpx solid transparent;
-      }
+    :deep(h1) {
+      font-size: 28rpx !important;
+      margin: 16rpx 0 8rpx !important;
+      font-weight: 600 !important;
     }
+
+    :deep(h2) {
+      font-size: 26rpx !important;
+      margin: 16rpx 0 8rpx !important;
+      font-weight: 600 !important;
+    }
+
+    :deep(h3) {
+      font-size: 24rpx !important;
+      margin: 16rpx 0 8rpx !important;
+      font-weight: 600 !important;
+    }
+
+    :deep(ul),
+    :deep(ol) {
+      margin: 8rpx 0 !important;
+      padding-left: 32rpx !important;
+    }
+
+    :deep(li) {
+      margin: 4rpx 0 !important;
+      font-size: 24rpx !important;
+    }
+
+    :deep(pre) {
+      margin: 12rpx 0 !important;
+      border-radius: 8rpx !important;
+    }
+
+    :deep(code) {
+      font-size: 22rpx !important;
+    }
+
+    :deep(p code),
+    :deep(li code) {
+      background: rgba(0, 0, 0, 0.06) !important;
+      padding: 2rpx 6rpx !important;
+      border-radius: 4rpx !important;
+      font-size: 22rpx !important;
+    }
+
+    :deep(blockquote) {
+      margin: 12rpx 0 !important;
+      padding-left: 16rpx !important;
+      border-left: 4rpx solid #007AFF !important;
+      color: #666 !important;
+    }
+
+    :deep(table) {
+      font-size: 22rpx !important;
+      margin: 12rpx 0 !important;
+    }
+
+    :deep(p) {
+      margin: 8rpx 0 !important;
+      font-size: 24rpx !important;
+    }
+
+    :deep(img) {
+      max-width: 100% !important;
+      border-radius: 8rpx !important;
+    }
+
+    :deep(a) {
+      color: #007AFF !important;
+      text-decoration: none !important;
+    }
+
+    :deep(strong) {
+      font-weight: 600 !important;
+      color: #000 !important;
+    }
+
+    :deep(em) {
+      font-style: italic !important;
+    }
+  }
+
+  .cursor {
+    color: #007AFF;
+    font-size: 24rpx;
+    line-height: 1.6;
+    margin-left: 4rpx;
+    animation: pulse 1s infinite;
+    font-weight: 300;
   }
 }
 
-/* 思考动画关键帧 */
-@keyframes thinking {
+@keyframes pulse {
 
   0%,
-  60%,
   100% {
-    transform: translateY(0);
-    opacity: 0.4;
-  }
-
-  30% {
-    transform: translateY(-8rpx);
     opacity: 1;
   }
-}
 
-/* 光标闪烁动画 */
-@keyframes blink {
-
-  0%,
   50% {
-    opacity: 1;
-  }
-
-  51%,
-  100% {
-    opacity: 0;
+    opacity: 0.3;
   }
 }
 </style>

@@ -4,3 +4,5 @@ manifest.json
 /mock
 .trae/
 .claude/
+.env
+node_modules/
