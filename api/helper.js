@@ -412,6 +412,195 @@ export const getAIStatus = async () => {
 };
 
 /**
+ * 格式化成绩数据为 AI 可读的文本
+ * @param {Array} grades - 成绩数据
+ * @returns {string} 格式化后的文本
+ */
+const formatGradesForAI = (grades) => {
+  if (!grades || grades.length === 0) {
+    return '暂无成绩数据';
+  }
+
+  let text = '## 课程成绩明细\n\n';
+
+  grades.forEach((grade, index) => {
+    text += `${index + 1}. **${grade.courseName}** (${grade.courseCode || '无代码'})\n`;
+    text += `   - 成绩：${grade.score}分\n`;
+    text += `   - 学分：${grade.credit}\n`;
+    text += `   - 绩点：${grade.gpa}\n`;
+    text += `   - 类型：${grade.type || '未知'}\n`;
+    text += `   - 类别：${grade.category || '其他'}\n\n`;
+  });
+
+  // 计算统计数据
+  const totalCourses = grades.length;
+  const totalCredits = grades.reduce((sum, grade) => sum + grade.credit, 0);
+  const averageScore = grades.reduce((sum, grade) => sum + grade.score, 0) / totalCourses;
+  const averageGPA = grades.reduce((sum, grade) => sum + grade.gpa, 0) / totalCourses;
+
+  text += '## 统计数据\n\n';
+  text += `- 总课程数：${totalCourses}门\n`;
+  text += `- 总学分：${totalCredits.toFixed(1)}\n`;
+  text += `- 平均分：${averageScore.toFixed(1)}\n`;
+  text += `- 平均绩点：${averageGPA.toFixed(2)}\n`;
+
+  return text;
+};
+
+/**
+ * 格式化课表数据为 AI 可读的文本
+ * @param {Array} courses - 课程数据
+ * @param {string} currentWeek - 当前周次
+ * @returns {string} 格式化后的文本
+ */
+const formatScheduleForAI = (courses, currentWeek) => {
+  if (!courses || courses.length === 0) {
+    return `第${currentWeek}周暂无课程数据`;
+  }
+
+  const weekDays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+  const timeSlots = [
+    '08:30-10:05 (第1-2节)',
+    '10:25-12:00 (第3-4节)',
+    '14:00-15:35 (第5-6节)',
+    '15:55-17:30 (第7-8节)',
+    '18:30-20:05 (第9-10节)',
+    '20:25-22:00 (第11-12节)'
+  ];
+
+  let text = `## 第${currentWeek}周课程表\n\n`;
+
+  // 按星期和时间段组织课程
+  const scheduleMap = {};
+  courses.forEach(course => {
+    if (!scheduleMap[course.dayOfWeek]) {
+      scheduleMap[course.dayOfWeek] = [];
+    }
+    scheduleMap[course.dayOfWeek].push(course);
+  });
+
+  // 统计数据
+  const totalCourses = courses.length;
+  const totalHours = courses.reduce((sum, course) => sum + (course.endTime - course.startTime + 1), 0);
+  const dailyStats = {};
+
+  courses.forEach(course => {
+    if (!dailyStats[course.dayOfWeek]) {
+      dailyStats[course.dayOfWeek] = 0;
+    }
+    dailyStats[course.dayOfWeek] += (course.endTime - course.startTime + 1);
+  });
+
+  // 生成课程表
+  for (let day = 1; day <= 7; day++) {
+    const dayCourses = scheduleMap[day] || [];
+    if (dayCourses.length > 0) {
+      text += `### ${weekDays[day - 1]} (${dayCourses.length}门课)\n\n`;
+      dayCourses.forEach(course => {
+        const startTime = timeSlots[Math.floor((course.startTime - 1) / 2)];
+        text += `- **${course.name}** (${course.courseCode || '无代码'})\n`;
+        text += `  - 时间：${startTime}\n`;
+        text += `  - 地点：${course.location || '待定'}\n`;
+        text += `  - 教师：${course.teacher || '未知'}\n\n`;
+      });
+    } else {
+      text += `### ${weekDays[day - 1]} (无课程)\n\n`;
+    }
+  }
+
+  // 添加统计信息
+  text += '## 统计信息\n\n';
+  text += `- 本周总课程：${totalCourses}门\n`;
+  text += `- 本周总课时：${totalHours}节\n`;
+  text += `- 每日课时分布：\n`;
+
+  for (let day = 1; day <= 7; day++) {
+    const hours = dailyStats[day] || 0;
+    if (hours > 0) {
+      text += `  - ${weekDays[day - 1]}：${hours}节\n`;
+    }
+  }
+
+  return text;
+};
+
+/**
+ * AI 成绩分析（流式）
+ * @param {Array} grades - 成绩数据
+ * @param {Function} onChunk - 接收数据块回调
+ * @param {Function} onComplete - 完成回调
+ * @param {Function} onError - 错误回调
+ * @returns {Function} - 取消函数
+ */
+export const analyzeGradesStream = (
+  grades,
+  onChunk,
+  onComplete,
+  onError,
+) => {
+  const gradesText = formatGradesForAI(grades);
+
+  const prompt = `你是一个专业的学业顾问，请分析以下学生的成绩数据，提供专业的学习建议和评价。
+
+${gradesText}
+
+请从以下几个方面进行分析：
+1. **总体评价**：整体学业表现概述，包括成绩水平、排名等
+2. **成绩亮点**：表现优秀的课程和值得肯定的地方
+3. **改进建议**：针对薄弱环节的具体改进措施
+4. **学习规划**：下学期的学习重点和计划建议
+
+**格式要求（重要）**：
+- 使用 Markdown 格式，包括标题、列表等
+- 严禁使用表格（table）元素，因为显示区域较小，表格显示效果不好
+- 使用列表（bullet points）代替表格来组织信息
+- 代码块仅在必要时使用，优先使用加粗、列表等简洁格式
+
+语气要友好鼓励，帮助学生建立信心。`;
+
+  return sendMessageToAIStream(prompt, onChunk, onComplete, onError);
+};
+
+/**
+ * AI 课表分析（流式）
+ * @param {Array} courses - 课程数据
+ * @param {string} currentWeek - 当前周次
+ * @param {Function} onChunk - 接收数据块回调
+ * @param {Function} onComplete - 完成回调
+ * @param {Function} onError - 错误回调
+ * @returns {Function} - 取消函数
+ */
+export const analyzeScheduleStream = (
+  courses,
+  currentWeek,
+  onChunk,
+  onComplete,
+  onError,
+) => {
+  const scheduleText = formatScheduleForAI(courses, currentWeek);
+
+  const prompt = `你是一个专业的时间管理顾问，请分析以下学生的课程安排，提供时间管理建议。
+
+${scheduleText}
+
+请从以下几个方面进行分析：
+1. **时间安排**：课程分布是否合理，是否存在过载或空闲时间过多的情况
+2. **空闲时间利用**：建议如何有效利用空闲时间，包括学习、休息、社交等
+3. **学习建议**：根据课程特点、时间分布提供学习方法建议
+4. **注意事项**：需要特别关注的时间点，如早八课程、连续上课等
+
+**格式要求（重要）**：
+- 使用 Markdown 格式，包括标题、列表等
+- 严禁使用表格（table）元素，因为显示区域较小，表格显示效果不好
+- 使用列表（bullet points）代替表格来组织信息
+- 代码块仅在必要时使用，优先使用加粗、列表等简洁格式
+
+语气要友好实用，提供可操作的建议。`;
+
+  return sendMessageToAIStream(prompt, onChunk, onComplete, onError);
+};
+
+/**
  * 设置 API Key（供调用方使用）
  * @param {string} apiKey DashScope API Key
  */

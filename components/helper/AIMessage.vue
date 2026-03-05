@@ -40,6 +40,8 @@ const processedContent = computed(() => {
 <style lang="scss" scoped>
 .ai-message-wrapper {
   margin: 20rpx 30rpx;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .ai-header {
@@ -65,6 +67,8 @@ const processedContent = computed(() => {
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
+  max-width: 100%;
+  overflow-x: hidden;
 
   .cursor {
     color: #007AFF;
@@ -73,6 +77,7 @@ const processedContent = computed(() => {
     margin-left: 4rpx;
     animation: pulse 1s infinite;
     font-weight: 300;
+    flex-shrink: 0;
   }
 }
 

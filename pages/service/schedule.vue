@@ -17,18 +17,14 @@
 				<uni-icons type="person-filled" size="20" color="#007aff"></uni-icons>
 				<text class="card-title">教务系统登录</text>
 			</view>
-			
+
 			<view class="form-content">
 				<view class="form-item">
 					<view class="form-label">
 						<uni-icons type="person" size="18" color="#666"></uni-icons>
 						<text>学号</text>
 					</view>
-					<input 
-						class="form-input" 
-						v-model="loginForm.studentNo" 
-						placeholder="请输入学号"
-					/>
+					<input class="form-input" v-model="loginForm.studentNo" placeholder="请输入学号" />
 				</view>
 
 				<view class="form-item">
@@ -36,12 +32,7 @@
 						<uni-icons type="locked" size="18" color="#666"></uni-icons>
 						<text>密码</text>
 					</view>
-					<input 
-						class="form-input" 
-						v-model="loginForm.password" 
-						placeholder="请输入教务系统密码"
-						password
-					/>
+					<input class="form-input" v-model="loginForm.password" placeholder="请输入教务系统密码" password />
 				</view>
 
 				<view class="form-item">
@@ -49,13 +40,8 @@
 						<uni-icons type="calendar" size="18" color="#666"></uni-icons>
 						<text>学期</text>
 					</view>
-					<picker 
-						@change="onTermChange" 
-						:value="termIndex" 
-						:range="termOptions"
-						range-key="label"
-						class="form-picker"
-					>
+					<picker @change="onTermChange" :value="termIndex" :range="termOptions" range-key="label"
+						class="form-picker">
 						<view class="picker-content">
 							<text class="picker-text">{{ termOptions[termIndex]?.label || '请选择学期' }}</text>
 							<uni-icons type="down" size="16" color="#999"></uni-icons>
@@ -68,12 +54,7 @@
 						<uni-icons type="calendar" size="18" color="#666"></uni-icons>
 						<text>周次</text>
 					</view>
-					<picker 
-						@change="onWeekChange" 
-						:value="weekIndex" 
-						:range="weekOptions"
-						class="form-picker"
-					>
+					<picker @change="onWeekChange" :value="weekIndex" :range="weekOptions" class="form-picker">
 						<view class="picker-content">
 							<text class="picker-text">{{ weekOptions[weekIndex] || '请选择周次' }}</text>
 							<uni-icons type="down" size="16" color="#999"></uni-icons>
@@ -81,11 +62,7 @@
 					</picker>
 				</view>
 
-				<button 
-					class="login-button" 
-					@click="handleLogin"
-					:loading="loading"
-				>
+				<button class="login-button" @click="handleLogin" :loading="loading">
 					<text>查询课表</text>
 				</button>
 			</view>
@@ -122,18 +99,19 @@
 						<text class="time-range">{{ period }}</text>
 					</view>
 					<view class="course-cell" v-for="(day, dayIndex) in weekDays" :key="dayIndex">
-						<view 
-							class="course-item" 
+						<view class="course-item"
 							v-if="shouldShowCourse(getCourseForSlot(index * 2 + 1, dayIndex + 1), index * 2 + 1)"
-							:style="{ 
+							:style="{
 								backgroundColor: getCourseColor(getCourseForSlot(index * 2 + 1, dayIndex + 1)),
 								gridRowEnd: `span ${getCourseSpan(getCourseForSlot(index * 2 + 1, dayIndex + 1), index * 2 + 1)}`
-							}"
-						>
+							}">
 							<text class="course-name">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).name }}</text>
-							<text class="course-location">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).location }}</text>
-							<text class="course-teacher">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).teacher }}</text>
-							<text class="course-code">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).courseCode }}</text>
+							<text class="course-location">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).location
+							}}</text>
+							<text class="course-teacher">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).teacher
+							}}</text>
+							<text class="course-code">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).courseCode
+							}}</text>
 						</view>
 					</view>
 				</view>
@@ -156,13 +134,8 @@
 		</view>
 
 		<!-- AI分析组件 -->
-		<AIAnalysis
-			v-if="isLoggedIn"
-			type="schedule"
-			:data="courses"
-			window-title="AI课表分析"
-			@analyze="handleAnalyze"
-		/>
+		<AIAnalysis v-if="isLoggedIn" type="schedule" :data="courses" :currentWeek="currentWeek.toString()"
+			window-title="AI课表分析" @analyze="handleAnalyze" />
 	</view>
 </template>
 
@@ -204,16 +177,16 @@ onMounted(() => {
 // 数据处理函数
 const processCourseData = (courseData) => {
 	const processedCourses = [];
-	
+
 	courseData.forEach(course => {
 		// 解析节次信息 (jcdm2: "01,02" 表示第1-2节)
 		const periods = course.jcdm2.split(',').map(p => parseInt(p));
 		const startPeriod = Math.min(...periods);
 		const endPeriod = Math.max(...periods);
-		
+
 		// 转换星期 (xq: "3" 表示星期三)
 		const dayOfWeek = parseInt(course.xq);
-		
+
 		processedCourses.push({
 			id: course.dgksdm,
 			name: course.kcmc,
@@ -232,7 +205,7 @@ const processCourseData = (courseData) => {
 			description: course.sknrjj || ''
 		});
 	});
-	
+
 	return processedCourses;
 };
 
@@ -240,17 +213,10 @@ const processCourseData = (courseData) => {
 const isLoggedIn = ref(false);
 const loading = ref(false);
 
-// 表单数据
-const loginForm = ref({
-	studentNo: '',
-	password: '',
-	term: '20251',
-	week: '1'
-});
-
 // 学期选项
 const termOptions = [
-	{ label: '2024-2025-1', value: '20251' },
+	{ label: '2025-2026-2', value: '20252' },
+	{ label: '2025-2026-1', value: '20251' },
 	{ label: '2024-2025-3', value: '20243' },
 	{ label: '2024-2025-2', value: '20242' },
 	{ label: '2024-2025-1', value: '20241' },
@@ -259,6 +225,14 @@ const termOptions = [
 	{ label: '2023-2024-1', value: '20231' }
 ];
 const termIndex = ref(0);
+
+// 表单数据
+const loginForm = ref({
+	studentNo: '',
+	password: '',
+	term: termOptions[0].value, // 使用 termOptions 的第一个值，保持一致
+	week: '1'
+});
 
 // 周次选项
 const weekOptions = Array.from({ length: 17 }, (_, i) => `第${i + 1}周`);
@@ -272,7 +246,7 @@ const courses = ref([]);
 const weekDays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 const timePeriods = [
 	'08:30-10:05',
-	'10:25-12:00', 
+	'10:25-12:00',
 	'14:00-15:35',
 	'15:55-17:30',
 	'18:30-20:05',
@@ -315,9 +289,9 @@ const changeWeek = (direction) => {
 
 // 获取指定时间段和星期的课程
 const getCourseForSlot = (period, dayOfWeek) => {
-	return courses.value.find(course => 
-		course.dayOfWeek === dayOfWeek && 
-		course.startTime <= period && 
+	return courses.value.find(course =>
+		course.dayOfWeek === dayOfWeek &&
+		course.startTime <= period &&
 		course.endTime >= period
 	);
 };
@@ -325,12 +299,12 @@ const getCourseForSlot = (period, dayOfWeek) => {
 // 检查课程是否跨越多个时间段
 const getCourseSpan = (course, period) => {
 	if (!course) return 1;
-	
+
 	// 如果是课程的第一个时间段，返回跨越的时间段数
 	if (course.startTime === period) {
 		return course.endTime - course.startTime + 1;
 	}
-	
+
 	// 如果不是第一个时间段，返回0（不显示）
 	return 0;
 };
@@ -349,7 +323,7 @@ const getCourseColor = (course) => {
 
 const loadScheduleData = async () => {
 	if (!isLoggedIn.value) return;
-	
+
 	loading.value = true;
 	try {
 		console.log('切换周次，重新获取课表，参数:', {
@@ -358,7 +332,7 @@ const loadScheduleData = async () => {
 			term: loginForm.value.term,
 			week: loginForm.value.week
 		});
-		
+
 		const response = await fetchSchoolCourses(
 			loginForm.value.studentNo,
 			loginForm.value.password,
@@ -406,7 +380,7 @@ const handleLogin = async () => {
 		});
 		return;
 	}
-	
+
 	if (!loginForm.value.password) {
 		uni.showToast({
 			title: '请输入密码',
@@ -414,7 +388,7 @@ const handleLogin = async () => {
 		});
 		return;
 	}
-	
+
 	if (!loginForm.value.term) {
 		uni.showToast({
 			title: '请选择学期',
@@ -424,7 +398,7 @@ const handleLogin = async () => {
 	}
 
 	loading.value = true;
-	
+
 	try {
 		console.log('正在查询课表，参数:', {
 			studentNo: loginForm.value.studentNo,
@@ -432,7 +406,7 @@ const handleLogin = async () => {
 			term: loginForm.value.term,
 			week: loginForm.value.week
 		});
-		
+
 		// 调用真实API
 		const result = await fetchSchoolCourses(
 			loginForm.value.studentNo,
@@ -473,7 +447,7 @@ const handleLogin = async () => {
 			currentWeek.value = parseInt(loginForm.value.week);
 			weekIndex.value = currentWeek.value - 1; // 同步更新picker索引
 		}
-		
+
 	} catch (error) {
 		console.error('查询课表失败:', error);
 		uni.showToast({
@@ -519,21 +493,21 @@ const handleAnalyze = (type) => {
 	border-radius: 20rpx;
 	padding: 40rpx 30rpx;
 	margin-bottom: 20rpx;
-	
+
 	.header-content {
 		display: flex;
 		align-items: center;
-		
+
 		.header-text {
 			margin-left: 20rpx;
-			
+
 			.title {
 				display: block;
 				font-size: 32rpx;
 				font-weight: bold;
 				color: #fff;
 			}
-			
+
 			.subtitle {
 				display: block;
 				font-size: 24rpx;
@@ -550,12 +524,12 @@ const handleAnalyze = (type) => {
 	padding: 30rpx;
 	margin-bottom: 20rpx;
 	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
-	
+
 	.card-header {
 		display: flex;
 		align-items: center;
 		margin-bottom: 30rpx;
-		
+
 		.card-title {
 			font-size: 28rpx;
 			font-weight: bold;
@@ -563,23 +537,23 @@ const handleAnalyze = (type) => {
 			margin-left: 15rpx;
 		}
 	}
-	
+
 	.form-content {
 		.form-item {
 			margin-bottom: 30rpx;
-			
+
 			.form-label {
 				display: flex;
 				align-items: center;
 				margin-bottom: 15rpx;
-				
+
 				text {
 					font-size: 26rpx;
 					color: #666;
 					margin-left: 10rpx;
 				}
 			}
-			
+
 			.form-input {
 				width: 100%;
 				height: 80rpx;
@@ -589,16 +563,16 @@ const handleAnalyze = (type) => {
 				font-size: 26rpx;
 				border: 2rpx solid transparent;
 				box-sizing: border-box;
-				
+
 				&:focus {
 					border-color: #007aff;
 					background-color: #fff;
 				}
 			}
-			
+
 			.form-picker {
 				width: 100%;
-				
+
 				.picker-content {
 					display: flex;
 					align-items: center;
@@ -607,7 +581,7 @@ const handleAnalyze = (type) => {
 					background-color: #f8f9fa;
 					border-radius: 12rpx;
 					padding: 0 20rpx;
-					
+
 					.picker-text {
 						font-size: 26rpx;
 						color: #333;
@@ -615,7 +589,7 @@ const handleAnalyze = (type) => {
 				}
 			}
 		}
-		
+
 		.login-button {
 			width: 100%;
 			height: 88rpx;
@@ -626,7 +600,7 @@ const handleAnalyze = (type) => {
 			font-size: 28rpx;
 			font-weight: bold;
 			margin-top: 20rpx;
-			
+
 			&:active {
 				opacity: 0.8;
 			}
@@ -640,22 +614,22 @@ const handleAnalyze = (type) => {
 	padding: 30rpx;
 	margin-bottom: 20rpx;
 	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
-	
+
 	.week-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		
+
 		.current-week {
 			font-size: 28rpx;
 			font-weight: bold;
 			color: #333;
 		}
-		
+
 		.week-actions {
 			display: flex;
 			gap: 20rpx;
-			
+
 			.week-btn {
 				width: 60rpx;
 				height: 60rpx;
@@ -665,11 +639,11 @@ const handleAnalyze = (type) => {
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				
+
 				&:active {
 					background-color: #e9ecef;
 				}
-				
+
 				&:disabled {
 					opacity: 0.5;
 				}
@@ -692,7 +666,7 @@ const handleAnalyze = (type) => {
 	background-color: #f8f9fa;
 	border-bottom: 2rpx solid #e9ecef;
 	min-width: 1000rpx;
-	
+
 	.time-column {
 		width: 120rpx;
 		min-width: 120rpx;
@@ -703,7 +677,7 @@ const handleAnalyze = (type) => {
 		color: #666;
 		border-right: 2rpx solid #e9ecef;
 	}
-	
+
 	.day-column {
 		width: 125rpx;
 		min-width: 125rpx;
@@ -713,7 +687,7 @@ const handleAnalyze = (type) => {
 		font-weight: bold;
 		color: #666;
 		border-right: 2rpx solid #e9ecef;
-		
+
 		&:last-child {
 			border-right: none;
 		}
@@ -722,15 +696,15 @@ const handleAnalyze = (type) => {
 
 .schedule-content {
 	min-width: 1000rpx;
-	
+
 	.schedule-row {
 		display: flex;
 		border-bottom: 2rpx solid #f0f0f0;
-		
+
 		&:last-child {
 			border-bottom: none;
 		}
-		
+
 		.time-cell {
 			width: 120rpx;
 			min-width: 120rpx;
@@ -740,31 +714,31 @@ const handleAnalyze = (type) => {
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			
+
 			.period-number {
 				font-size: 28rpx;
 				font-weight: bold;
 				color: #007aff;
 				margin-bottom: 5rpx;
 			}
-			
+
 			.time-range {
 				font-size: 20rpx;
 				color: #999;
 			}
 		}
-		
+
 		.course-cell {
 			width: 125rpx;
 			min-width: 125rpx;
 			min-height: 120rpx;
 			border-right: 2rpx solid #f0f0f0;
 			padding: 10rpx;
-			
+
 			&:last-child {
 				border-right: none;
 			}
-			
+
 			.course-item {
 				width: 100%;
 				height: 100%;
@@ -775,7 +749,7 @@ const handleAnalyze = (type) => {
 				justify-content: center;
 				align-items: center;
 				box-sizing: border-box;
-				
+
 				.course-name {
 					font-size: 20rpx;
 					font-weight: bold;
@@ -789,7 +763,7 @@ const handleAnalyze = (type) => {
 					-webkit-line-clamp: 2;
 					-webkit-box-orient: vertical;
 				}
-				
+
 				.course-location {
 					font-size: 16rpx;
 					color: #666;
@@ -800,7 +774,7 @@ const handleAnalyze = (type) => {
 					white-space: nowrap;
 					width: 100%;
 				}
-				
+
 				.course-teacher {
 					font-size: 16rpx;
 					color: #999;
@@ -822,14 +796,14 @@ const handleAnalyze = (type) => {
 	text-align: center;
 	margin-bottom: 20rpx;
 	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
-	
+
 	.empty-text {
 		display: block;
 		font-size: 28rpx;
 		color: #999;
 		margin: 20rpx 0 10rpx;
 	}
-	
+
 	.empty-desc {
 		display: block;
 		font-size: 24rpx;
@@ -841,7 +815,7 @@ const handleAnalyze = (type) => {
 	display: flex;
 	justify-content: center;
 	padding: 20rpx 0;
-	
+
 	.secondary-button {
 		display: flex;
 		align-items: center;
@@ -852,7 +826,7 @@ const handleAnalyze = (type) => {
 		border-radius: 25rpx;
 		color: #007aff;
 		font-size: 26rpx;
-		
+
 		&:active {
 			background-color: #f0f8ff;
 		}
