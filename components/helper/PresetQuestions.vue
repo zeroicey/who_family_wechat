@@ -94,44 +94,42 @@ const getPreviewText = (content) => {
       }
       
       &:nth-child(odd) {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #e8d5ff 0%, #d4b8ff 100%);
       }
-      
+
       &:nth-child(even) {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #ffd6e8 0%, #ffc2e2 100%);
       }
-      
+
       &:nth-child(3n) {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        background: linear-gradient(135deg, #d4ecff 0%, #b8ddff 100%);
       }
-      
+
       &:nth-child(4n) {
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        background: linear-gradient(135deg, #d4ffe8 0%, #b8ffd4 100%);
       }
-      
+
       &:nth-child(5n) {
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        background: linear-gradient(135deg, #ffe8d4 0%, #ffd4b8 100%);
       }
-      
+
       &:nth-child(6n) {
-        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        background: linear-gradient(135deg, #fff5d4 0%, #ffeab8 100%);
       }
       
       .question-title {
         font-size: 26rpx;
         font-weight: bold;
-        color: #fff;
+        color: #333;
         margin-bottom: 12rpx;
         line-height: 1.3;
-        text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.1);
       }
-      
+
       .question-preview {
         font-size: 22rpx;
-        color: rgba(255, 255, 255, 0.9);
+        color: #666;
         line-height: 1.4;
         margin-bottom: 16rpx;
-        text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.1);
       }
       
       .click-hint {
