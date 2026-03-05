@@ -56,6 +56,13 @@
       }
     },
     {
+      "path": "pages/knowledge/article",
+      "style": {
+        "navigationBarTitleText": "知识详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/agreement/privacy",
       "style": {
         "navigationBarTitleText": "隐私政策"
