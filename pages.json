@@ -81,6 +81,12 @@
       }
     },
     {
+      "path": "pages/knowledge/index",
+      "style": {
+        "navigationBarTitleText": "知识"
+      }
+    },
+    {
       "path": "pages/recruit/index",
       "style": {
         "navigationBarTitleText": "招聘"
@@ -163,31 +169,31 @@
       {
         "pagePath": "pages/home/index",
         "iconPath": "/static/images/tabbar/home.png",
-        "selectedIconPath": "/static/images/tabbar/home-active.png",
+        "selectedIconPath": "/static/images/tabbar/home.png",
         "text": "首页"
       },
       {
         "pagePath": "pages/community/index",
         "iconPath": "/static/images/tabbar/community.png",
-        "selectedIconPath": "/static/images/tabbar/community-active.png",
+        "selectedIconPath": "/static/images/tabbar/community.png",
         "text": "社区"
       },
       {
         "pagePath": "pages/helper/index",
         "iconPath": "/static/images/tabbar/helper.png",
-        "selectedIconPath": "/static/images/tabbar/helper-active.png",
+        "selectedIconPath": "/static/images/tabbar/helper.png",
         "text": "助手"
       },
       {
-        "pagePath": "pages/recruit/index",
-        "iconPath": "/static/images/tabbar/recruit.png",
-        "selectedIconPath": "/static/images/tabbar/recruit-active.png",
-        "text": "招聘"
+        "pagePath": "pages/knowledge/index",
+        "iconPath": "/static/images/tabbar/knowledge.png",
+        "selectedIconPath": "/static/images/tabbar/knowledge.png",
+        "text": "知识"
       },
       {
         "pagePath": "pages/me/index",
         "iconPath": "/static/images/tabbar/me.png",
-        "selectedIconPath": "/static/images/tabbar/me-active.png",
+        "selectedIconPath": "/static/images/tabbar/me.png",
         "text": "我的"
       }
     ]
