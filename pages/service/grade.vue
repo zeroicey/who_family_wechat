@@ -21,7 +21,7 @@
 		<view class="form-card" v-if="!isLoggedIn">
 			<view class="card-header">
 				<view class="header-icon-wrapper">
-					<uni-icons type="person" size="22" color="#007aff"></uni-icons>
+					<uni-icons type="person" size="22" color="#fff"></uni-icons>
 				</view>
 				<view class="header-text-wrapper">
 					<text class="card-title">教务系统登录</text>

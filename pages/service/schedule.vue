@@ -600,6 +600,9 @@ const handleAnalyze = (type) => {
 			font-size: 28rpx;
 			font-weight: bold;
 			margin-top: 20rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 
 			&:active {
 				opacity: 0.8;
