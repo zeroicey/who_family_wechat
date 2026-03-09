@@ -28,12 +28,21 @@ const props = defineProps({
 
 const processedContent = computed(() => {
   if (!props.content) return ''
-  const codeBlocks = props.content.match(/```[\s\S]*?```|```[\s\S]*?$/g) || []
-  const lastBlock = codeBlocks[codeBlocks.length - 1]
-  if (lastBlock && !lastBlock.endsWith('```')) {
-    return props.content + '\n'
+
+  // 确保内容是字符串类型，避免编码问题
+  let content = String(props.content)
+
+  // 处理未闭合的代码块（仅在流式输出时需要）
+  if (props.isTyping) {
+    const codeBlocks = content.match(/```[\s\S]*?```|```[\s\S]*?$/g) || []
+    const lastBlock = codeBlocks[codeBlocks.length - 1]
+    if (lastBlock && !lastBlock.endsWith('```')) {
+      // 为未闭合的代码块添加换行，帮助 markdown 渲染器正确处理
+      content = content + '\n'
+    }
   }
-  return props.content
+
+  return content
 })
 </script>
 
@@ -69,6 +78,14 @@ const processedContent = computed(() => {
   flex-wrap: wrap;
   max-width: 100%;
   overflow-x: hidden;
+  word-break: break-word; // 确保长文本正确换行
+  line-height: 1.6; // 统一行高
+
+  // 确保markdown渲染器正确显示
+  .markdown-renderer {
+    width: 100%;
+    overflow-wrap: break-word;
+  }
 
   .cursor {
     color: #007AFF;

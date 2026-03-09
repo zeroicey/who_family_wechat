@@ -54,6 +54,48 @@ const parseSSEChunk = (chunk) => {
 };
 
 /**
+ * 手动实现 UTF-8 解码（兼容微信小程序）
+ * @param {Uint8Array} array - UTF-8 编码的字节数组
+ * @returns {string} 解码后的字符串
+ */
+const utf8ArrayToString = (array) => {
+  let out = "";
+  let i = 0;
+  const len = array.length;
+
+  while (i < len) {
+    const byte = array[i++];
+
+    if ((byte & 0x80) === 0) {
+      // 1-byte sequence (0xxxxxxx)
+      out += String.fromCharCode(byte);
+    } else if ((byte & 0xE0) === 0xC0) {
+      // 2-byte sequence (110xxxxx 10xxxxxx)
+      const byte1 = array[i++];
+      out += String.fromCharCode(((byte & 0x1F) << 6) | (byte1 & 0x3F));
+    } else if ((byte & 0xF0) === 0xE0) {
+      // 3-byte sequence (1110xxxx 10xxxxxx 10xxxxxx)
+      const byte1 = array[i++];
+      const byte2 = array[i++];
+      out += String.fromCharCode(((byte & 0x0F) << 12) | ((byte1 & 0x3F) << 6) | (byte2 & 0x3F));
+    } else if ((byte & 0xF8) === 0xF0) {
+      // 4-byte sequence (11110xxx 10xxxxxx 10xxxxxx 10xxxxxx)
+      const byte1 = array[i++];
+      const byte2 = array[i++];
+      const byte3 = array[i++];
+      let codePoint = ((byte & 0x07) << 18) | ((byte1 & 0x3F) << 12) | ((byte2 & 0x3F) << 6) | (byte3 & 0x3F);
+      codePoint -= 0x10000;
+      out += String.fromCharCode((codePoint >> 10) + 0xD800, (codePoint & 0x3FF) + 0xDC00);
+    } else {
+      // Invalid UTF-8 sequence, skip
+      console.warn('Invalid UTF-8 sequence at position', i - 1, 'byte:', byte);
+    }
+  }
+
+  return out;
+};
+
+/**
  * 发送消息给AI助手（流式响应）
  * @param {string} message 用户消息
  * @param {Function} onChunk - 接收数据块的回调函数 (content: string) => void
@@ -108,6 +150,7 @@ export const sendMessageToAIStream = (
     },
     timeout: 60000, // 流式响应可能需要更长时间
     enableChunked: true, // 启用分块传输（部分平台支持）
+    responseType: 'arraybuffer', // 关键：使用 arraybuffer 而不是 text
     success: (res) => {
       // 请求成功完成（作为兜底）
       console.log("流式请求完成", res);
@@ -141,12 +184,19 @@ export const sendMessageToAIStream = (
           // 兼容不同平台的响应格式
           let chunk = "";
           if (res.data) {
-            // 微信小程序等平台
-            if (typeof TextDecoder !== "undefined") {
-              chunk = new TextDecoder().decode(res.data);
-            } else {
-              // 降级处理：假设 res.data 是字符串
-              chunk = String.fromCharCode.apply(null, new Uint8Array(res.data));
+            // 微信小程序环境：res.data 是 ArrayBuffer
+            if (res.data instanceof ArrayBuffer) {
+              const uint8Array = new Uint8Array(res.data);
+              chunk = utf8ArrayToString(uint8Array);
+            }
+            // 降级处理：如果已经是字符串
+            else if (typeof res.data === 'string') {
+              chunk = res.data;
+            }
+            // 其他平台尝试使用 TextDecoder
+            else if (typeof TextDecoder !== "undefined") {
+              const decoder = new TextDecoder('utf-8', { fatal: false });
+              chunk = decoder.decode(new Uint8Array(res.data), { stream: true });
             }
           } else if (res.data === undefined && res.statusCode !== undefined) {
             // 某些平台的特殊格式
@@ -160,6 +210,12 @@ export const sendMessageToAIStream = (
           // 按双换行符分割 SSE 消息
           const messages = buffer.split("\n\n");
           buffer = messages.pop() || ""; // 保留最后一个不完整的消息
+
+          // 防止缓冲区过大（避免内存问题）
+          if (buffer.length > 10000) {
+            console.warn('SSE buffer overflow, clearing');
+            buffer = '';
+          }
 
           for (const msg of messages) {
             // 检查是否是 [DONE] 标记
