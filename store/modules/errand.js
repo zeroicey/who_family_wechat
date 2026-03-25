@@ -1,0 +1,224 @@
+// Mock 数据直接定义在模块中
+const mockData = {
+  errandTasks: [
+    {
+      id: 1,
+      type: "校园跑腿",
+      content: "帮忙取个快递",
+      from: "菜鸟驿站",
+      to: "J4 212",
+      price: 5,
+      status: "pending",
+      createTime: "2024-03-04 14:30:00",
+      userName: "张三",
+      avatarId: "avatar1"
+    },
+    {
+      id: 2,
+      type: "快递代取",
+      content: "京东快递，中等包裹",
+      from: "京东快递点",
+      to: "J3 101",
+      price: 8,
+      status: "completed",
+      createTime: "2024-03-04 13:20:00",
+      userName: "李四",
+      avatarId: "avatar2"
+    },
+    {
+      id: 3,
+      type: "东南门代拿",
+      content: "取外卖，急",
+      from: "东南门",
+      to: "小镇1栋 321",
+      price: 6,
+      status: "cancelled",
+      createTime: "2024-03-04 12:15:00",
+      userName: "王五",
+      avatarId: "avatar3"
+    },
+    {
+      id: 4,
+      type: "快递到寝",
+      content: "大件包裹，帮忙送上楼",
+      from: "快递站",
+      to: "J2 408",
+      price: 10,
+      status: "pending",
+      createTime: "2024-03-04 11:00:00",
+      userName: "赵六",
+      avatarId: "avatar4"
+    },
+    {
+      id: 5,
+      type: "东北门代拿",
+      content: "取个外卖",
+      from: "东北门",
+      to: "J1 201",
+      price: 5,
+      status: "completed",
+      createTime: "2024-03-04 10:30:00",
+      userName: "孙七",
+      avatarId: "avatar5"
+    },
+    {
+      id: 6,
+      type: "校园跑腿",
+      content: "帮忙买份午饭",
+      from: "食堂",
+      to: "图书馆",
+      price: 7,
+      status: "pending",
+      createTime: "2024-03-04 09:45:00",
+      userName: "周八",
+      avatarId: "avatar6"
+    },
+    {
+      id: 7,
+      type: "快递代取",
+      content: "顺丰快递，小件",
+      from: "顺丰快递点",
+      to: "J4 109",
+      price: 6,
+      status: "pending",
+      createTime: "2024-03-03 18:20:00",
+      userName: "吴九",
+      avatarId: "avatar7"
+    },
+    {
+      id: 8,
+      type: "西门代拿",
+      content: "取外卖，两份",
+      from: "西门",
+      to: "小镇2栋 502",
+      price: 8,
+      status: "completed",
+      createTime: "2024-03-03 17:10:00",
+      userName: "郑十",
+      avatarId: "avatar8"
+    },
+    {
+      id: 9,
+      type: "快递到寝",
+      content: "两个包裹，送上楼",
+      from: "中通快递点",
+      to: "J3 210",
+      price: 12,
+      status: "cancelled",
+      createTime: "2024-03-03 16:00:00",
+      userName: "陈十一",
+      avatarId: "avatar9"
+    },
+    {
+      id: 10,
+      type: "东南门代拿",
+      content: "取快递",
+      from: "东南门快递点",
+      to: "J4 318",
+      price: 5,
+      status: "pending",
+      createTime: "2024-03-03 14:30:00",
+      userName: "刘十二",
+      avatarId: "avatar10"
+    },
+    {
+      id: 11,
+      type: "其他跑腿",
+      content: "帮忙打印资料，30页",
+      from: "打印店",
+      to: "图书馆",
+      price: 8,
+      status: "completed",
+      createTime: "2024-03-03 13:15:00",
+      userName: "黄十三",
+      avatarId: "avatar11"
+    },
+    {
+      id: 12,
+      type: "校园跑腿",
+      content: "帮忙带瓶水",
+      from: "超市",
+      to: "J2 411",
+      price: 4,
+      status: "pending",
+      createTime: "2024-03-03 11:40:00",
+      userName: "林十四",
+      avatarId: "avatar12"
+    },
+    {
+      id: 13,
+      type: "快递代取",
+      content: "圆通快递",
+      from: "圆通快递点",
+      to: "小镇3栋 205",
+      price: 6,
+      status: "pending",
+      createTime: "2024-03-02 19:20:00",
+      userName: "何十五",
+      avatarId: "avatar13"
+    },
+    {
+      id: 14,
+      type: "东北门代拿",
+      content: "取外卖",
+      from: "东北门",
+      to: "J1 408",
+      price: 5,
+      status: "completed",
+      createTime: "2024-03-02 18:00:00",
+      userName: "罗十六",
+      avatarId: "avatar14"
+    },
+    {
+      id: 15,
+      type: "快递到寝",
+      content: "大件家电",
+      from: "快递站",
+      to: "小镇4栋 102",
+      price: 15,
+      status: "pending",
+      createTime: "2024-03-02 16:45:00",
+      userName: "高十七",
+      avatarId: "avatar15"
+    }
+  ]
+};
+
+const state = {
+  tasks: []
+};
+
+const getters = {
+  get_tasks: (state) => state.tasks
+};
+
+const mutations = {
+  SET_TASKS(state, tasks) {
+    state.tasks = tasks;
+  }
+};
+
+const actions = {
+  async fetch_tasks({ commit }) {
+    try {
+      console.log("[跑腿模块] 开始加载跑腿任务");
+
+      // 从 mock 数据中获取任务
+      commit('SET_TASKS', mockData.errandTasks || []);
+
+      console.log("[跑腿模块] 加载跑腿任务成功");
+    } catch (error) {
+      console.error("[跑腿模块] 加载跑腿任务失败", error);
+      // 如果加载失败，设置为空数组
+      commit('SET_TASKS', []);
+    }
+  }
+};
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  mutations,
+  actions
+};

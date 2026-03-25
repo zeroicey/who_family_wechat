@@ -69,6 +69,33 @@ const fetchRecommendServices = async () => {
         // },
         {
           id: 1,
+          title: '校园人流天气',
+          description: '实时查看校园各区域人流量分布与空气质量指数，助你避开拥挤，畅享清新校园生活。',
+          imageUrl: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAESETBpwP6ugYWtISs6XQ81KokrT4mBIgACnCQAAiLeCFbhCOwpzFtBizoE.png',
+          rating: 5.0,
+          orders: 4060,
+          url: '/pages/service/personinfo/personinfo'
+        },
+        {
+          id: 2,
+          title: '查询课表服务',
+          description: '查询当前学期的课表，方便你及时了解自己的课程安排。',
+          imageUrl: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEECPRpAZAXQl3cBfhxDxuSt1AojYoeHQAC7iAAAtCQCFQvkTsfSeUnwjYE.jpg',
+          rating: 4.8,
+          orders: 1580,
+          url: '/pages/service/schedule'
+        },
+        {
+          id: 3,
+          title: '查询成绩服务',
+          description: '查询当前学期的成绩，方便你及时了解自己的学习情况。',
+          imageUrl: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEECP5pAZDT2lKDbMs1BC1kkTo76bcj3AAC-CAAAtCQCFQGU12qYNcw8DYE.jpg',
+          rating: 4.8,
+          orders: 1580,
+          url: '/pages/service/grade'
+        },
+        {
+          id: 4,
           title: '远程打印服务',
           description: '宿舍也能轻松打印！手机一键上传，即刻获取文件。',
           imageUrl: 'https://api.hcyj.xyz/images/dnfw.png',
@@ -78,16 +105,7 @@ const fetchRecommendServices = async () => {
           url: '/pages/service/print/index'
         },
         {
-          id: 2,
-          title: '查询课表服务',
-          description: '查询当前学期的课表，方便你及时了解自己的课程安排。',
-          imageUrl: 'https://api.hcyj.xyz/images/gdfw.jpg',
-          rating: 4.8,
-          orders: 1580,
-          url: ''
-        },
-        {
-          id: 3,
+          id: 5,
           title: '更多服务',
           description: '更多精彩服务即将上线！我们正在精心准备更多便捷实用的校园服务。',
           imageUrl: 'https://api.hcyj.xyz/images/gdfw.jpg',
@@ -123,19 +141,6 @@ const fetchRecommendServices = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-// 获取服务图标颜色
-// 为每个图标生成不同的颜色
-const getServiceColor = (index) => {
-  const colors = [
-    'linear-gradient(135deg, #1890ff, #36cfc9)',  // 蓝色
-    'linear-gradient(135deg, #f5222d, #ff7a45)',  // 红色
-    'linear-gradient(135deg, #722ed1, #b37feb)',  // 紫色
-    'linear-gradient(135deg, #52c41a, #95de64)',  // 绿色
-    'linear-gradient(135deg, #fa8c16, #ffd666)'   // 橙色
-  ];
-  return colors[index % colors.length];
 };
 
 // 跳转到服务页面

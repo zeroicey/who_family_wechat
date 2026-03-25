@@ -2,3 +2,8 @@ manifest.json
 .windsurfrules
 /unpackage
 /mock
+.trae/
+.claude/
+.env
+api/env.js
+node_modules/

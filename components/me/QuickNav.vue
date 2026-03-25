@@ -2,27 +2,23 @@
   <view class="quick-nav-card">
     <view class="quick-nav-grid">
       <view class="nav-item" @tap="navigateTo('/pages/me/order/index')">
-        <view class="icon-wrapper" style="background-color: #ff913c;">
-          <image src="/static/images/me/order.png" mode="aspectFit" class="icon-image"></image>
-        </view>
+        <image src="/static/images/me/order.svg" mode="aspectFit" class="nav-icon"></image>
         <text class="nav-text">订单</text>
       </view>
       <view class="nav-item" @tap="navigateTo('/pages/me/address/index')">
-        <view class="icon-wrapper" style="background-color: #06c15f;">
-          <image src="/static/images/me/address.png" mode="aspectFit" class="icon-image"></image>
-        </view>
+        <image src="/static/images/me/address.svg" mode="aspectFit" class="nav-icon"></image>
         <text class="nav-text">地址</text>
       </view>
+      <view class="nav-item">
+        <image src="/static/images/me/message.svg" mode="aspectFit" class="nav-icon"></image>
+        <text class="nav-text">消息</text>
+      </view>
       <view class="nav-item" @tap="navigateTo('/pages/me/about')">
-        <view class="icon-wrapper" style="background-color: #3c9dff;">
-          <image src="/static/images/me/about.png" mode="aspectFit" class="icon-image"></image>
-        </view>
+        <image src="/static/images/me/about.svg" mode="aspectFit" class="nav-icon"></image>
         <text class="nav-text">关于</text>
       </view>
       <view class="nav-item" @tap="navigateTo('/pages/me/feedback')">
-        <view class="icon-wrapper" style="background-color: #8a56e8;">
-          <image src="/static/images/me/feedback.png" mode="aspectFit" class="icon-image"></image>
-        </view>
+        <image src="/static/images/me/feedback.svg" mode="aspectFit" class="nav-icon"></image>
         <text class="nav-text">反馈</text>
       </view>
     </view>
@@ -54,25 +50,17 @@ const navigateTo = (url) => {
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 25%;
+      width: 20%;
 
-      .icon-wrapper {
-        width: 12vw;
-        height: 12vw;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 2vw;
-
-        .icon-image {
-          width: 6vw;
-          height: 6vw;
-        }
+      .nav-icon {
+        width: 8vw;
+        height: 8vw;
+        margin-bottom: 1.5vw;
       }
 
       .nav-text {
         font-size: 3.2vw;
+        font-weight: bold;
         color: #333;
       }
     }
