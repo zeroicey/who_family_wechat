@@ -69,13 +69,12 @@ const fetchRecommendServices = async () => {
         // },
         {
           id: 1,
-          title: '远程打印服务',
-          description: '宿舍也能轻松打印！手机一键上传，即刻获取文件。',
-          imageUrl: 'https://api.hcyj.xyz/images/dnfw.png',
-          price: '¥0.2/页',
-          rating: 4.9,
-          orders: 2350,
-          url: '/pages/service/print/index'
+          title: '校园人流天气',
+          description: '实时查看校园各区域人流量分布与空气质量指数，助你避开拥挤，畅享清新校园生活。',
+          imageUrl: 'https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAESETBpwP6ugYWtISs6XQ81KokrT4mBIgACnCQAAiLeCFbhCOwpzFtBizoE.png',
+          rating: 5.0,
+          orders: 4060,
+          url: '/pages/service/personinfo/personinfo'
         },
         {
           id: 2,
@@ -97,6 +96,16 @@ const fetchRecommendServices = async () => {
         },
         {
           id: 4,
+          title: '远程打印服务',
+          description: '宿舍也能轻松打印！手机一键上传，即刻获取文件。',
+          imageUrl: 'https://api.hcyj.xyz/images/dnfw.png',
+          price: '¥0.2/页',
+          rating: 4.9,
+          orders: 2350,
+          url: '/pages/service/print/index'
+        },
+        {
+          id: 5,
           title: '更多服务',
           description: '更多精彩服务即将上线！我们正在精心准备更多便捷实用的校园服务。',
           imageUrl: 'https://api.hcyj.xyz/images/gdfw.jpg',
