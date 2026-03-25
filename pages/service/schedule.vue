@@ -1,27 +1,36 @@
 <template>
 	<view class="schedule-page">
-		<!-- 页面头部 -->
+		<!-- 页面头部 - Glassmorphism 风格 -->
 		<view class="header-section">
+			<view class="header-bg-pattern"></view>
 			<view class="header-content">
-				<uni-icons type="calendar-filled" size="32" color="#fff"></uni-icons>
+				<view class="header-icon-wrap">
+					<uni-icons type="calendar-filled" size="28" color="#fff"></uni-icons>
+				</view>
 				<view class="header-text">
-					<text class="title">课表查询</text>
+					<text class="title">课程表</text>
 					<text class="subtitle">查看您的课程安排</text>
 				</view>
 			</view>
 		</view>
 
-		<!-- 登录表单 -->
+		<!-- 登录表单 - Bento Card 风格 -->
 		<view class="form-card" v-if="!isLoggedIn">
+			<view class="card-glass-bg"></view>
 			<view class="card-header">
-				<uni-icons type="person-filled" size="20" color="#007aff"></uni-icons>
-				<text class="card-title">教务系统登录</text>
+				<view class="header-accent-bar"></view>
+				<view class="header-title-group">
+					<text class="card-title">教务系统登录</text>
+					<text class="card-subtitle">ACADEMIC SYSTEM</text>
+				</view>
 			</view>
 
 			<view class="form-content">
 				<view class="form-item">
 					<view class="form-label">
-						<uni-icons type="person" size="18" color="#666"></uni-icons>
+						<view class="label-icon">
+							<uni-icons type="person" size="16" color="#8E8E93"></uni-icons>
+						</view>
 						<text>学号</text>
 					</view>
 					<input class="form-input" v-model="loginForm.studentNo" placeholder="请输入学号" />
@@ -29,7 +38,9 @@
 
 				<view class="form-item">
 					<view class="form-label">
-						<uni-icons type="locked" size="18" color="#666"></uni-icons>
+						<view class="label-icon">
+							<uni-icons type="locked" size="16" color="#8E8E93"></uni-icons>
+						</view>
 						<text>密码</text>
 					</view>
 					<input class="form-input" v-model="loginForm.password" placeholder="请输入教务系统密码" password />
@@ -37,27 +48,31 @@
 
 				<view class="form-item">
 					<view class="form-label">
-						<uni-icons type="calendar" size="18" color="#666"></uni-icons>
+						<view class="label-icon">
+							<uni-icons type="calendar" size="16" color="#8E8E93"></uni-icons>
+						</view>
 						<text>学期</text>
 					</view>
 					<picker @change="onTermChange" :value="termIndex" :range="termOptions" range-key="label"
 						class="form-picker">
 						<view class="picker-content">
 							<text class="picker-text">{{ termOptions[termIndex]?.label || '请选择学期' }}</text>
-							<uni-icons type="down" size="16" color="#999"></uni-icons>
+							<uni-icons type="down" size="14" color="#C7C7CC"></uni-icons>
 						</view>
 					</picker>
 				</view>
 
 				<view class="form-item">
 					<view class="form-label">
-						<uni-icons type="calendar" size="18" color="#666"></uni-icons>
+						<view class="label-icon">
+							<uni-icons type="calendar" size="16" color="#8E8E93"></uni-icons>
+						</view>
 						<text>周次</text>
 					</view>
 					<picker @change="onWeekChange" :value="weekIndex" :range="weekOptions" class="form-picker">
 						<view class="picker-content">
 							<text class="picker-text">{{ weekOptions[weekIndex] || '请选择周次' }}</text>
-							<uni-icons type="down" size="16" color="#999"></uni-icons>
+							<uni-icons type="down" size="14" color="#C7C7CC"></uni-icons>
 						</view>
 					</picker>
 				</view>
@@ -68,50 +83,75 @@
 			</view>
 		</view>
 
-		<!-- 周次切换 -->
+		<!-- 周次切换 + 操作按钮 -->
 		<view class="week-selector" v-if="isLoggedIn">
-			<view class="week-header">
-				<text class="current-week">第{{ currentWeek }}周课表</text>
-				<view class="week-actions">
-					<button class="week-btn" @click="changeWeek(-1)" :disabled="currentWeek <= 1">
-						<uni-icons type="left" size="16" color="#007aff"></uni-icons>
-					</button>
-					<button class="week-btn" @click="changeWeek(1)" :disabled="currentWeek >= 17">
-						<uni-icons type="right" size="16" color="#007aff"></uni-icons>
-					</button>
+			<view class="week-stepper">
+				<view class="stepper-btn" :class="{ disabled: currentWeek <= 1 }" @click="changeWeek(-1)">
+					<uni-icons type="left" size="18" :color="currentWeek <= 1 ? '#C7C7CC' : '#007AFF'"></uni-icons>
+				</view>
+				<view class="week-display">
+					<text class="week-text">第</text>
+					<text class="week-number">{{ currentWeek }}</text>
+					<text class="week-text">周</text>
+				</view>
+				<view class="stepper-btn" :class="{ disabled: currentWeek >= 17 }" @click="changeWeek(1)">
+					<uni-icons type="right" size="18" :color="currentWeek >= 17 ? '#C7C7CC' : '#007AFF'"></uni-icons>
+				</view>
+				<view class="stepper-divider"></view>
+				<view class="refresh-btn" @click="resetForm">
+					<uni-icons type="refresh" size="18" color="#5AC8FA"></uni-icons>
+					<text class="refresh-text">重新查询</text>
 				</view>
 			</view>
 		</view>
 
-		<!-- 课表展示 -->
-		<view class="schedule-container" v-if="isLoggedIn">
-			<!-- 课表头部 -->
-			<view class="schedule-header">
-				<view class="time-column">时间</view>
-				<view class="day-column" v-for="day in weekDays" :key="day">{{ day }}</view>
-			</view>
-
-			<!-- 课表内容 -->
-			<view class="schedule-content">
-				<view class="schedule-row" v-for="(period, index) in timePeriods" :key="index">
-					<view class="time-cell">
-						<text class="period-number">{{ (index * 2 + 1) + '-' + (index * 2 + 2) }}</text>
-						<text class="time-range">{{ period }}</text>
+		<!-- 课表展示 - 固定布局 -->
+		<view class="schedule-card" v-if="isLoggedIn">
+			<view class="schedule-container">
+				<!-- 课表头部 -->
+				<view class="schedule-header">
+					<view class="header-glass"></view>
+					<view class="time-column">
+						<text class="header-text">时间</text>
 					</view>
-					<view class="course-cell" v-for="(day, dayIndex) in weekDays" :key="dayIndex">
-						<view class="course-item"
-							v-if="shouldShowCourse(getCourseForSlot(index * 2 + 1, dayIndex + 1), index * 2 + 1)"
-							:style="{
-								backgroundColor: getCourseColor(getCourseForSlot(index * 2 + 1, dayIndex + 1)),
-								gridRowEnd: `span ${getCourseSpan(getCourseForSlot(index * 2 + 1, dayIndex + 1), index * 2 + 1)}`
-							}">
-							<text class="course-name">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).name }}</text>
-							<text class="course-location">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).location
-							}}</text>
-							<text class="course-teacher">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).teacher
-							}}</text>
-							<text class="course-code">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).courseCode
-							}}</text>
+					<view class="day-column" :class="{ 'is-today': dayIndex === adjustedTodayIndex }"
+						v-for="(day, dayIndex) in weekDays" :key="dayIndex">
+						<text class="header-text">{{ day }}</text>
+					</view>
+				</view>
+
+				<!-- 课表内容 -->
+				<view class="schedule-content">
+					<view class="schedule-row" v-for="(period, index) in timePeriods" :key="index">
+						<!-- 时间轴 -->
+						<view class="time-cell">
+							<view class="time-info">
+								<text class="period-number">{{ (index * 2 + 1) + '-' + (index * 2 + 2) }}节</text>
+								<text class="time-range">{{ period }}</text>
+							</view>
+						</view>
+						<!-- 课程格子 -->
+						<view class="course-cell" :class="{ 'is-today': dayIndex === adjustedTodayIndex }"
+							v-for="(_, dayIndex) in weekDays" :key="dayIndex">
+							<view class="course-item"
+								:class="'color-' + (getCourseForSlot(index * 2 + 1, dayIndex + 1)?.id % 10 || 0)"
+								v-if="shouldShowCourse(getCourseForSlot(index * 2 + 1, dayIndex + 1), index * 2 + 1)"
+								:style="{
+									gridRowEnd: `span ${getCourseSpan(getCourseForSlot(index * 2 + 1, dayIndex + 1), index * 2 + 1)}`
+								}" @tap="showCourseDetail(getCourseForSlot(index * 2 + 1, dayIndex + 1))">
+								<view class="course-accent-bar"></view>
+								<view class="course-body">
+									<text class="course-name">{{ getCourseForSlot(index * 2 + 1, dayIndex + 1).name
+									}}</text>
+									<view class="course-detail">
+										<view class="detail-row">
+											<!-- <text class="detail-icon">📍</text> -->
+											<text class="detail-text">{{ getCourseForSlot(index * 2 + 1, dayIndex +
+												1).location }}</text>
+										</view>
+									</view>
+								</view>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -120,22 +160,73 @@
 
 		<!-- 空状态 -->
 		<view class="empty-state" v-if="isLoggedIn && courses.length === 0">
-			<uni-icons type="info-filled" size="48" color="#ccc"></uni-icons>
+			<view class="empty-icon">📚</view>
 			<text class="empty-text">暂无课程数据</text>
 			<text class="empty-desc">请检查周次选择或稍后重试</text>
-		</view>
-
-		<!-- 重新查询按钮 -->
-		<view class="action-bar" v-if="isLoggedIn">
-			<button class="secondary-button" @click="resetForm">
-				<uni-icons type="refresh" size="18" color="#007aff"></uni-icons>
-				<text>重新查询</text>
-			</button>
 		</view>
 
 		<!-- AI分析组件 -->
 		<AIAnalysis v-if="isLoggedIn" type="schedule" :data="courses" :currentWeek="currentWeek.toString()"
 			window-title="AI课表分析" @analyze="handleAnalyze" />
+
+		<!-- 课程详情弹窗 -->
+		<view class="course-modal-mask" v-if="showModal" @tap="closeModal"></view>
+		<view class="course-modal" :class="{ show: showModal }" @tap.stop>
+			<view class="modal-header">
+				<view class="modal-accent-bar" :class="'accent-' + (selectedCourse?.id % 10 || 0)"></view>
+				<text class="modal-title">{{ selectedCourse?.name || '课程详情' }}</text>
+				<view class="modal-close" @tap="closeModal">
+					<text>✕</text>
+				</view>
+			</view>
+			<view class="modal-body" v-if="selectedCourse">
+				<view class="detail-item">
+					<view class="detail-label">
+						<text class="label-icon">📍</text>
+						<text>教室</text>
+					</view>
+					<text class="detail-value">{{ selectedCourse.location || '未安排' }}</text>
+				</view>
+				<view class="detail-item">
+					<view class="detail-label">
+						<text class="label-icon">👨‍🏫</text>
+						<text>教师</text>
+					</view>
+					<text class="detail-value">{{ selectedCourse.teacher || '未安排' }}</text>
+				</view>
+				<view class="detail-item">
+					<view class="detail-label">
+						<text class="label-icon">📅</text>
+						<text>周次</text>
+					</view>
+					<text class="detail-value">第{{ selectedCourse.week }}周</text>
+				</view>
+				<view class="detail-item">
+					<view class="detail-label">
+						<text class="label-icon">🕐</text>
+						<text>时间</text>
+					</view>
+					<text class="detail-value">
+						{{ weekDays[selectedCourse.dayOfWeek - 1] }} 第{{ selectedCourse.startTime }}-{{
+							selectedCourse.endTime }}节
+					</text>
+				</view>
+				<view class="detail-item" v-if="selectedCourse.className">
+					<view class="detail-label">
+						<text class="label-icon">🏫</text>
+						<text>班级</text>
+					</view>
+					<text class="detail-value">{{ selectedCourse.className }}</text>
+				</view>
+				<view class="detail-item" v-if="selectedCourse.credits">
+					<view class="detail-label">
+						<text class="label-icon">📖</text>
+						<text>学分</text>
+					</view>
+					<text class="detail-value">{{ selectedCourse.credits }} 学分</text>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -143,6 +234,9 @@
 import { ref, reactive, onMounted } from 'vue';
 import { fetchSchoolCourses } from '@/api/school.js';
 import AIAnalysis from '@/components/AIAnalysis.vue';
+
+// 设计一个简单的延迟函数
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // 存储键名
 const STORAGE_KEY = 'schedule_credentials';
@@ -230,7 +324,7 @@ const termIndex = ref(0);
 const loginForm = ref({
 	studentNo: '',
 	password: '',
-	term: termOptions[0].value, // 使用 termOptions 的第一个值，保持一致
+	term: termOptions[0].value,
 	week: '1'
 });
 
@@ -253,11 +347,13 @@ const timePeriods = [
 	'20:25-22:00'
 ];
 
-// 课程颜色配置
-const courseColors = [
-	'#e3f2fd', '#f3e5f5', '#e8f5e8', '#fff3e0', '#fce4ec',
-	'#e0f2f1', '#f1f8e9', '#fff8e1', '#e8eaf6', '#fafafa'
-];
+// 今天是周几 (0-6, 0=周一)
+const today = new Date().getDay();
+const adjustedTodayIndex = today === 0 ? 6 : today - 1;
+
+// 弹窗相关
+const showModal = ref(false);
+const selectedCourse = ref(null);
 
 // 方法
 const onTermChange = (e) => {
@@ -270,7 +366,6 @@ const onWeekChange = (e) => {
 	const selectedWeek = e.detail.value + 1;
 	currentWeek.value = selectedWeek;
 	loginForm.value.week = selectedWeek.toString();
-	// 重新获取课表数据
 	if (isLoggedIn.value) {
 		loadScheduleData();
 	}
@@ -280,9 +375,8 @@ const changeWeek = (direction) => {
 	const newWeek = currentWeek.value + direction;
 	if (newWeek >= 1 && newWeek <= 17) {
 		currentWeek.value = newWeek;
-		weekIndex.value = newWeek - 1; // 同步更新picker的索引
+		weekIndex.value = newWeek - 1;
 		loginForm.value.week = newWeek.toString();
-		// 重新获取课表数据
 		loadScheduleData();
 	}
 };
@@ -299,26 +393,29 @@ const getCourseForSlot = (period, dayOfWeek) => {
 // 检查课程是否跨越多个时间段
 const getCourseSpan = (course, period) => {
 	if (!course) return 1;
-
-	// 如果是课程的第一个时间段，返回跨越的时间段数
 	if (course.startTime === period) {
 		return course.endTime - course.startTime + 1;
 	}
-
-	// 如果不是第一个时间段，返回0（不显示）
 	return 0;
 };
 
-// 检查是否应该显示课程（避免重复显示）
+// 检查是否应该显示课程
 const shouldShowCourse = (course, period) => {
 	if (!course) return false;
 	return course.startTime === period;
 };
 
-const getCourseColor = (course) => {
-	if (!course) return '#f5f5f5';
-	const index = course.id % courseColors.length;
-	return courseColors[index];
+// 显示课程详情弹窗
+const showCourseDetail = (course) => {
+	if (!course) return;
+	selectedCourse.value = course;
+	showModal.value = true;
+};
+
+// 关闭弹窗
+const closeModal = () => {
+	showModal.value = false;
+	selectedCourse.value = null;
 };
 
 const loadScheduleData = async () => {
@@ -326,13 +423,6 @@ const loadScheduleData = async () => {
 
 	loading.value = true;
 	try {
-		console.log('切换周次，重新获取课表，参数:', {
-			studentNo: loginForm.value.studentNo,
-			password: loginForm.value.password,
-			term: loginForm.value.term,
-			week: loginForm.value.week
-		});
-
 		const response = await fetchSchoolCourses(
 			loginForm.value.studentNo,
 			loginForm.value.password,
@@ -340,11 +430,9 @@ const loadScheduleData = async () => {
 			loginForm.value.week
 		);
 
-		// 兼容新旧API格式（items 或 data）
 		const scheduleData = response.items || response.data;
 
 		if (response.success && scheduleData && scheduleData.length > 0) {
-			// 处理课程数据
 			const courseData = scheduleData[0] || [];
 			courses.value = processCourseData(courseData);
 
@@ -372,6 +460,7 @@ const loadScheduleData = async () => {
 };
 
 const handleLogin = async () => {
+
 	// 表单验证
 	if (!loginForm.value.studentNo) {
 		uni.showToast({
@@ -397,17 +486,14 @@ const handleLogin = async () => {
 		return;
 	}
 
+	// 先开启 loading 状态
 	loading.value = true;
 
-	try {
-		console.log('正在查询课表，参数:', {
-			studentNo: loginForm.value.studentNo,
-			password: loginForm.value.password,
-			term: loginForm.value.term,
-			week: loginForm.value.week
-		});
+	// 记录开始时间，确保 loading 至少持续 3 秒
+	const startTime = Date.now();
+	const minLoadingTime = 800;
 
-		// 调用真实API
+	try {
 		const result = await fetchSchoolCourses(
 			loginForm.value.studentNo,
 			loginForm.value.password,
@@ -415,44 +501,90 @@ const handleLogin = async () => {
 			loginForm.value.week
 		);
 
-		// 兼容新旧API格式（items 或 data）
-		const scheduleData = result.items || result.data;
+		// 计算已过去的时间，补足剩余时间
+		const elapsed = Date.now() - startTime;
+		const remainingTime = Math.max(0, minLoadingTime - elapsed);
+		if (remainingTime > 0) {
+			await sleep(remainingTime);
+		}
 
-		if (result.success && scheduleData && scheduleData.length > 0) {
-			// 保存凭据到本地存储
-			saveCredentials();
-
-			// 处理课程数据
-			const courseData = scheduleData[0] || [];
-			const dateData = scheduleData[1] || [];
-
-			// 转换数据格式
-			courses.value = processCourseData(courseData);
-			currentWeek.value = parseInt(loginForm.value.week);
-			weekIndex.value = currentWeek.value - 1; // 同步更新picker索引
-			isLoggedIn.value = true;
-
+		console.log('正在查询课表，参数：', {
+			studentNo: loginForm.value.studentNo,
+			password: loginForm.value.password,
+			term: loginForm.value.term,
+			week: loginForm.value.week
+		});
+		// 【Bug Fix】严格判断返回状态
+		// 情况1：网络请求成功但业务逻辑失败
+		if (result.success === false) {
 			uni.showToast({
-				title: '查询成功',
-				icon: 'success'
+				title: result.message || '账号或密码错误',
+				icon: 'none',
+				duration: 2000
 			});
-		} else {
+			loading.value = false;
+			return; // 阻断跳转
+		}
+
+		// 情况2：返回数据为空
+		const scheduleData = result.items || result.data;
+		if (!scheduleData || scheduleData.length === 0) {
 			uni.showToast({
-				title: '暂无课程数据',
+				title: '暂无课程数据，请检查账号密码',
+				icon: 'none',
+				duration: 2000
+			});
+			loading.value = false;
+			return; // 阻断跳转
+		}
+
+		// 情况3：课程数据为空数组
+		const courseData = scheduleData[0] || [];
+		if (courseData.length === 0) {
+			uni.showToast({
+				title: '该周次暂无课程安排',
 				icon: 'none'
 			});
-			// 显示空状态
-			courses.value = [];
-			isLoggedIn.value = true;
-			currentWeek.value = parseInt(loginForm.value.week);
-			weekIndex.value = currentWeek.value - 1; // 同步更新picker索引
+			// 这里可以选择继续显示空状态还是阻断
 		}
+
+		// 【验证通过】保存凭据并跳转
+		saveCredentials();
+
+		// 处理课程数据
+		courses.value = processCourseData(courseData);
+		currentWeek.value = parseInt(loginForm.value.week);
+		weekIndex.value = currentWeek.value - 1;
+		isLoggedIn.value = true;
+
+		uni.showToast({
+			title: '查询成功',
+			icon: 'success'
+		});
 
 	} catch (error) {
 		console.error('查询课表失败:', error);
+		// 确保错误时也保持 loading 时间
+		const elapsed = Date.now() - startTime;
+		const remainingTime = Math.max(0, minLoadingTime - elapsed);
+		if (remainingTime > 0) {
+			await sleep(remainingTime);
+		}
+		// 【Bug Fix】区分网络错误和认证错误
+		let errorMsg = '查询失败，请稍后重试';
+		if (error.message) {
+			if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+				errorMsg = '账号或密码错误';
+			} else if (error.message.includes('timeout')) {
+				errorMsg = '网络超时，请检查网络';
+			} else if (error.message.includes('network')) {
+				errorMsg = '网络连接失败';
+			}
+		}
 		uni.showToast({
-			title: '查询失败，请检查账号密码',
-			icon: 'none'
+			title: errorMsg,
+			icon: 'none',
+			duration: 2000
 		});
 	} finally {
 		loading.value = false;
@@ -476,97 +608,231 @@ const resetForm = () => {
 // AI分析处理
 const handleAnalyze = (type) => {
 	console.log('触发AI分析:', type);
-	// 这里可以调用真实的AI分析API
-	// 目前使用mock数据展示
 };
 </script>
 
 <style lang="scss" scoped>
+// ==================== 设计变量 ====================
+$primary-blue: #007AFF;
+$primary-blue-light: #5AC8FA;
+$primary-gradient: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
+$glass-bg: rgba(255, 255, 255, 0.72);
+$glass-border: rgba(255, 255, 255, 0.5);
+$text-primary: #1C1C1E;
+$text-secondary: #8E8E93;
+$text-tertiary: #C7C7CC;
+$bg-page: linear-gradient(180deg, #F2F6FA 0%, #FFFFFF 100%);
+$card-shadow: 0 8rpx 32rpx rgba(0, 122, 255, 0.08);
+
+// 莫兰迪/马卡龙色系 - 课程卡片
+$color-0: #E8F4FD;
+$color-1: #F3E8FD;
+$color-2: #E8FDF0;
+$color-3: #FDF6E8;
+$color-4: #FDE8F0;
+$color-5: #E8FDF8;
+$color-6: #F0FDE8;
+$color-7: #FDFBE8;
+$color-8: #ECE8FD;
+$color-9: #F8F8F8;
+
+// 对应的加深色
+$accent-0: #5AC8FA;
+$accent-1: #AF52DE;
+$accent-2: #34C759;
+$accent-3: #FF9500;
+$accent-4: #FF2D55;
+$accent-5: #00C7BE;
+$accent-6: #30D158;
+$accent-7: #FFD60A;
+$accent-8: #BF5AF2;
+$accent-9: #8E8E93;
+
+// ==================== 页面容器 ====================
 .schedule-page {
-	background-color: #f7f8fa;
 	min-height: 100vh;
-	padding: 20rpx;
+	background: $bg-page;
+	padding: 24rpx 24rpx calc(env(safe-area-inset-bottom) + 24rpx);
+	position: relative;
+
+	&::before {
+		content: '';
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-image:
+			radial-gradient(circle at 20% 20%, rgba(0, 122, 255, 0.03) 0%, transparent 50%),
+			radial-gradient(circle at 80% 80%, rgba(90, 200, 250, 0.03) 0%, transparent 50%);
+		pointer-events: none;
+		z-index: 0;
+	}
 }
 
+// ==================== 页面头部 ====================
 .header-section {
-	background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
-	border-radius: 20rpx;
-	padding: 40rpx 30rpx;
-	margin-bottom: 20rpx;
+	position: relative;
+	background: $primary-gradient;
+	border-radius: 24rpx;
+	padding: 36rpx 32rpx;
+	margin-bottom: 24rpx;
+	overflow: hidden;
+	box-shadow: $card-shadow;
+	z-index: 1;
+
+	.header-bg-pattern {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-image:
+			radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 30%),
+			radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 40%);
+		pointer-events: none;
+	}
 
 	.header-content {
+		position: relative;
 		display: flex;
 		align-items: center;
+
+		.header-icon-wrap {
+			width: 64rpx;
+			height: 64rpx;
+			background: rgba(255, 255, 255, 0.2);
+			backdrop-filter: blur(10rpx);
+			-webkit-backdrop-filter: blur(10rpx);
+			border-radius: 16rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 
 		.header-text {
 			margin-left: 20rpx;
 
 			.title {
 				display: block;
-				font-size: 32rpx;
-				font-weight: bold;
-				color: #fff;
+				font-size: 36rpx;
+				font-weight: 700;
+				color: #FFFFFF;
+				letter-spacing: 1rpx;
 			}
 
 			.subtitle {
 				display: block;
 				font-size: 24rpx;
 				color: rgba(255, 255, 255, 0.8);
-				margin-top: 8rpx;
+				margin-top: 6rpx;
 			}
 		}
 	}
 }
 
+// ==================== 登录表单卡片 ====================
 .form-card {
-	background-color: #fff;
-	border-radius: 20rpx;
-	padding: 30rpx;
-	margin-bottom: 20rpx;
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+	position: relative;
+	background: $glass-bg;
+	backdrop-filter: blur(40rpx);
+	-webkit-backdrop-filter: blur(40rpx);
+	border-radius: 24rpx;
+	padding: 32rpx;
+	margin-bottom: 24rpx;
+	box-shadow: $card-shadow;
+	border: 1rpx solid $glass-border;
+	z-index: 1;
+
+	.card-glass-bg {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
+		border-radius: 24rpx;
+		z-index: -1;
+	}
 
 	.card-header {
 		display: flex;
 		align-items: center;
-		margin-bottom: 30rpx;
+		margin-bottom: 28rpx;
+		padding-bottom: 20rpx;
+		border-bottom: 1rpx solid rgba(0, 0, 0, 0.04);
 
-		.card-title {
-			font-size: 28rpx;
-			font-weight: bold;
-			color: #333;
-			margin-left: 15rpx;
+		.header-accent-bar {
+			width: 6rpx;
+			height: 36rpx;
+			background: $primary-gradient;
+			border-radius: 3rpx;
+			margin-right: 16rpx;
+		}
+
+		.header-title-group {
+			display: flex;
+			flex-direction: column;
+			gap: 4rpx;
+
+			.card-title {
+				font-size: 30rpx;
+				font-weight: 600;
+				color: $text-primary;
+			}
+
+			.card-subtitle {
+				font-size: 20rpx;
+				color: $text-tertiary;
+				letter-spacing: 1rpx;
+			}
 		}
 	}
 
 	.form-content {
 		.form-item {
-			margin-bottom: 30rpx;
+			margin-bottom: 24rpx;
 
 			.form-label {
 				display: flex;
 				align-items: center;
-				margin-bottom: 15rpx;
+				margin-bottom: 12rpx;
+
+				.label-icon {
+					width: 32rpx;
+					height: 32rpx;
+					background: rgba(0, 122, 255, 0.08);
+					border-radius: 8rpx;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					margin-right: 12rpx;
+				}
 
 				text {
 					font-size: 26rpx;
-					color: #666;
-					margin-left: 10rpx;
+					color: $text-secondary;
+					font-weight: 500;
 				}
 			}
 
 			.form-input {
 				width: 100%;
-				height: 80rpx;
-				background-color: #f8f9fa;
-				border-radius: 12rpx;
-				padding: 0 20rpx;
-				font-size: 26rpx;
+				height: 88rpx;
+				background: rgba(0, 0, 0, 0.02);
+				border-radius: 16rpx;
+				padding: 0 24rpx;
+				font-size: 28rpx;
+				color: $text-primary;
 				border: 2rpx solid transparent;
 				box-sizing: border-box;
+				transition: all 0.3s ease;
 
 				&:focus {
-					border-color: #007aff;
-					background-color: #fff;
+					border-color: $primary-blue;
+					background: rgba(255, 255, 255, 0.8);
+					box-shadow: 0 0 0 4rpx rgba(0, 122, 255, 0.1);
+				}
+
+				&::placeholder {
+					color: $text-tertiary;
 				}
 			}
 
@@ -577,14 +843,19 @@ const handleAnalyze = (type) => {
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
-					height: 80rpx;
-					background-color: #f8f9fa;
-					border-radius: 12rpx;
-					padding: 0 20rpx;
+					height: 88rpx;
+					background: rgba(0, 0, 0, 0.02);
+					border-radius: 16rpx;
+					padding: 0 24rpx;
+					transition: all 0.3s ease;
+
+					&:active {
+						background: rgba(0, 0, 0, 0.04);
+					}
 
 					.picker-text {
-						font-size: 26rpx;
-						color: #333;
+						font-size: 28rpx;
+						color: $text-primary;
 					}
 				}
 			}
@@ -592,247 +863,617 @@ const handleAnalyze = (type) => {
 
 		.login-button {
 			width: 100%;
-			height: 88rpx;
-			background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%);
-			border-radius: 44rpx;
+			height: 96rpx;
+			background: $primary-gradient;
+			border-radius: 48rpx;
 			border: none;
-			color: #fff;
-			font-size: 28rpx;
-			font-weight: bold;
-			margin-top: 20rpx;
+			color: #FFFFFF;
+			font-size: 30rpx;
+			font-weight: 600;
+			margin-top: 16rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			box-shadow: 0 8rpx 24rpx rgba(0, 122, 255, 0.3);
+			transition: all 0.3s ease;
 
 			&:active {
-				opacity: 0.8;
+				transform: scale(0.98);
+				box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.3);
 			}
 		}
 	}
 }
 
+// ==================== 周次切换器 ====================
 .week-selector {
-	background-color: #fff;
-	border-radius: 20rpx;
-	padding: 30rpx;
-	margin-bottom: 20rpx;
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+	display: flex;
+	justify-content: center;
+	margin-bottom: 24rpx;
+	z-index: 1;
 
-	.week-header {
+	.week-stepper {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		background: $glass-bg;
+		backdrop-filter: blur(40rpx);
+		-webkit-backdrop-filter: blur(40rpx);
+		border-radius: 48rpx;
+		overflow: hidden;
+		box-shadow: $card-shadow;
+		border: 1rpx solid $glass-border;
 
-		.current-week {
-			font-size: 28rpx;
-			font-weight: bold;
-			color: #333;
+		.stepper-btn {
+			width: 80rpx;
+			height: 72rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s ease;
+
+			&:active {
+				background: rgba(0, 122, 255, 0.1);
+			}
+
+			&.disabled {
+				opacity: 0.3;
+				pointer-events: none;
+			}
 		}
 
-		.week-actions {
+		.week-display {
 			display: flex;
-			gap: 20rpx;
+			align-items: center;
+			justify-content: center;
+			padding: 0 24rpx;
+			height: 72rpx;
 
-			.week-btn {
-				width: 60rpx;
-				height: 60rpx;
-				background-color: #f8f9fa;
-				border-radius: 30rpx;
-				border: none;
-				display: flex;
-				align-items: center;
-				justify-content: center;
+			.week-text {
+				font-size: 26rpx;
+				color: $text-secondary;
+				font-weight: 400;
+			}
 
-				&:active {
-					background-color: #e9ecef;
-				}
+			.week-number {
+				font-size: 40rpx;
+				font-weight: 700;
+				color: $primary-blue;
+				margin: 0 4rpx;
+			}
+		}
 
-				&:disabled {
-					opacity: 0.5;
-				}
+		.stepper-divider {
+			width: 1rpx;
+			height: 36rpx;
+			background: rgba(0, 0, 0, 0.08);
+			margin: 0 8rpx;
+		}
+
+		.refresh-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6rpx;
+			padding: 0 80rpx;
+			height: 72rpx;
+			transition: all 0.2s ease;
+
+			&:active {
+				background: rgba(0, 122, 255, 0.1);
+			}
+
+			.refresh-text {
+				font-size: 26rpx;
+				font-weight: 500;
+				color: $primary-blue-light;
 			}
 		}
 	}
 }
 
-.schedule-container {
-	background-color: #fff;
-	border-radius: 20rpx;
-	margin-bottom: 20rpx;
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
-	overflow-x: auto;
-	overflow-y: hidden;
+// ==================== 课表卡片（固定布局，无滚动）====================
+.schedule-card {
+	width: 100%;
+	margin-bottom: 24rpx;
+	z-index: 1;
 }
 
+// ==================== 课表容器 ====================
+.schedule-container {
+	width: 100%;
+	background: $glass-bg;
+	backdrop-filter: blur(40rpx);
+	-webkit-backdrop-filter: blur(40rpx);
+	border-radius: 24rpx;
+	box-shadow: $card-shadow;
+	border: 1rpx solid $glass-border;
+	overflow: hidden;
+}
+
+// ==================== 课表头部 ====================
 .schedule-header {
 	display: flex;
-	background-color: #f8f9fa;
-	border-bottom: 2rpx solid #e9ecef;
-	min-width: 1000rpx;
+	position: relative;
+	background: rgba(255, 255, 255, 0.9);
+
+	.header-glass {
+		position: absolute;
+		inset: 0;
+		background: rgba(255, 255, 255, 0.9);
+		backdrop-filter: blur(20rpx);
+		-webkit-backdrop-filter: blur(20rpx);
+		z-index: -1;
+	}
 
 	.time-column {
-		width: 120rpx;
-		min-width: 120rpx;
-		padding: 20rpx 10rpx;
+		width: 65rpx;
+		min-width: 65rpx;
+		padding: 12rpx 4rpx;
 		text-align: center;
-		font-size: 24rpx;
-		font-weight: bold;
-		color: #666;
-		border-right: 2rpx solid #e9ecef;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.header-text {
+			font-size: 20rpx;
+			font-weight: 600;
+			color: $text-secondary;
+		}
 	}
 
 	.day-column {
-		width: 125rpx;
-		min-width: 125rpx;
-		padding: 20rpx 10rpx;
+		flex: 1;
+		padding: 12rpx 2rpx;
 		text-align: center;
-		font-size: 24rpx;
-		font-weight: bold;
-		color: #666;
-		border-right: 2rpx solid #e9ecef;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 
-		&:last-child {
-			border-right: none;
+		&.is-today {
+			.header-text {
+				color: $primary-blue;
+				font-weight: 700;
+			}
+		}
+
+		.header-text {
+			font-size: 24rpx;
+			font-weight: 600;
+			color: $text-secondary;
+			transition: color 0.2s ease;
 		}
 	}
 }
 
+// ==================== 课表内容 ====================
 .schedule-content {
-	min-width: 1000rpx;
+	padding: 2rpx;
 
 	.schedule-row {
 		display: flex;
-		border-bottom: 2rpx solid #f0f0f0;
+		width: 100%;
 
-		&:last-child {
-			border-bottom: none;
-		}
-
+		// 时间轴
 		.time-cell {
-			width: 120rpx;
-			min-width: 120rpx;
-			padding: 15rpx 10rpx;
-			border-right: 2rpx solid #f0f0f0;
+			width: 65rpx;
+			min-width: 65rpx;
+			min-height: 150rpx;
+			padding: 8rpx 2rpx;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
+			position: relative;
+			border-right: 1rpx solid rgba(0, 122, 255, 0.08);
 
-			.period-number {
-				font-size: 28rpx;
-				font-weight: bold;
-				color: #007aff;
-				margin-bottom: 5rpx;
-			}
+			.time-info {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				width: 100%;
 
-			.time-range {
-				font-size: 20rpx;
-				color: #999;
+				.period-number {
+					font-size: 25rpx;
+					font-weight: 700;
+					color: $primary-blue;
+					margin-bottom: 2rpx;
+					line-height: 1.2;
+				}
+
+				.time-range {
+					font-size: 18rpx;
+					color: $text-tertiary;
+					line-height: 1.2;
+					white-space: normal;
+					word-break: break-all;
+					width: 100%;
+				}
 			}
 		}
 
+		// 课程格子
 		.course-cell {
-			width: 125rpx;
-			min-width: 125rpx;
-			min-height: 120rpx;
-			border-right: 2rpx solid #f0f0f0;
-			padding: 10rpx;
+			flex: 1;
+			padding: 2rpx;
+			position: relative;
+			min-height: 160rpx;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 
-			&:last-child {
-				border-right: none;
+			&.is-today {
+				background: rgba(0, 122, 255, 0.03);
 			}
 
+			// 课程卡片
 			.course-item {
 				width: 100%;
+				min-height: 150rpx;
 				height: 100%;
 				border-radius: 8rpx;
-				padding: 8rpx 6rpx;
+				padding: 6rpx;
 				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				box-sizing: border-box;
+				flex-direction: row;
+				overflow: hidden;
+				position: relative;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-				.course-name {
-					font-size: 20rpx;
-					font-weight: bold;
-					color: #333;
-					margin-bottom: 4rpx;
-					text-align: center;
-					line-height: 1.2;
-					word-break: break-all;
-					overflow: hidden;
-					display: -webkit-box;
-					-webkit-line-clamp: 2;
-					-webkit-box-orient: vertical;
+				&:active {
+					transform: scale(0.96);
 				}
 
-				.course-location {
-					font-size: 16rpx;
-					color: #666;
-					margin-bottom: 2rpx;
-					text-align: center;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-					width: 100%;
+				.course-accent-bar {
+					width: 4rpx;
+					min-width: 4rpx;
+					border-radius: 2rpx;
+					margin-right: 4rpx;
+					flex-shrink: 0;
 				}
 
-				.course-teacher {
-					font-size: 16rpx;
-					color: #999;
-					text-align: center;
+				.course-body {
+					flex: 1;
+					display: flex;
+					flex-direction: column;
+					min-width: 0;
 					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-					width: 100%;
+
+					.course-name {
+						font-size: 25rpx;
+						font-weight: 600;
+						color: $text-primary;
+						margin-bottom: 2rpx;
+						line-height: 1.3;
+						display: -webkit-box;
+						-webkit-box-orient: vertical;
+						-webkit-line-clamp: 3;
+						line-clamp: 3;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						word-break: break-all;
+						white-space: normal;
+					}
+
+					.course-detail {
+						display: flex;
+						flex-direction: column;
+						gap: 2rpx;
+
+						.detail-row {
+							display: flex;
+							align-items: center;
+							gap: 2rpx;
+
+							.detail-icon {
+								font-size: 20rpx;
+								flex-shrink: 0;
+							}
+
+							.detail-text {
+								font-size: 20rpx;
+								color: $text-secondary;
+								overflow: hidden;
+								text-overflow: ellipsis;
+								white-space: nowrap;
+							}
+						}
+					}
+				}
+
+				// 莫兰迪色系
+				&.color-0 {
+					background: $color-0;
+					box-shadow: 0 2rpx 12rpx rgba(90, 200, 250, 0.2);
+
+					.course-accent-bar {
+						background: $accent-0;
+					}
+				}
+
+				&.color-1 {
+					background: $color-1;
+					box-shadow: 0 2rpx 12rpx rgba(175, 82, 222, 0.15);
+
+					.course-accent-bar {
+						background: $accent-1;
+					}
+				}
+
+				&.color-2 {
+					background: $color-2;
+					box-shadow: 0 2rpx 12rpx rgba(52, 199, 89, 0.15);
+
+					.course-accent-bar {
+						background: $accent-2;
+					}
+				}
+
+				&.color-3 {
+					background: $color-3;
+					box-shadow: 0 2rpx 12rpx rgba(255, 149, 0, 0.15);
+
+					.course-accent-bar {
+						background: $accent-3;
+					}
+				}
+
+				&.color-4 {
+					background: $color-4;
+					box-shadow: 0 2rpx 12rpx rgba(255, 45, 85, 0.12);
+
+					.course-accent-bar {
+						background: $accent-4;
+					}
+				}
+
+				&.color-5 {
+					background: $color-5;
+					box-shadow: 0 2rpx 12rpx rgba(0, 199, 190, 0.15);
+
+					.course-accent-bar {
+						background: $accent-5;
+					}
+				}
+
+				&.color-6 {
+					background: $color-6;
+					box-shadow: 0 2rpx 12rpx rgba(48, 209, 88, 0.15);
+
+					.course-accent-bar {
+						background: $accent-6;
+					}
+				}
+
+				&.color-7 {
+					background: $color-7;
+					box-shadow: 0 2rpx 12rpx rgba(255, 214, 10, 0.2);
+
+					.course-accent-bar {
+						background: $accent-7;
+					}
+				}
+
+				&.color-8 {
+					background: $color-8;
+					box-shadow: 0 2rpx 12rpx rgba(191, 90, 242, 0.15);
+
+					.course-accent-bar {
+						background: $accent-8;
+					}
+				}
+
+				&.color-9 {
+					background: $color-9;
+					box-shadow: 0 2rpx 12rpx rgba(142, 142, 142, 0.1);
+
+					.course-accent-bar {
+						background: $accent-9;
+					}
 				}
 			}
 		}
 	}
 }
 
+// ==================== 空状态 ====================
 .empty-state {
-	background-color: #fff;
-	border-radius: 20rpx;
-	padding: 80rpx 30rpx;
+	background: $glass-bg;
+	backdrop-filter: blur(40rpx);
+	-webkit-backdrop-filter: blur(40rpx);
+	border-radius: 24rpx;
+	padding: 64rpx 32rpx;
 	text-align: center;
-	margin-bottom: 20rpx;
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+	margin-bottom: 24rpx;
+	box-shadow: $card-shadow;
+	border: 1rpx solid $glass-border;
+	z-index: 1;
+
+	.empty-icon {
+		font-size: 64rpx;
+		margin-bottom: 16rpx;
+	}
 
 	.empty-text {
 		display: block;
-		font-size: 28rpx;
-		color: #999;
-		margin: 20rpx 0 10rpx;
+		font-size: 30rpx;
+		color: $text-secondary;
+		font-weight: 500;
+		margin-bottom: 8rpx;
 	}
 
 	.empty-desc {
 		display: block;
 		font-size: 24rpx;
-		color: #ccc;
+		color: $text-tertiary;
 	}
 }
 
-.action-bar {
-	display: flex;
-	justify-content: center;
-	padding: 20rpx 0;
+// ==================== 课程详情弹窗 ====================
+.course-modal-mask {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(8rpx);
+	-webkit-backdrop-filter: blur(8rpx);
+	z-index: 100;
+	animation: fadeIn 0.3s ease;
+}
 
-	.secondary-button {
+.course-modal {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%) scale(0.9);
+	width: 600rpx;
+	max-width: 90vw;
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(40rpx);
+	-webkit-backdrop-filter: blur(40rpx);
+	border-radius: 24rpx;
+	box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
+	z-index: 101;
+	opacity: 0;
+	pointer-events: none;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+	&.show {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translate(-50%, -50%) scale(1);
+	}
+
+	.modal-header {
 		display: flex;
 		align-items: center;
-		gap: 10rpx;
-		padding: 20rpx 40rpx;
-		background-color: #fff;
-		border: 2rpx solid #007aff;
-		border-radius: 25rpx;
-		color: #007aff;
-		font-size: 26rpx;
+		padding: 28rpx 24rpx;
+		border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
 
-		&:active {
-			background-color: #f0f8ff;
+		.modal-accent-bar {
+			width: 6rpx;
+			height: 32rpx;
+			border-radius: 3rpx;
+			margin-right: 16rpx;
+
+			&.accent-0 {
+				background: $accent-0;
+			}
+
+			&.accent-1 {
+				background: $accent-1;
+			}
+
+			&.accent-2 {
+				background: $accent-2;
+			}
+
+			&.accent-3 {
+				background: $accent-3;
+			}
+
+			&.accent-4 {
+				background: $accent-4;
+			}
+
+			&.accent-5 {
+				background: $accent-5;
+			}
+
+			&.accent-6 {
+				background: $accent-6;
+			}
+
+			&.accent-7 {
+				background: $accent-7;
+			}
+
+			&.accent-8 {
+				background: $accent-8;
+			}
+
+			&.accent-9 {
+				background: $accent-9;
+			}
 		}
+
+		.modal-title {
+			flex: 1;
+			font-size: 32rpx;
+			font-weight: 700;
+			color: $text-primary;
+		}
+
+		.modal-close {
+			width: 56rpx;
+			height: 56rpx;
+			background: rgba(0, 0, 0, 0.05);
+			border-radius: 28rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.3s ease;
+
+			&:active {
+				background: rgba(0, 0, 0, 0.1);
+				transform: scale(0.9);
+			}
+
+			text {
+				font-size: 24rpx;
+				color: $text-secondary;
+			}
+		}
+	}
+
+	.modal-body {
+		padding: 20rpx 24rpx 32rpx;
+
+		.detail-item {
+			display: flex;
+			align-items: flex-start;
+			padding: 16rpx 0;
+			border-bottom: 1rpx solid rgba(0, 0, 0, 0.03);
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			.detail-label {
+				display: flex;
+				align-items: center;
+				gap: 8rpx;
+				width: 140rpx;
+				flex-shrink: 0;
+
+				.label-icon {
+					font-size: 24rpx;
+				}
+
+				text {
+					font-size: 26rpx;
+					color: $text-secondary;
+				}
+			}
+
+			.detail-value {
+				flex: 1;
+				font-size: 28rpx;
+				color: $text-primary;
+				font-weight: 500;
+			}
+		}
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
 	}
 }
 </style>

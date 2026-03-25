@@ -19,6 +19,12 @@
       }
     },
     {
+      "path": "pages/service/personinfo/personinfo",
+      "style": {
+        "navigationBarTitleText": "校园人流数据"
+      }
+    },
+    {
       "path": "pages/service/print/index",
       "style": {
         "navigationBarTitleText": "文件打印"
