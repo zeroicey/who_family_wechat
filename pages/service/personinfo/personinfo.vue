@@ -1,3 +1,11 @@
+<!--  那个漏洞数据的表示 -->
+<!--  原字段	新字段 -->
+<!--  星期	day -->
+<!--  楼栋	building -->
+<!--  时段	period -->
+<!--  课室数量	rooms -->
+<!--  学生总数	students -->
+
 <template>
 	<view class="monitor-page">
 		<!-- 顶部标题卡片 -->
