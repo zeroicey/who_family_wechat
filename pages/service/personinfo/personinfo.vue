@@ -369,7 +369,7 @@ const statusConfig = {
 // 场景化建议配置
 const adviceConfig = {
 	'教学楼': {
-		comfortable: '当前人流稀少，楼道通畅，可放心通行，适合自习',
+		comfortable: '当前人流稀少，楼道通畅，可放心通行',
 		moderate: '人流适中，楼道较为通畅，通行基本无阻',
 		crowded: '人流较多，下课时楼道可能拥挤，建议稍作停留或走楼梯',
 		saturated: '人流密集！建议错峰通行或绕行其他楼栋，注意安全'
@@ -420,6 +420,7 @@ const realtimeData = computed(() => {
 
 	const timePhase = getCurrentTimePhase();
 	const day = getCurrentDay();
+	const building = currentLocation.value;
 
 	// 周末无数据
 	if (day === '周日' || day === '周六') {
@@ -435,12 +436,23 @@ const realtimeData = computed(() => {
 		};
 	}
 
-	// 下课高峰期 -> 楼道人多
+	// 下课高峰期 -> 根据课表数据判断楼道人流
 	if (timePhase.phase === 'passing') {
+		const period = timePhase.period;
+		const students = getStudentCount(day, period, building);
+		// 下课高峰期楼道人数约为上课人数的30-50%
+		const passingStudents = Math.floor(students * 0.4);
+		const percentage = passingStudents > 400 ? 75 : passingStudents > 200 ? 50 : 20;
+		const status = passingStudents > 400 ? 'high' : passingStudents > 200 ? 'medium' : 'low';
+		const textMap = {
+			high: '下课高峰，楼道人流密集',
+			medium: '下课高峰，楼道人流适中',
+			low: '下课时间，楼道人流较少'
+		};
 		return {
-			percentage: 75, // 显示较多
-			status: 'high',
-			text: '下课高峰，楼道人流密集'
+			percentage,
+			status,
+			text: textMap[status]
 		};
 	}
 
@@ -486,10 +498,16 @@ const predictData = computed(() => {
 		// 根据上课人数计算百分比（不显示具体数字）
 		const percentage = students > 1000 ? 85 : students > 500 ? 65 : students > 200 ? 45 : 20;
 		const status = students > 800 ? 'high' : students > 300 ? 'medium' : 'low';
+		// 根据状态设置描述文字
+		const textMap = {
+			high: `预计${period.replace('节', '节课后')}人流较大`,
+			medium: `预计${period.replace('节', '节课后')}人流适中`,
+			low: `预计${period.replace('节', '节课后')}人流较少`
+		};
 		return {
 			percentage,
 			status,
-			text: `预计${period.replace('节', '节课后')}人流较大`
+			text: textMap[status]
 		};
 	}
 
@@ -498,10 +516,17 @@ const predictData = computed(() => {
 		const period = timePhase.period;
 		const students = getStudentCount(day, period, building);
 		const percentage = students > 1000 ? 80 : students > 500 ? 60 : students > 200 ? 40 : 25;
+		const status = students > 800 ? 'high' : students > 300 ? 'medium' : 'low';
+		// 根据状态设置描述文字
+		const textMap = {
+			high: `当前${period}下课人流高峰`,
+			medium: `当前${period}下课人流适中`,
+			low: `当前${period}下课人流较少`
+		};
 		return {
 			percentage,
-			status: students > 800 ? 'high' : students > 300 ? 'medium' : 'low',
-			text: `当前${period}下课人流高峰`
+			status,
+			text: textMap[status]
 		};
 	}
 
@@ -522,10 +547,16 @@ const predictData = computed(() => {
 		const students = getStudentCount(day, nextPeriod, building);
 		if (students > 0) {
 			const percentage = students > 1000 ? 70 : students > 500 ? 50 : students > 200 ? 35 : 15;
+			const status = students > 800 ? 'high' : students > 300 ? 'medium' : 'low';
+			const textMap = {
+				high: `下节${nextPeriod}，下课时人流较大`,
+				medium: `下节${nextPeriod}，下课时人流适中`,
+				low: `下节${nextPeriod}，下课时人流较少`
+			};
 			return {
 				percentage,
-				status: 'predict',
-				text: `下节${nextPeriod}有课，下课时请注意`
+				status,
+				text: textMap[status]
 			};
 		}
 	}
