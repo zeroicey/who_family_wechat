@@ -13,9 +13,8 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
+import { useRecruitStore } from "@/stores/recruit";
+const recruitStore = useRecruitStore();
 
 // Props
 const props = defineProps({
@@ -29,7 +28,7 @@ const props = defineProps({
 const emit = defineEmits(['select-type']);
 
 // 计算属性
-const recruitClasses = computed(() => store.getters['recruit/get_recruit_classes']);
+const recruitClasses = computed(() => recruitStore.get_recruit_classes);
 
 // 方法
 const selectType = (index) => {

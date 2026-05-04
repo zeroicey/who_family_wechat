@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useStore } from "vuex";
+import { useUserStore } from "@/stores/user";
 
 // 导入组件
 import LoginBackground from "@/components/login/LoginBackground.vue";
@@ -42,14 +42,13 @@ import LoginLoading from "@/components/login/LoginLoading.vue";
 import LoginForm from "@/components/login/LoginForm.vue";
 import LoginIntro from "@/components/login/LoginIntro.vue";
 import LoginFooter from "@/components/login/LoginFooter.vue";
-
-const store = useStore();
+const userStore = useUserStore();
 
 // 加载状态
 const isLoading = ref(true);
 
 // 登录加载状态
-const loginLoading = computed(() => store.getters["user/login_loading"]);
+const loginLoading = computed(() => userStore.login_loading);
 
 // 页面加载时模拟加载过程
 onMounted(() => {
@@ -62,7 +61,7 @@ onMounted(() => {
 // 处理微信登录
 const handleWechatLogin = async () => {
   try {
-    await store.dispatch("user/wechat_login");
+    await userStore.wechat_login();
 
     // 登录成功提示
     uni.showToast({

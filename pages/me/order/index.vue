@@ -81,7 +81,6 @@
                     </view>
                 </view>
 
-
             </view>
         </view>
 
@@ -98,14 +97,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app';
-import { useStore } from 'vuex'
-
-const store = useStore()
+import { usePrintStore } from "@/stores/print";
+const printStore = usePrintStore();
 
 // 响应式数据
 const activeFilter = ref('all')
-const ordersLoading = computed(() => store.getters['print/get_orders_loading'])
-const orders = computed(() => store.getters['print/get_orders'])
+const ordersLoading = computed(() => printStore.get_orders_loading)
+const orders = computed(() => printStore.get_orders)
 
 // 筛选后的订单列表
 const filteredOrders = computed(() => {
@@ -131,18 +129,11 @@ const getStatusClass = (status) => {
     return statusMap[status] || 'pending'
 }
 
-
-
-
-
 // 查看订单详情
 const viewOrderDetail = (order) => {
     console.log('查看订单详情:', order)
     // 移除详情页跳转，直接在当前页面显示所有信息
 }
-
-
-
 
 // 跳转到打印页面
 const gotoPrint = () => {
@@ -151,12 +142,10 @@ const gotoPrint = () => {
     })
 }
 
-
-
 // 页面加载时获取订单数据
 onMounted(async () => {
     try {
-        await store.dispatch('print/fetch_print_orders')
+        await printStore.fetch_print_orders()
     } catch (error) {
         console.error('获取订单列表失败:', error)
         uni.showToast({
@@ -168,7 +157,7 @@ onMounted(async () => {
 
 // 页面显示时刷新数据
 onShow(() => {
-    store.dispatch('print/fetch_print_orders')
+    printStore.fetch_print_orders()
 })
 </script>
 

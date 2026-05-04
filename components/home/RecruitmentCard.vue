@@ -38,29 +38,27 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore()
+import { useRecruitStore } from "@/stores/recruit";
+const recruitStore = useRecruitStore();
 
 // 加载状态
 const loading = ref(false);
 
 // 招聘数据
 const recruits = computed(() => {
-    const allRecruits = store.getters["recruit/get_recruits"];
+    const allRecruits = recruitStore.get_recruits;
     return allRecruits && allRecruits.length > 5 ? allRecruits.slice(0, 5) : allRecruits;
 });
 
-
 onMounted(async () => {
     if (!recruits.value || recruits.value.length === 0) {
-        await store.dispatch("recruit/fetch_first_recruits");
+        await recruitStore.fetch_first_recruits();
     }
 })
 
 // 查看更多
 const navigateToMore = () => {
-    uni.switchTab({
+    uni.navigateTo({
         url: '/pages/recruit/index'
     });
 };

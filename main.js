@@ -13,12 +13,14 @@ app.$mount();
 
 // #ifdef VUE3
 import { createSSRApp } from "vue";
-import store from "./store";
+import pinia from "@/stores";
+import { useAppStore } from "@/stores/app";
 export function createApp() {
   const app = createSSRApp(App);
-  app.use(store);
+  app.use(pinia);
 
-  store.dispatch("init_app");
+  const appStore = useAppStore(pinia);
+  appStore.init_app();
 
   return {
     app,

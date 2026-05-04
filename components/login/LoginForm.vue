@@ -25,15 +25,15 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore();
 
 // 移除了showAppDownload属性
 
 const emit = defineEmits(['wechatLogin', 'agreement', 'privacy']);
-const store = useStore();
 
 // 获取登录加载状态
-const loading = computed(() => store.getters['user/login_loading']);
+const loading = computed(() => userStore.login_loading);
 
 // 处理微信登录
 const handleWechatLogin = () => {

@@ -4,7 +4,8 @@
 
 // 导入配置
 import { BASE_URL, DEV_BASE_URL, TIMEOUT, CURRENT_ENV, ENV } from "./config";
-import store from "@/store";
+import pinia from "@/stores";
+import { useUserStore } from "@/stores/user";
 
 /**
  * 请求拦截器
@@ -25,6 +26,7 @@ const requestInterceptor = (config) => {
 // 用于存储正在进行的登录请求，避免重复登录
 let isRefreshing = false;
 let failedQueue = [];
+const getUserStore = () => useUserStore(pinia);
 
 // 处理队列中的请求
 const processQueue = (error, token = null) => {
@@ -58,7 +60,8 @@ const responseInterceptor = async (response, originalConfig) => {
 
     try {
       // 使用store中的wechat_login action进行登录
-      await store.dispatch("user/wechat_login");
+      const userStore = getUserStore();
+      await userStore.wechat_login();
       
       // 获取新的token
       const newToken = uni.getStorageSync("token");

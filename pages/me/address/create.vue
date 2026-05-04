@@ -33,9 +33,9 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useStore } from 'vuex';
+import { useAddressStore } from "@/stores/address";
+const addressStore = useAddressStore();
 
-const store = useStore();
 const form = ref({
   alias: '',
   name: '',
@@ -56,7 +56,7 @@ const saveAddress = () => {
     });
     return;
   }
-  store.dispatch('address/add_address', form.value).then(() => {
+  addressStore.add_address( form.value).then(() => {
     uni.navigateBack();
   });
 };

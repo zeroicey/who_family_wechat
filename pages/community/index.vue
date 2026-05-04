@@ -37,7 +37,6 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import { useStore } from "vuex";
 import Dynamic from "@/components/community/Dynamic.vue";
 import Errand from "@/components/community/Errand.vue";
 import SecondHand from "@/components/community/SecondHand.vue";
@@ -57,10 +56,11 @@ onShareTimeline(() => ({
   title: '互成一家小程序',
   imageUrl: '/static/images/logo.png'
 }))
-const store = useStore();
 
 // 当前选中的标签
 const currentTab = ref('dynamic');
+import { useCommunityStore } from "@/stores/community";
+const communityStore = useCommunityStore();
 
 // 标签列表
 const tabs = [
@@ -89,17 +89,17 @@ onUnmounted(() => {
 
 // 组件挂载后初始化数据
 onMounted(async () => {
-  await store.dispatch("community/fetch_post_types");
+  await communityStore.fetch_post_types();
 });
 
 onPullDownRefresh(async () => {
-  await store.dispatch("community/fetch_first_posts");
+  await communityStore.fetch_first_posts();
   setTimeout(() => {
     uni.stopPullDownRefresh();
   }, 1000);
 });
 onReachBottom(async () => {
-  await store.dispatch("community/fetch_more_posts");
+  await communityStore.fetch_more_posts();
 });
 
 // 发布新帖子 - 长按事件

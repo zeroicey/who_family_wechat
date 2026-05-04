@@ -75,12 +75,13 @@
 
 <script setup>
 import { reactive, computed } from "vue";
-import { useStore } from "vuex";
+import { useCommunityStore } from "@/stores/community";
+import { useUserStore } from "@/stores/user";
+const communityStore = useCommunityStore();
+const userStore = useUserStore();
 
-const store = useStore();
-
-const userInfo = computed(() => store.getters["user/get_user_info"]);
-const avatarUrl = computed(() => store.getters["user/get_user_avatar_url"]);
+const userInfo = computed(() => userStore.get_user_info);
+const avatarUrl = computed(() => userStore.get_user_avatar_url);
 
 // 性别选项
 const genderOptions = ["男", "女"];
@@ -114,9 +115,9 @@ const chooseAvatar = () => {
         encoding: "base64",
         success: async (res) => {
           const base64Data = res.data;
-          await store.dispatch("user/update_user_avatar", base64Data);
-          await store.dispatch("community/fetch_first_posts");
-          await store.dispatch("user/fetch_first_posts");
+          await userStore.update_user_avatar( base64Data);
+          await communityStore.fetch_first_posts();
+          await userStore.fetch_first_posts();
           uni.showToast({
             title: '头像更新成功',
             icon: 'success',
@@ -168,9 +169,9 @@ const saveProfile = async () => {
   });
 
   try {
-    await store.dispatch("user/update_user_info", userProfile);
-    await store.dispatch("community/fetch_first_posts");
-    await store.dispatch("user/fetch_first_posts");
+    await userStore.update_user_info( userProfile);
+    await communityStore.fetch_first_posts();
+    await userStore.fetch_first_posts();
 
     uni.hideLoading();
 

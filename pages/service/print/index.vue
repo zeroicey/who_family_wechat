@@ -32,7 +32,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
-import { useStore } from 'vuex';
 import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
 
 onShareAppMessage(() => {
@@ -56,20 +55,22 @@ import PriceCard from '@/components/service/print/PriceCard.vue';
 import PrintForm from '@/components/service/print/PrintForm.vue';
 import ServiceInfoCard from '@/components/service/print/ServiceInfoCard.vue';
 import WhyUsCard from '@/components/service/print/WhyUsCard.vue';
-
-const store = useStore();
+import { useAddressStore } from "@/stores/address";
+import { usePrintStore } from "@/stores/print";
+const addressStore = useAddressStore();
+const printStore = usePrintStore();
 
 // 响应式数据
 const serviceType = ref('delivery'); // 默认选择派送服务
 const printFormRef = ref(null);
 
 // 计算属性
-const selectedAddress = computed(() => store.getters['address/get_default_address']);
-const isServiceOpen = computed(() => store.getters['print/get_is_service_open']);
+const selectedAddress = computed(() => addressStore.get_default_address);
+const isServiceOpen = computed(() => printStore.get_is_service_open);
 
 // 从默认地址获取手机号的计算属性
 const defaultPhoneNumber = computed(() => {
-	const defaultAddress = store.getters['address/get_default_address'];
+	const defaultAddress = addressStore.get_default_address;
 	return defaultAddress?.phone || '';
 });
 
@@ -77,13 +78,13 @@ const defaultPhoneNumber = computed(() => {
 onShow(async () => {
 	try {
 		// 检查打印服务是否开启
-		await store.dispatch('print/check_service_open');
+		await printStore.check_service_open();
 
 		// 加载地址列表
-		await store.dispatch('address/load_addresses');
+		await addressStore.load_addresses();
 
 		// 获取打印价格
-		await store.dispatch('print/fetch_print_price');
+		await printStore.fetch_print_price();
 
 		// 初始化打印表单的手机号
 		if (printFormRef.value && printFormRef.value.initializePhoneNumber) {
@@ -97,7 +98,7 @@ onShow(async () => {
 // 方法
 const goToHome = () => {
 	uni.switchTab({
-		url: '/pages/index/index'
+		url: '/pages/home/index'
 	});
 };
 

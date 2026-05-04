@@ -1,4 +1,5 @@
-// Mock 数据直接定义在模块中
+import { defineStore } from "pinia";
+
 const mockData = {
   errandTasks: [
     {
@@ -11,7 +12,7 @@ const mockData = {
       status: "pending",
       createTime: "2024-03-04 14:30:00",
       userName: "张三",
-      avatarId: "avatar1"
+      avatarId: "avatar1",
     },
     {
       id: 2,
@@ -23,7 +24,7 @@ const mockData = {
       status: "completed",
       createTime: "2024-03-04 13:20:00",
       userName: "李四",
-      avatarId: "avatar2"
+      avatarId: "avatar2",
     },
     {
       id: 3,
@@ -35,7 +36,7 @@ const mockData = {
       status: "cancelled",
       createTime: "2024-03-04 12:15:00",
       userName: "王五",
-      avatarId: "avatar3"
+      avatarId: "avatar3",
     },
     {
       id: 4,
@@ -47,7 +48,7 @@ const mockData = {
       status: "pending",
       createTime: "2024-03-04 11:00:00",
       userName: "赵六",
-      avatarId: "avatar4"
+      avatarId: "avatar4",
     },
     {
       id: 5,
@@ -59,7 +60,7 @@ const mockData = {
       status: "completed",
       createTime: "2024-03-04 10:30:00",
       userName: "孙七",
-      avatarId: "avatar5"
+      avatarId: "avatar5",
     },
     {
       id: 6,
@@ -71,7 +72,7 @@ const mockData = {
       status: "pending",
       createTime: "2024-03-04 09:45:00",
       userName: "周八",
-      avatarId: "avatar6"
+      avatarId: "avatar6",
     },
     {
       id: 7,
@@ -83,7 +84,7 @@ const mockData = {
       status: "pending",
       createTime: "2024-03-03 18:20:00",
       userName: "吴九",
-      avatarId: "avatar7"
+      avatarId: "avatar7",
     },
     {
       id: 8,
@@ -95,7 +96,7 @@ const mockData = {
       status: "completed",
       createTime: "2024-03-03 17:10:00",
       userName: "郑十",
-      avatarId: "avatar8"
+      avatarId: "avatar8",
     },
     {
       id: 9,
@@ -107,7 +108,7 @@ const mockData = {
       status: "cancelled",
       createTime: "2024-03-03 16:00:00",
       userName: "陈十一",
-      avatarId: "avatar9"
+      avatarId: "avatar9",
     },
     {
       id: 10,
@@ -119,7 +120,7 @@ const mockData = {
       status: "pending",
       createTime: "2024-03-03 14:30:00",
       userName: "刘十二",
-      avatarId: "avatar10"
+      avatarId: "avatar10",
     },
     {
       id: 11,
@@ -131,7 +132,7 @@ const mockData = {
       status: "completed",
       createTime: "2024-03-03 13:15:00",
       userName: "黄十三",
-      avatarId: "avatar11"
+      avatarId: "avatar11",
     },
     {
       id: 12,
@@ -143,7 +144,7 @@ const mockData = {
       status: "pending",
       createTime: "2024-03-03 11:40:00",
       userName: "林十四",
-      avatarId: "avatar12"
+      avatarId: "avatar12",
     },
     {
       id: 13,
@@ -155,7 +156,7 @@ const mockData = {
       status: "pending",
       createTime: "2024-03-02 19:20:00",
       userName: "何十五",
-      avatarId: "avatar13"
+      avatarId: "avatar13",
     },
     {
       id: 14,
@@ -167,7 +168,7 @@ const mockData = {
       status: "completed",
       createTime: "2024-03-02 18:00:00",
       userName: "罗十六",
-      avatarId: "avatar14"
+      avatarId: "avatar14",
     },
     {
       id: 15,
@@ -179,46 +180,36 @@ const mockData = {
       status: "pending",
       createTime: "2024-03-02 16:45:00",
       userName: "高十七",
-      avatarId: "avatar15"
-    }
-  ]
+      avatarId: "avatar15",
+    },
+  ],
 };
 
-const state = {
-  tasks: []
-};
+export const useErrandStore = defineStore("errand", {
+  state: () => ({
+    tasks: [],
+  }),
 
-const getters = {
-  get_tasks: (state) => state.tasks
-};
+  getters: {
+    get_tasks: (state) => state.tasks,
+  },
 
-const mutations = {
-  SET_TASKS(state, tasks) {
-    state.tasks = tasks;
-  }
-};
+  actions: {
+    SET_TASKS(tasks) {
+      this.tasks = tasks;
+    },
 
-const actions = {
-  async fetch_tasks({ commit }) {
-    try {
-      console.log("[跑腿模块] 开始加载跑腿任务");
+    async fetch_tasks() {
+      try {
+        console.log("[跑腿模块] 开始加载跑腿任务");
+        this.SET_TASKS(mockData.errandTasks || []);
+        console.log("[跑腿模块] 加载跑腿任务成功");
+      } catch (error) {
+        console.error("[跑腿模块] 加载跑腿任务失败", error);
+        this.SET_TASKS([]);
+      }
+    },
+  },
+});
 
-      // 从 mock 数据中获取任务
-      commit('SET_TASKS', mockData.errandTasks || []);
-
-      console.log("[跑腿模块] 加载跑腿任务成功");
-    } catch (error) {
-      console.error("[跑腿模块] 加载跑腿任务失败", error);
-      // 如果加载失败，设置为空数组
-      commit('SET_TASKS', []);
-    }
-  }
-};
-
-export default {
-  namespaced: true,
-  state,
-  getters,
-  mutations,
-  actions
-};
+export default useErrandStore;

@@ -59,7 +59,8 @@
 
 <script setup>
 import { ref, reactive, onMounted, watch, computed } from 'vue'
-import { useStore } from 'vuex'
+import { useCommunityStore } from "@/stores/community";
+import { useUserStore } from "@/stores/user";
 
 // 定义props
 const props = defineProps({
@@ -73,7 +74,6 @@ const props = defineProps({
 const emit = defineEmits(['reply', 'delete', 'load-replies', 'delete-reply', 'load-more-replies'])
 
 // 获取store实例
-const store = useStore()
 
 // 响应式数据
 const showReplies = ref(false)
@@ -106,7 +106,7 @@ const formatTime = (timeString) => {
 const fetchAvatar = async () => {
   if (props.comment && props.comment.avatarId && props.comment.username) {
     try {
-      const url = await store.dispatch('community/fetch_post_user_avatar', {
+      const url = await communityStore.fetch_post_user_avatar( {
         avatarId: props.comment.avatarId,
         name: props.comment.username
       })
@@ -122,7 +122,7 @@ const getUserAvatar = async (avatarId, username) => {
   if (!avatarId || !username) return ''
 
   try {
-    const avatarUrl = await store.dispatch('community/fetch_post_user_avatar', {
+    const avatarUrl = await communityStore.fetch_post_user_avatar( {
       avatarId: avatarId,
       name: username
     })
@@ -138,16 +138,18 @@ const handleReply = () => {
   emit('reply', props.comment)
 }
 
-const currentUser = store.getters['user/get_user_info'];
+const communityStore = useCommunityStore();
+const userStore = useUserStore();
+const currentUser = computed(() => userStore.get_user_info);
 
 // 计算属性，判断是否可以删除一级评论
 const canDeleteComment = computed(() => {
-  return currentUser && currentUser.id === props.comment.uid;
+  return currentUser.value && currentUser.value.id === props.comment.uid;
 });
 
 // 计算属性，判断是否可以删除二级评论
 const canDeleteReply = (reply) => {
-  return currentUser && currentUser.id === reply.uid;
+  return currentUser.value && currentUser.value.id === reply.uid;
 };
 
 // 处理删除

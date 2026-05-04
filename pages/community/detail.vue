@@ -25,16 +25,14 @@
 <script setup>
 import { ref } from "vue";
 import { onLoad, onShareAppMessage, onShareTimeline } from "@dcloudio/uni-app";
+import { useCommunityStore } from "@/stores/community";
 import PostAuthorInfo from "@/components/community/detail/PostAuthorInfo.vue";
 import PostContentDisplay from "@/components/community/detail/PostContentDisplay.vue";
 import PostImagesGrid from "@/components/community/detail/PostImagesGrid.vue";
 import PostStatsBar from "@/components/community/detail/PostStatsBar.vue";
 import CommentSection from "@/components/community/detail/CommentSection.vue";
 
-import { useStore } from "vuex";
-
-const store = useStore();
-
+const communityStore = useCommunityStore();
 const post = ref(null);
 const postId = ref(null);
 
@@ -42,11 +40,7 @@ onLoad(async (options) => {
   postId.value = options.id; // 从页面参数获取帖子ID
   if (postId.value) {
     // fetchPostDetail(postId.value);
-
-    post.value = await store.dispatch(
-      "community/fetch_post_by_id",
-      postId.value
-    );
+    post.value = await communityStore.fetch_post_by_id(postId.value);
   } else {
     uni.showToast({ title: "帖子ID无效", icon: "none" });
   }
@@ -54,7 +48,7 @@ onLoad(async (options) => {
 
 onShareAppMessage(() => {
   return {
-    title: `互成一家 | ${post.value?.title}` || '互成一家 | 社区',
+    title: post.value?.title ? `互成一家 | ${post.value.title}` : '互成一家 | 社区',
     path: `/pages/community/detail?id=${postId.value}`,
     imageUrl: (post.value?.imgList && post.value.imgList.length > 0)
       ? post.value.imgList[0]
@@ -63,7 +57,7 @@ onShareAppMessage(() => {
 })
 
 onShareTimeline(() => ({
-  title: `互成一家 | post.value?.title` || '互成一家小程序',
+  title: post.value?.title ? `互成一家 | ${post.value.title}` : '互成一家小程序',
   imageUrl: (post.value?.imgList && post.value.imgList.length > 0)
     ? post.value.imgList[0]
     : '/static/images/logo.png'

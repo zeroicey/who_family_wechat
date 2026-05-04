@@ -33,10 +33,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
 import { onLoad } from '@dcloudio/uni-app';
+import { useAddressStore } from "@/stores/address";
+const addressStore = useAddressStore();
 
-const store = useStore();
 const form = ref({
   id: null,
   alias: '',
@@ -48,7 +48,7 @@ const form = ref({
 
 onLoad((options) => {
   if (options.id) {
-    const addresses = store.getters['address/get_addresses'];
+    const addresses = addressStore.get_addresses;
     const address = addresses.find(a => a.id == options.id);
     if (address) {
       form.value = { ...address };
@@ -68,7 +68,7 @@ const saveAddress = () => {
     });
     return;
   }
-  store.dispatch('address/update_address', form.value).then(() => {
+  addressStore.update_address( form.value).then(() => {
     uni.navigateBack();
   });
 };

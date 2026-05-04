@@ -40,19 +40,21 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useStore } from 'vuex';
+import { useFocusStore } from "@/stores/focus";
+import { useTaskStore } from "@/stores/task";
+const focusStore = useFocusStore();
+const taskStore = useTaskStore();
 
 // 初始化 store
-const store = useStore();
 
-const todayFocusTime = computed(() => store.getters['focus/get_today_focus_time']); // 修正getter名称
-const todoTaskNum = computed(() => store.getters['task/get_todo_task_num']);
-const doneTaskNum = computed(() => store.getters['task/get_done_task_num']);
+const todayFocusTime = computed(() => focusStore.get_today_focus_time); // 修正getter名称
+const todoTaskNum = computed(() => taskStore.get_todo_task_num);
+const doneTaskNum = computed(() => taskStore.get_done_task_num);
 
 onMounted(async () => {
   try {
-    await store.dispatch('task/fetch_all_tasks');
-    await store.dispatch('focus/fetch_today_focus_time');
+    await taskStore.fetch_all_tasks();
+    await focusStore.fetch_today_focus_time();
   } catch (error) {
     uni.showToast({
       title: '数据获取失败',
@@ -138,8 +140,6 @@ const navigateTo = (url) => {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       }
 
-
-
       .card-header {
         margin-bottom: 3vw;
       }
@@ -187,8 +187,6 @@ const navigateTo = (url) => {
           }
         }
       }
-
-
 
       .card-progress {
         display: flex;

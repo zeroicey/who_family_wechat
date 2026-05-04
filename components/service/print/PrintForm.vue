@@ -79,9 +79,12 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
+import { useAddressStore } from "@/stores/address";
+import { usePrintStore } from "@/stores/print";
+import { useUserStore } from "@/stores/user";
+const addressStore = useAddressStore();
+const printStore = usePrintStore();
+const userStore = useUserStore();
 
 // Props 和 Emits
 const emit = defineEmits(['order-placed', 'service-type-change']);
@@ -93,11 +96,11 @@ const serviceType = ref('delivery'); // 默认选择派送服务
 const printCount = ref(1); // 默认打印份数为1
 
 // 计算属性
-const selectedAddress = computed(() => store.getters['address/get_default_address']);
+const selectedAddress = computed(() => addressStore.get_default_address);
 
 // 从默认地址获取手机号的计算属性
 const defaultPhoneNumber = computed(() => {
-	const defaultAddress = store.getters['address/get_default_address'];
+	const defaultAddress = addressStore.get_default_address;
 	return defaultAddress?.phone || '';
 });
 
@@ -207,7 +210,7 @@ const placeOrder = async () => {
 
 	// 如果选择派送服务，需要验证手机号（从地址或用户信息获取）
 	if (serviceType.value === 'delivery') {
-		const deliveryPhone = selectedAddress.value?.phone || store.getters['user/get_user_info']?.phone;
+		const deliveryPhone = selectedAddress.value?.phone || userStore.get_user_info?.phone;
 		if (!deliveryPhone || deliveryPhone.trim() === '') {
 			uni.showToast({
 				title: '收货地址缺少联系电话，请完善地址信息',
@@ -224,7 +227,7 @@ const placeOrder = async () => {
 		});
 
 		// 获取用户信息
-		const userInfo = store.getters['user/get_user_info'];
+		const userInfo = userStore.get_user_info;
 
 		// 将文件转换为base64
 		const fileBase64 = await convertFileToBase64(selectedFile.value);
@@ -242,7 +245,7 @@ const placeOrder = async () => {
 		};
 
 		// 调用store action上传订单
-		const result = await store.dispatch('print/upload_print_order', orderData);
+		const result = await printStore.upload_print_order( orderData);
 
 		uni.hideLoading();
 

@@ -34,15 +34,14 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 import { onShow } from '@dcloudio/uni-app';
+import { useAddressStore } from "@/stores/address";
+const addressStore = useAddressStore();
 
-const store = useStore();
-
-const addresses = computed(() => store.getters['address/get_addresses']);
+const addresses = computed(() => addressStore.get_addresses);
 
 onShow(() => {
-  store.dispatch('address/load_addresses');
+  addressStore.load_addresses();
 });
 
 const addAddress = () => {
@@ -59,14 +58,14 @@ const deleteAddress = (id) => {
     content: '确定要删除这个地址吗？',
     success: (res) => {
       if (res.confirm) {
-        store.dispatch('address/delete_address', id);
+        addressStore.delete_address( id);
       }
     },
   });
 };
 
 const setDefault = (id) => {
-  store.dispatch('address/set_default_address', id);
+  addressStore.set_default_address( id);
 };
 </script>
 

@@ -26,11 +26,12 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue';
+import { useRecruitStore } from "@/stores/recruit";
 
-import { useStore } from 'vuex';
 import CategoryTabs from '@/components/recruit/CategoryTabs.vue';
 import RecruitCard from '@/components/recruit/RecruitCard.vue';
 import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+const recruitStore = useRecruitStore();
 
 onShareAppMessage(() => {
   return {
@@ -44,7 +45,6 @@ onShareTimeline(() => ({
   title: '互成一家小程序',
   imageUrl: '/static/images/logo.png'
 }))
-const store = useStore();
 
 // 响应式数据
 const selectedTypeIndex = ref(0);
@@ -53,9 +53,9 @@ const noMoreData = ref(false);
 const isRefreshing = ref(false);
 
 // 计算属性
-const recruits = computed(() => store.getters['recruit/get_recruits']);
-const recruitTypes = computed(() => store.getters['recruit/get_recruit_types']);
-const recruitClasses = computed(() => store.getters['recruit/get_recruit_classes']);
+const recruits = computed(() => recruitStore.get_recruits);
+const recruitTypes = computed(() => recruitStore.get_recruit_types);
+const recruitClasses = computed(() => recruitStore.get_recruit_classes);
 
 // 过滤后的招聘列表
 const filteredRecruits = computed(() => {
@@ -87,7 +87,7 @@ const onRefresh = async () => {
     isRefreshing.value = true;
 
     // 重新获取第一页数据
-    await store.dispatch('recruit/fetch_first_recruits');
+    await recruitStore.fetch_first_recruits();
 
     // 重置加载状态
     noMoreData.value = false;
@@ -134,7 +134,7 @@ const loadMore = async () => {
     const currentLength = recruits.value.length;
     console.log('当前数据长度:', currentLength);
 
-    await store.dispatch('recruit/fetch_more_recruits');
+    await recruitStore.fetch_more_recruits();
 
     console.log('加载后数据长度:', recruits.value.length);
 
@@ -166,8 +166,8 @@ const goToDetail = (recruitId) => {
 onMounted(async () => {
   try {
     await Promise.all([
-      store.dispatch('recruit/fetch_first_recruits'),
-      store.dispatch('recruit/fetch_recruit_types')
+      recruitStore.fetch_first_recruits(),
+      recruitStore.fetch_recruit_types()
     ]);
   } catch (error) {
     console.error('初始化数据失败:', error);

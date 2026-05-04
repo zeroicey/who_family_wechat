@@ -22,7 +22,8 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useAddressStore } from "@/stores/address";
+const addressStore = useAddressStore();
 
 // Props
 const props = defineProps({
@@ -32,10 +33,8 @@ const props = defineProps({
 	}
 });
 
-const store = useStore();
-
 // 计算属性
-const selectedAddress = computed(() => store.getters['address/get_default_address']);
+const selectedAddress = computed(() => addressStore.get_default_address);
 </script>
 
 <style lang="scss" scoped>

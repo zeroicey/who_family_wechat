@@ -11,18 +11,17 @@
 
 <script setup>
 import { computed, onMounted } from "vue";
-import { useStore } from "vuex";
 import PostCard from "@/components/community/PostCard.vue";
-
-const store = useStore();
+import { useCommunityStore } from "@/stores/community";
+const communityStore = useCommunityStore();
 
 // 获取帖子数据
-const posts = computed(() => store.getters["community/get_posts"]);
+const posts = computed(() => communityStore.get_posts);
 
 // 组件挂载后检查帖子是否为空
 onMounted(async () => {
   if (!posts.value || posts.value.length === 0) {
-    await store.dispatch("community/fetch_first_posts");
+    await communityStore.fetch_first_posts();
   }
 });
 

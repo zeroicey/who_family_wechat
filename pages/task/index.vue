@@ -77,10 +77,10 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { useTaskStore } from "@/stores/task";
+const taskStore = useTaskStore();
 
-const store = useStore();
-const tasks = computed(() => store.getters['task/get_tasks']);
+const tasks = computed(() => taskStore.get_tasks);
 const newTaskTitle = ref('');
 const scrollHeight = ref('calc(100vh - 280rpx)'); // 重新调整高度，考虑激励语区域
 const isModalVisible = ref(false);
@@ -123,18 +123,17 @@ const randomMotivation = computed(() => {
     return motivationalQuotes[randomIndex];
 });
 
-
 // 切换任务状态
 const toggleTaskStatus = async (task) => {
     try {
         if (task.status === '已完成') {
-            await store.dispatch('task/mark_task_todo', task.id);
+            await taskStore.mark_task_todo( task.id);
             uni.showToast({
                 title: '已标记为待完成',
                 icon: 'none'
             });
         } else {
-            await store.dispatch('task/mark_task_done', task.id);
+            await taskStore.mark_task_done( task.id);
             uni.showToast({
                 title: '任务已完成！',
                 icon: 'success'
@@ -156,7 +155,7 @@ const deleteTask = async (taskId) => {
         success: async (res) => {
             if (res.confirm) {
                 try {
-                    await store.dispatch('task/delete_task', taskId);
+                    await taskStore.delete_task( taskId);
                     uni.showToast({
                         title: '删除成功',
                         icon: 'success'
@@ -198,7 +197,7 @@ const addNewTask = async () => {
             status: '待完成'
         };
 
-        await store.dispatch('task/add_task', newTask);
+        await taskStore.add_task( newTask);
         newTaskTitle.value = '';
 
         uni.showToast({

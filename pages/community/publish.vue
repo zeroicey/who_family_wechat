@@ -43,12 +43,13 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex";
 import { ref, computed } from "vue";
 import { onLoad } from "@dcloudio/uni-app"; // 引入 onLoad
 import { optimizePost } from "@/api/helper.js";
-
-const store = useStore();
+import { useCommunityStore } from "@/stores/community";
+import { useUserStore } from "@/stores/user";
+const communityStore = useCommunityStore();
+const userStore = useUserStore();
 
 const title = ref("");
 const content = ref("");
@@ -72,9 +73,6 @@ onLoad((options) => {
     }
   }
 });
-
-
-
 
 const chooseImage = () => { // 此函数现在用于在发布页面补充图片
   if (imageList.value.length >= 4) {
@@ -209,9 +207,9 @@ const submitPost = async () => {
 
   try {
     if (imagePaths.length === 0) {
-      await store.dispatch("community/publish_post_only_text", postData);
+      await communityStore.publish_post_only_text( postData);
     } else {
-      await store.dispatch("community/publish_post_with_image", {
+      await communityStore.publish_post_with_image( {
         postData,
         imagePaths,
       });
@@ -229,8 +227,8 @@ const submitPost = async () => {
     content.value = "";
     imageList.value = [];
 
-    await store.dispatch("community/fetch_first_posts");
-    await store.dispatch("user/fetch_first_posts");
+    await communityStore.fetch_first_posts();
+    await userStore.fetch_first_posts();
     // 延时一小段时间再跳转，让用户能看到提示
     setTimeout(() => {
       uni.switchTab({
@@ -280,8 +278,6 @@ const submitPost = async () => {
   height: 200rpx;
   flex-shrink: 0;
 }
-
-
 
 .form-input,
 .form-textarea {
@@ -376,8 +372,6 @@ const submitPost = async () => {
     color: #666;
   }
 }
-
-
 
 .image-uploader {
   .image-preview-list {

@@ -106,9 +106,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
+import { useRecruitStore } from "@/stores/recruit";
+const recruitStore = useRecruitStore();
 
 // 响应式数据
 const loading = ref(true);
@@ -135,7 +134,7 @@ onMounted(() => {
 const loadRecruitDetail = async () => {
   try {
     loading.value = true;
-    const data = await store.dispatch('recruit/fetch_recruit_by_id', recruitId.value);
+    const data = await recruitStore.fetch_recruit_by_id( recruitId.value);
     recruitDetail.value = data;
     
     // 设置收藏和投递状态
@@ -157,14 +156,14 @@ const loadRecruitDetail = async () => {
 const toggleCollect = async () => {
   try {
     if (isCollected.value) {
-      await store.dispatch('recruit/uncollect_recruit', recruitId.value);
+      await recruitStore.uncollect_recruit( recruitId.value);
       isCollected.value = false;
       uni.showToast({
         title: '取消收藏成功',
         icon: 'success'
       });
     } else {
-      await store.dispatch('recruit/collect_recruit', recruitId.value);
+      await recruitStore.collect_recruit( recruitId.value);
       isCollected.value = true;
       uni.showToast({
         title: '收藏成功',
@@ -196,7 +195,7 @@ const handleApply = () => {
     success: async (res) => {
       if (res.confirm) {
         try {
-          await store.dispatch('recruit/delivery_job', recruitId.value);
+          await recruitStore.delivery_job( recruitId.value);
           isDelivered.value = true;
           
           // 更新投递人数

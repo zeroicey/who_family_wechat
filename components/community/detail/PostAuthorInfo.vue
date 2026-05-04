@@ -14,12 +14,11 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watch } from "vue"; // 引入 ref, onMounted, watch
+import { computed, ref, onMounted, watch } from "vue";
 import { formatRelativeTime } from "@/utils/timeFormat.js";
+import { useCommunityStore } from "@/stores/community";
+const communityStore = useCommunityStore();
 // import { getRandomAvatarUrl } from "@/utils/randomData.js"; // 如果不再使用随机头像，可以移除
-import { useStore } from "vuex"; // 引入 useStore
-
-const store = useStore(); // 初始化 store
 
 const props = defineProps({
   post: {
@@ -40,7 +39,7 @@ const fetchAvatar = async () => {
   // 确保 post 对象和必要的属性存在
   if (props.post && props.post.avaterId && props.post.username) { 
     try {
-      const url = await store.dispatch("community/fetch_post_user_avatar", {
+      const url = await communityStore.fetch_post_user_avatar( {
         avatarId: props.post.avaterId,
         name: props.post.username,
       });

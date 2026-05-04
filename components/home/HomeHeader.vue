@@ -31,14 +31,14 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore();
 
 // 初始化 store
-const store = useStore();
 
 // 用户名
 const username = computed(() => {
-  const userInfo = store.getters['user/get_user_info'];
+  const userInfo = userStore.get_user_info;
   return userInfo?.name || '同学';
 });
 

@@ -67,7 +67,8 @@
 </template>
 
 <script setup>
-import { useStore } from "vuex"
+import { useRecruitStore } from "@/stores/recruit";
+const recruitStore = useRecruitStore();
 // Props
 const props = defineProps({
   recruit: {
@@ -75,8 +76,6 @@ const props = defineProps({
     required: true
   }
 });
-
-const store = useStore();
 
 // Emits
 const emit = defineEmits(['click']);
@@ -104,7 +103,7 @@ const handleSubmitClick = async () => {
     success: async (res) => {
       if (res.confirm) {
         try {
-          await store.dispatch("recruit/delivery_job", props.recruit.id)
+          await recruitStore.delivery_job( props.recruit.id)
 
           uni.showToast({
             title: '投递成功',

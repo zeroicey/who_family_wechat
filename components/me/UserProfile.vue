@@ -46,11 +46,11 @@
 
 <script setup>
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore();
 
-const store = useStore();
-const userInfo = computed(() => store.getters["user/get_user_info"]);
-const avatarUrl = computed(() => store.getters["user/get_user_avatar_url"]);
+const userInfo = computed(() => userStore.get_user_info);
+const avatarUrl = computed(() => userStore.get_user_avatar_url);
 
 // 用户标签数组
 const brandTitles = [

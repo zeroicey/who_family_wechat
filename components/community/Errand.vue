@@ -19,14 +19,13 @@
 
 <script setup>
 import { computed, onMounted } from 'vue';
-import { useStore } from 'vuex';
 import ErrandCard from './ErrandCard.vue';
-
-const store = useStore();
+import { useErrandStore } from "@/stores/errand";
+const errandStore = useErrandStore();
 
 // 获取跑腿任务列表，添加防御性代码
 const errandTasks = computed(() => {
-  const tasks = store.getters['errand/get_tasks'];
+  const tasks = errandStore.get_tasks;
   console.log('[Errand.vue] getter返回值:', tasks);
   return tasks || [];
 });
@@ -34,17 +33,13 @@ const errandTasks = computed(() => {
 // 处理任务卡片点击
 const handleTaskClick = (task) => {
   console.log('点击跑腿任务:', task);
-  // TODO: 跳转到任务详情页
-  // uni.navigateTo({
-  //   url: `/pages/community/errand-detail?id=${task.id}`
-  // });
 };
 
 // 组件挂载时加载任务数据
 onMounted(async () => {
   console.log('[Errand.vue] 组件挂载，开始加载任务');
   try {
-    await store.dispatch('errand/fetch_tasks');
+    await errandStore.fetch_tasks();
     console.log('[Errand.vue] 任务加载完成');
   } catch (error) {
     console.error('[Errand.vue] 任务加载失败:', error);

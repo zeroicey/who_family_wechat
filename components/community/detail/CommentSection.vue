@@ -37,7 +37,10 @@
 <script setup>
 import CommentItem from './CommentItem.vue';
 import { ref, onMounted, computed } from 'vue';
-import { useStore } from 'vuex';
+import { useCommunityStore } from "@/stores/community";
+import { useUserStore } from "@/stores/user";
+const communityStore = useCommunityStore();
+const userStore = useUserStore();
 
 const props = defineProps({
   postId: {
@@ -53,7 +56,6 @@ const props = defineProps({
 const comments = ref([]);
 const commentText = ref('');
 const replyTarget = ref(null); // 当前回复的目标评论
-const store = useStore();
 
 // 是否显示加载更多评论按钮
 const showLoadMoreComments = computed(() => {
@@ -69,7 +71,7 @@ const truncateText = (text, maxLength) => {
 // 加载初始评论
 const loadInitialComments = async () => {
   try {
-    const commentsData = await store.dispatch('community/fetch_first_comments', {
+    const commentsData = await communityStore.fetch_first_comments( {
       postId: props.postId,
       comments: []
     });
@@ -86,7 +88,7 @@ const loadMoreComments = async () => {
     const lastCommentId = comments.value[comments.value.length - 1]?.id;
     if (!lastCommentId) return;
 
-    const moreComments = await store.dispatch('community/fetch_first_more_comments', {
+    const moreComments = await communityStore.fetch_first_more_comments( {
       postId: props.postId,
       lastCommentId
     });
@@ -113,7 +115,7 @@ const submitComment = async () => {
 
   try {
     // 获取当前用户信息
-    const userInfo = await store.getters['user/get_user_info'];
+    const userInfo = userStore.get_user_info;
     const currentTime = new Date().toLocaleString('zh-CN', {
       year: 'numeric',
       month: '2-digit',
@@ -134,7 +136,7 @@ const submitComment = async () => {
 
     if (replyTarget.value) {
       // 添加二级评论
-      const updatedComments = await store.dispatch('community/add_second_comment', {
+      const updatedComments = await communityStore.add_second_comment( {
         commentId: replyTarget.value.id,
         content: commentText.value.trim(),
         comments: comments.value,
@@ -143,7 +145,7 @@ const submitComment = async () => {
       comments.value = updatedComments;
     } else {
       // 添加一级评论
-      const updatedComments = await store.dispatch('community/add_first_comment', {
+      const updatedComments = await communityStore.add_first_comment( {
         postId: props.postId,
         content: commentText.value.trim(),
         comments: comments.value,
@@ -170,7 +172,7 @@ const handleDeleteComment = async (delete_comment) => {
       if (res.confirm) {
         try {
           // 删除一级评论
-          const updatedComments = await store.dispatch('community/delete_first_comment', {
+          const updatedComments = await communityStore.delete_first_comment( {
             comments: comments.value,
             commentId: delete_comment.id
           });
@@ -194,7 +196,7 @@ const handleDeleteReplyComment = async ({ parentComment, reply }) => {
       if (res.confirm) {
         try {
           // 删除二级评论
-          const updatedComments = await store.dispatch('community/delete_second_comment', {
+          const updatedComments = await communityStore.delete_second_comment( {
             comments: comments.value,
             commentId: parentComment.id,
             replyId: reply.id
@@ -213,7 +215,7 @@ const handleDeleteReplyComment = async ({ parentComment, reply }) => {
 // 处理加载回复
 const handleLoadReplies = async (comment) => {
   try {
-    const updatedComments = await store.dispatch('community/fetch_second_comments', {
+    const updatedComments = await communityStore.fetch_second_comments( {
       commentId: comment.id,
       comments: comments.value
     });
@@ -232,7 +234,7 @@ const handleLoadMoreReplies = async (comment) => {
       : null;
     console.log(comment.id)
 
-    const updatedComments = await store.dispatch('community/fetch_second_more_comments', {
+    const updatedComments = await communityStore.fetch_second_more_comments( {
       commentId: comment.id,
       lastCommentId: lastReplyId,
       comments: comments.value

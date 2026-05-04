@@ -14,12 +14,11 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { usePrintStore } from "@/stores/print";
+const printStore = usePrintStore();
 
-const store = useStore();
-
-const priceText = computed(() => store.getters['print/get_price_text']);
-const priceLoading = computed(() => store.getters['print/get_price_loading']);
+const priceText = computed(() => printStore.get_price_text);
+const priceLoading = computed(() => printStore.get_price_loading);
 </script>
 
 <style lang="scss" scoped>

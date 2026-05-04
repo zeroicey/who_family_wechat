@@ -37,9 +37,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
-
-const store = useStore();
 
 // 加载状态
 const loading = ref(false);
@@ -57,16 +54,6 @@ const fetchRecommendServices = async () => {
 
     const serviceData =
       [
-        // {
-        //   id: 1,
-        //   title: '代拿快递服务',
-        //   description: '校内快递专人代取，省时省力，专注于更重要的事。',
-        //   imageUrl: 'https://api.hcyj.xyz/images/dngg.jpg',
-        //   price: '¥3起',
-        //   rating: 4.8,
-        //   orders: 1580,
-        //   url: '/pages/service/details/express'
-        // },
         {
           id: 1,
           title: '校园人流天气',

@@ -58,9 +58,8 @@
 <script setup>
 import { computed, ref, onMounted, watch } from "vue";
 import { formatRelativeTime } from "@/utils/timeFormat.js";
-import { useStore } from "vuex";
-
-const store = useStore();
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore();
 
 // 定义props
 const props = defineProps({
@@ -92,7 +91,7 @@ const handleDeleteClick = async () => {
     success: async (res) => {
       if (res.confirm) {
         try {
-          await store.dispatch("user/delete_post", props.post.id);
+          await userStore.delete_post( props.post.id);
           uni.showToast({
             title: '删除成功',
             icon: 'success',
@@ -114,7 +113,7 @@ const handleDeleteClick = async () => {
 const handleLikeClick = () => {
   // 处理点赞逻辑
   const actionPrefix = props.post.isLike === 1 ? 'unlike' : 'like';
-  store.dispatch(`user/${actionPrefix}_post`, props.post.id);
+  userStore[`${actionPrefix}_post`](props.post.id);
 };
 
 // 处理图片列表

@@ -36,8 +36,6 @@
             </view>
         </view>
 
-
-
         <view class="footer-actions">
             <button class="btn back-home-btn" @click="backHome">返回首页</button>
         </view>
@@ -46,10 +44,10 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
 import { onLoad } from '@dcloudio/uni-app';
+import { usePrintStore } from "@/stores/print";
+const printStore = usePrintStore();
 
-const store = useStore();
 const order = ref(null);
 
 // 从 PrintCard 组件迁移的计算属性
@@ -58,6 +56,7 @@ const statusClass = computed(() => {
     switch (order.value.status) {
         case '待支付':
             return 'status-pending';
+        case '待处理':
         case '待完成':
             return 'status-processing';
         case '已完成':
@@ -74,21 +73,37 @@ const formattedCreatedAt = computed(() => {
     return new Date(order.value.createdAt).toLocaleString();
 });
 
-onLoad((options) => {
+onLoad(async (options) => {
     const orderId = options.orderId;
-    if (orderId) {
-        const foundOrder = store.getters['print/get_order_by_id'](orderId);
-        if (foundOrder) {
-            order.value = foundOrder;
-            console.log(order.value)
-        } else {
-            console.error(`[打印订单成功页] 未找到ID为 ${orderId} 的订单`);
-            uni.showToast({
-                title: '订单信息加载失败',
-                icon: 'none'
-            });
+    if (!orderId) {
+        uni.showToast({
+            title: '订单号缺失',
+            icon: 'none'
+        });
+        return;
+    }
+
+    let foundOrder = printStore.get_order_by_id(orderId);
+    if (!foundOrder) {
+        try {
+            await printStore.fetch_print_orders();
+            foundOrder = printStore.get_order_by_id(orderId);
+        } catch (error) {
+            console.error('[打印订单成功页] 拉取订单列表失败', error);
         }
     }
+
+    if (foundOrder) {
+        order.value = foundOrder;
+        console.log(order.value)
+        return;
+    }
+
+    console.error(`[打印订单成功页] 未找到ID为 ${orderId} 的订单`);
+    uni.showToast({
+        title: '订单信息加载失败',
+        icon: 'none'
+    });
 });
 
 const backHome = () => {
@@ -96,7 +111,6 @@ const backHome = () => {
         url: '/pages/home/index'
     });
 };
-
 
 </script>
 
@@ -216,8 +230,6 @@ const backHome = () => {
         margin-bottom: 0;
     }
 }
-
-
 
 .footer-actions {
     position: fixed;

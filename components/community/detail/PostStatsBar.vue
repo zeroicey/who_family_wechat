@@ -22,9 +22,8 @@
 </template>
 
 <script setup>
-
-import { useStore } from "vuex";
-const store = useStore();
+import { useCommunityStore } from "@/stores/community";
+const communityStore = useCommunityStore();
 
 const props = defineProps({
   post: {
@@ -37,13 +36,13 @@ const handleLikeClick = () => {
   // 处理点赞逻辑
   if (props.post.isLike === 1) {
     // 已经点赞，取消点赞
-    store.dispatch("community/unlike_post", props.post.id);
+    communityStore.unlike_post( props.post.id);
     props.post.isLike = 0; // 更新本地状态
     props.post.likeCount--; // 更新本地状态
     return;
   }
   // 未点赞，执行点赞操作
-  store.dispatch("community/like_post", props.post.id);
+  communityStore.like_post( props.post.id);
   props.post.isLike = 1; // 更新本地状态
   props.post.likeCount++; // 更新本地状态
 }

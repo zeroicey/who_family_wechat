@@ -29,7 +29,6 @@
 import UserProfile from '@/components/me/UserProfile.vue';
 import QuickNav from '@/components/me/QuickNav.vue';
 import CoreFunctions from '@/components/me/CoreFunctions.vue';
-import { useStore } from "vuex";
 import { computed, onMounted, ref } from "vue"; // 引入 onMounted 和 onUnmounted
 import MyPostCard from "@/components/me/MyPostCard.vue";
 import { onReachBottom, onPullDownRefresh, onPageScroll } from '@dcloudio/uni-app';
@@ -48,17 +47,17 @@ onShareTimeline(() => ({
   imageUrl: '/static/images/logo.png'
 }))
 
-const store = useStore();
-
 // 回到顶部按钮
 const showBackToTop = ref(false);
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore();
 
 // 获取帖子数据
-const posts = computed(() => store.getters["user/get_posts"]);
+const posts = computed(() => userStore.get_posts);
 
 onMounted(async () => {
   if (!posts.value || posts.value.length === 0) {
-    await store.dispatch("user/fetch_first_posts");
+    await userStore.fetch_first_posts();
   }
   console.log("posts", posts.value);
 });
@@ -83,14 +82,14 @@ const backToTop = () => {
 };
 
 onPullDownRefresh(async () => {
-  await store.dispatch("user/fetch_first_posts");
-  await store.dispatch("user/wechat_login");
+  await userStore.fetch_first_posts();
+  await userStore.wechat_login();
   setTimeout(() => {
     uni.stopPullDownRefresh();
   }, 1000);
 });
 onReachBottom(async () => {
-  await store.dispatch("user/fetch_more_posts");
+  await userStore.fetch_more_posts();
 });
 </script>
 

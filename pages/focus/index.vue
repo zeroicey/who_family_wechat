@@ -36,13 +36,12 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
-import { useStore } from 'vuex';
+import { useFocusStore } from "@/stores/focus";
+const focusStore = useFocusStore();
 
-const store = useStore();
-
-const todayFocusTime = computed(() => store.getters['focus/get_today_focus_time']);
-const isFocusing = computed(() => store.getters['focus/get_is_focusing']);
-const focusStartTime = computed(() => store.getters['focus/get_focus_start_time']);
+const todayFocusTime = computed(() => focusStore.get_today_focus_time);
+const isFocusing = computed(() => focusStore.get_is_focusing);
+const focusStartTime = computed(() => focusStore.get_focus_start_time);
 
 const currentTime = ref(0);
 let timerInterval = null;
@@ -90,7 +89,7 @@ const formatTimer = (seconds) => {
 
 const startFocus = async () => {
   try {
-    await store.dispatch('focus/begin_focus');
+    await focusStore.begin_focus();
     currentTime.value = 0; // 重置计时器
     startTimer();
   } catch (error) {
@@ -103,14 +102,14 @@ const startFocus = async () => {
 
 const endFocus = async () => {
   try {
-    await store.dispatch('focus/end_focus');
+    await focusStore.end_focus();
     stopTimer();
     uni.showToast({
       title: '专注完成！',
       icon: 'success'
     });
     // 结束后可以考虑刷新今日专注总时长，如果store没有自动更新的话
-    await store.dispatch('focus/fetch_today_focus_time');
+    await focusStore.fetch_today_focus_time();
     showCompletionAnimation.value = true;
     setTimeout(() => {
       showCompletionAnimation.value = false;
@@ -131,7 +130,7 @@ const cancelFocus = async () => {
     success: async (res) => {
       if (res.confirm) {
         try {
-          await store.dispatch('focus/cancel_focus');
+          await focusStore.cancel_focus();
           stopTimer();
           currentTime.value = 0;
           uni.showToast({
@@ -189,7 +188,7 @@ watch(isFocusing, (newVal, oldVal) => {
 });
 
 onMounted(async () => {
-  await store.dispatch('focus/fetch_today_focus_time');
+  await focusStore.fetch_today_focus_time();
   // 页面加载时，检查是否已处于专注状态 (例如，用户中途退出App再回来)
   if (isFocusing.value && focusStartTime.value > 0) {
     currentTime.value = Math.floor((Date.now() - focusStartTime.value) / 1000);

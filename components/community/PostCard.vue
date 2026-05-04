@@ -77,9 +77,8 @@
 <script setup>
 import { computed, ref, onMounted, watch } from "vue"; // 引入 ref, onMounted, watch
 import { formatRelativeTime } from "@/utils/timeFormat.js";
-import { useStore } from "vuex";
-
-const store = useStore();
+import { useCommunityStore } from "@/stores/community";
+const communityStore = useCommunityStore();
 
 // 定义props
 const props = defineProps({
@@ -102,7 +101,7 @@ const imageLoadedStates = ref({});
 const fetchAvatar = async () => {
   if (props.post && props.post.avaterId && props.post.username) {
     try {
-      const url = await store.dispatch("community/fetch_post_user_avatar", {
+      const url = await communityStore.fetch_post_user_avatar( {
         avatarId: props.post.avaterId,
         name: props.post.username,
       });
@@ -117,7 +116,7 @@ const fetchAvatar = async () => {
 const handleLikeClick = () => {
   // 处理点赞逻辑
   const actionPrefix = props.post.isLike === 1 ? 'unlike' : 'like';
-  store.dispatch(`community/${actionPrefix}_post`, props.post.id);
+  communityStore[`${actionPrefix}_post`](props.post.id);
 };
 
 // 处理关注按钮点击

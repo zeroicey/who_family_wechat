@@ -63,14 +63,14 @@
 
 <script setup>
 import { ref, nextTick, onMounted, computed } from 'vue'
-import { useStore } from 'vuex'
+import { useHelperStore } from "@/stores/helper";
 import ChatInput from '@/components/helper/ChatInput.vue'
 import UserMessage from '@/components/helper/UserMessage.vue'
-import AiMessage from '@/components/helper/AiMessage.vue'
+import AiMessage from '@/components/helper/AIMessage.vue'
 import PresetQuestions from '@/components/helper/PresetQuestions.vue'
+const helperStore = useHelperStore();
 
 // 使用Vuex store
-const store = useStore()
 
 // 响应式数据
 const scrollTop = ref(0)
@@ -78,10 +78,10 @@ const scrollIntoView = ref('')
 const statusBarHeight = ref(0)
 
 // 从store获取数据
-const messageList = computed(() => store.getters['helper/get_message_list'])
-const inputValue = computed(() => store.getters['helper/get_input_value'])
-const isAIReplying = computed(() => store.getters['helper/is_ai_replying'])
-const presetQuestions = computed(() => store.getters['helper/get_preset_questions'])
+const messageList = computed(() => helperStore.get_message_list)
+const inputValue = computed(() => helperStore.get_input_value)
+const isAIReplying = computed(() => helperStore.is_ai_replying)
+const presetQuestions = computed(() => helperStore.get_preset_questions)
 
 // 页面加载
 onMounted(() => {
@@ -98,12 +98,12 @@ onMounted(() => {
   })
   
   // 检查AI服务状态
-  store.dispatch('helper/check_ai_status')
+  helperStore.check_ai_status()
 })
 
 // 方法
 const onInputChange = (value) => {
-  store.dispatch('helper/update_input_value', value)
+  helperStore.update_input_value( value)
 }
 
 const onSendMessage = async (content) => {
@@ -111,10 +111,10 @@ const onSendMessage = async (content) => {
   
   try {
     // 立即清空输入框
-    store.dispatch('helper/update_input_value', '')
+    helperStore.update_input_value( '')
     
     // 通过store发送消息
-    await store.dispatch('helper/send_message', content.trim())
+    await helperStore.send_message( content.trim())
     
     // 滚动到底部
     nextTick(() => {
@@ -155,7 +155,7 @@ const onMenuClick = () => {
           content: '确定要清空所有聊天记录吗？',
           success: (modalRes) => {
             if (modalRes.confirm) {
-              store.dispatch('helper/clear_chat_history')
+              helperStore.clear_chat_history()
               nextTick(() => {
                 scrollToBottom()
               })
@@ -164,7 +164,7 @@ const onMenuClick = () => {
         })
       } else if (res.tapIndex === 1) {
         // 检查AI状态
-        store.dispatch('helper/check_ai_status').then((status) => {
+        helperStore.check_ai_status().then((status) => {
           uni.showToast({
             title: status.message,
             icon: status.online ? 'success' : 'none'
