@@ -1,0 +1,1272 @@
+{
+  "生成时间": "2026-03-26 14:49:46",
+  "数据来源": "schedules.db",
+  "统计": {
+    "总课程记录数": 4115,
+    "总统计条目数": 230,
+    "总课室人次": 2361,
+    "总学生人次": 179093
+  },
+  "详细数据": [
+    {
+      "day": "周一",
+      "building": "A 栋",
+      "period": "第5-6节",
+      "rooms": 23,
+      "students": 914
+    },
+    {
+      "day": "周一",
+      "building": "A 栋",
+      "period": "第3-4节",
+      "rooms": 24,
+      "students": 1096
+    },
+    {
+      "day": "周一",
+      "building": "A 栋",
+      "period": "第1-2节",
+      "rooms": 24,
+      "students": 996
+    },
+    {
+      "day": "周一",
+      "building": "A 栋",
+      "period": "第7-8节",
+      "rooms": 19,
+      "students": 885
+    },
+    {
+      "day": "周一",
+      "building": "A 栋",
+      "period": "第9-10节",
+      "rooms": 5,
+      "students": 234
+    },
+    {
+      "day": "周一",
+      "building": "A 栋",
+      "period": "第11-12节",
+      "rooms": 1,
+      "students": 33
+    },
+    {
+      "day": "周一",
+      "building": "B 栋",
+      "period": "第7-8节",
+      "rooms": 13,
+      "students": 736
+    },
+    {
+      "day": "周一",
+      "building": "B 栋",
+      "period": "第9-10节",
+      "rooms": 7,
+      "students": 800
+    },
+    {
+      "day": "周一",
+      "building": "B 栋",
+      "period": "第1-2节",
+      "rooms": 13,
+      "students": 807
+    },
+    {
+      "day": "周一",
+      "building": "B 栋",
+      "period": "第3-4节",
+      "rooms": 13,
+      "students": 695
+    },
+    {
+      "day": "周一",
+      "building": "B 栋",
+      "period": "第5-6节",
+      "rooms": 17,
+      "students": 758
+    },
+    {
+      "day": "周一",
+      "building": "C 栋",
+      "period": "第1-2节",
+      "rooms": 19,
+      "students": 836
+    },
+    {
+      "day": "周一",
+      "building": "C 栋",
+      "period": "第3-4节",
+      "rooms": 19,
+      "students": 876
+    },
+    {
+      "day": "周一",
+      "building": "C 栋",
+      "period": "第7-8节",
+      "rooms": 13,
+      "students": 525
+    },
+    {
+      "day": "周一",
+      "building": "C 栋",
+      "period": "第5-6节",
+      "rooms": 16,
+      "students": 1230
+    },
+    {
+      "day": "周一",
+      "building": "C 栋",
+      "period": "第9-10节",
+      "rooms": 3,
+      "students": 231
+    },
+    {
+      "day": "周一",
+      "building": "C 栋",
+      "period": "第11-12节",
+      "rooms": 1,
+      "students": 29
+    },
+    {
+      "day": "周一",
+      "building": "D 栋",
+      "period": "第3-4节",
+      "rooms": 1,
+      "students": 29
+    },
+    {
+      "day": "周一",
+      "building": "E 栋",
+      "period": "第5-6节",
+      "rooms": 18,
+      "students": 1202
+    },
+    {
+      "day": "周一",
+      "building": "E 栋",
+      "period": "第7-8节",
+      "rooms": 18,
+      "students": 816
+    },
+    {
+      "day": "周一",
+      "building": "E 栋",
+      "period": "第3-4节",
+      "rooms": 25,
+      "students": 1046
+    },
+    {
+      "day": "周一",
+      "building": "E 栋",
+      "period": "第1-2节",
+      "rooms": 15,
+      "students": 650
+    },
+    {
+      "day": "周一",
+      "building": "E 栋",
+      "period": "第9-10节",
+      "rooms": 6,
+      "students": 259
+    },
+    {
+      "day": "周一",
+      "building": "F 栋",
+      "period": "第5-6节",
+      "rooms": 30,
+      "students": 3732
+    },
+    {
+      "day": "周一",
+      "building": "F 栋",
+      "period": "第3-4节",
+      "rooms": 20,
+      "students": 1736
+    },
+    {
+      "day": "周一",
+      "building": "F 栋",
+      "period": "第7-8节",
+      "rooms": 24,
+      "students": 2825
+    },
+    {
+      "day": "周一",
+      "building": "F 栋",
+      "period": "第1-2节",
+      "rooms": 12,
+      "students": 1050
+    },
+    {
+      "day": "周一",
+      "building": "F 栋",
+      "period": "第9-10节",
+      "rooms": 3,
+      "students": 396
+    },
+    {
+      "day": "周一",
+      "building": "G 栋",
+      "period": "第3-4节",
+      "rooms": 10,
+      "students": 493
+    },
+    {
+      "day": "周一",
+      "building": "G 栋",
+      "period": "第7-8节",
+      "rooms": 7,
+      "students": 726
+    },
+    {
+      "day": "周一",
+      "building": "G 栋",
+      "period": "第5-6节",
+      "rooms": 9,
+      "students": 698
+    },
+    {
+      "day": "周一",
+      "building": "G 栋",
+      "period": "第1-2节",
+      "rooms": 6,
+      "students": 178
+    },
+    {
+      "day": "周一",
+      "building": "G 栋",
+      "period": "第9-10节",
+      "rooms": 1,
+      "students": 40
+    },
+    {
+      "day": "周一",
+      "building": "H 栋",
+      "period": "第1-2节",
+      "rooms": 16,
+      "students": 1365
+    },
+    {
+      "day": "周一",
+      "building": "H 栋",
+      "period": "第5-6节",
+      "rooms": 21,
+      "students": 1808
+    },
+    {
+      "day": "周一",
+      "building": "H 栋",
+      "period": "第7-8节",
+      "rooms": 22,
+      "students": 1934
+    },
+    {
+      "day": "周一",
+      "building": "H 栋",
+      "period": "第3-4节",
+      "rooms": 21,
+      "students": 1241
+    },
+    {
+      "day": "周一",
+      "building": "H 栋",
+      "period": "第9-10节",
+      "rooms": 12,
+      "students": 1684
+    },
+    {
+      "day": "周一",
+      "building": "H 栋",
+      "period": "第11-12节",
+      "rooms": 1,
+      "students": 148
+    },
+    {
+      "day": "周二",
+      "building": "A 栋",
+      "period": "第1-2节",
+      "rooms": 23,
+      "students": 1513
+    },
+    {
+      "day": "周二",
+      "building": "A 栋",
+      "period": "第5-6节",
+      "rooms": 27,
+      "students": 1481
+    },
+    {
+      "day": "周二",
+      "building": "A 栋",
+      "period": "第3-4节",
+      "rooms": 24,
+      "students": 1315
+    },
+    {
+      "day": "周二",
+      "building": "A 栋",
+      "period": "第7-8节",
+      "rooms": 23,
+      "students": 1068
+    },
+    {
+      "day": "周二",
+      "building": "A 栋",
+      "period": "第9-10节",
+      "rooms": 9,
+      "students": 323
+    },
+    {
+      "day": "周二",
+      "building": "B 栋",
+      "period": "第1-2节",
+      "rooms": 13,
+      "students": 844
+    },
+    {
+      "day": "周二",
+      "building": "B 栋",
+      "period": "第3-4节",
+      "rooms": 13,
+      "students": 991
+    },
+    {
+      "day": "周二",
+      "building": "B 栋",
+      "period": "第5-6节",
+      "rooms": 15,
+      "students": 595
+    },
+    {
+      "day": "周二",
+      "building": "B 栋",
+      "period": "第7-8节",
+      "rooms": 12,
+      "students": 846
+    },
+    {
+      "day": "周二",
+      "building": "B 栋",
+      "period": "第9-10节",
+      "rooms": 7,
+      "students": 425
+    },
+    {
+      "day": "周二",
+      "building": "B 栋",
+      "period": "第11-12节",
+      "rooms": 2,
+      "students": 308
+    },
+    {
+      "day": "周二",
+      "building": "C 栋",
+      "period": "第5-6节",
+      "rooms": 15,
+      "students": 1200
+    },
+    {
+      "day": "周二",
+      "building": "C 栋",
+      "period": "第7-8节",
+      "rooms": 16,
+      "students": 1049
+    },
+    {
+      "day": "周二",
+      "building": "C 栋",
+      "period": "第1-2节",
+      "rooms": 18,
+      "students": 997
+    },
+    {
+      "day": "周二",
+      "building": "C 栋",
+      "period": "第3-4节",
+      "rooms": 19,
+      "students": 1347
+    },
+    {
+      "day": "周二",
+      "building": "C 栋",
+      "period": "第9-10节",
+      "rooms": 3,
+      "students": 382
+    },
+    {
+      "day": "周二",
+      "building": "D 栋",
+      "period": "第3-4节",
+      "rooms": 3,
+      "students": 94
+    },
+    {
+      "day": "周二",
+      "building": "D 栋",
+      "period": "第1-2节",
+      "rooms": 2,
+      "students": 71
+    },
+    {
+      "day": "周二",
+      "building": "D 栋",
+      "period": "第5-6节",
+      "rooms": 1,
+      "students": 33
+    },
+    {
+      "day": "周二",
+      "building": "E 栋",
+      "period": "第1-2节",
+      "rooms": 23,
+      "students": 1006
+    },
+    {
+      "day": "周二",
+      "building": "E 栋",
+      "period": "第7-8节",
+      "rooms": 21,
+      "students": 1055
+    },
+    {
+      "day": "周二",
+      "building": "E 栋",
+      "period": "第3-4节",
+      "rooms": 29,
+      "students": 1147
+    },
+    {
+      "day": "周二",
+      "building": "E 栋",
+      "period": "第5-6节",
+      "rooms": 25,
+      "students": 1095
+    },
+    {
+      "day": "周二",
+      "building": "E 栋",
+      "period": "第9-10节",
+      "rooms": 8,
+      "students": 344
+    },
+    {
+      "day": "周二",
+      "building": "F 栋",
+      "period": "第1-2节",
+      "rooms": 26,
+      "students": 4342
+    },
+    {
+      "day": "周二",
+      "building": "F 栋",
+      "period": "第5-6节",
+      "rooms": 22,
+      "students": 1891
+    },
+    {
+      "day": "周二",
+      "building": "F 栋",
+      "period": "第7-8节",
+      "rooms": 26,
+      "students": 2440
+    },
+    {
+      "day": "周二",
+      "building": "F 栋",
+      "period": "第3-4节",
+      "rooms": 29,
+      "students": 3605
+    },
+    {
+      "day": "周二",
+      "building": "F 栋",
+      "period": "第9-10节",
+      "rooms": 3,
+      "students": 344
+    },
+    {
+      "day": "周二",
+      "building": "F 栋",
+      "period": "第11-12节",
+      "rooms": 1,
+      "students": 142
+    },
+    {
+      "day": "周二",
+      "building": "G 栋",
+      "period": "第3-4节",
+      "rooms": 9,
+      "students": 382
+    },
+    {
+      "day": "周二",
+      "building": "G 栋",
+      "period": "第5-6节",
+      "rooms": 9,
+      "students": 444
+    },
+    {
+      "day": "周二",
+      "building": "G 栋",
+      "period": "第7-8节",
+      "rooms": 9,
+      "students": 429
+    },
+    {
+      "day": "周二",
+      "building": "G 栋",
+      "period": "第9-10节",
+      "rooms": 1,
+      "students": 29
+    },
+    {
+      "day": "周二",
+      "building": "G 栋",
+      "period": "第1-2节",
+      "rooms": 8,
+      "students": 262
+    },
+    {
+      "day": "周二",
+      "building": "H 栋",
+      "period": "第7-8节",
+      "rooms": 22,
+      "students": 2107
+    },
+    {
+      "day": "周二",
+      "building": "H 栋",
+      "period": "第1-2节",
+      "rooms": 17,
+      "students": 1008
+    },
+    {
+      "day": "周二",
+      "building": "H 栋",
+      "period": "第9-10节",
+      "rooms": 11,
+      "students": 1619
+    },
+    {
+      "day": "周二",
+      "building": "H 栋",
+      "period": "第3-4节",
+      "rooms": 20,
+      "students": 1993
+    },
+    {
+      "day": "周二",
+      "building": "H 栋",
+      "period": "第5-6节",
+      "rooms": 18,
+      "students": 1007
+    },
+    {
+      "day": "周三",
+      "building": "A 栋",
+      "period": "第3-4节",
+      "rooms": 26,
+      "students": 1259
+    },
+    {
+      "day": "周三",
+      "building": "A 栋",
+      "period": "第9-10节",
+      "rooms": 14,
+      "students": 934
+    },
+    {
+      "day": "周三",
+      "building": "A 栋",
+      "period": "第1-2节",
+      "rooms": 27,
+      "students": 1243
+    },
+    {
+      "day": "周三",
+      "building": "A 栋",
+      "period": "第11-12节",
+      "rooms": 2,
+      "students": 72
+    },
+    {
+      "day": "周三",
+      "building": "A 栋",
+      "period": "第5-6节",
+      "rooms": 1,
+      "students": 70
+    },
+    {
+      "day": "周三",
+      "building": "B 栋",
+      "period": "第1-2节",
+      "rooms": 13,
+      "students": 596
+    },
+    {
+      "day": "周三",
+      "building": "B 栋",
+      "period": "第3-4节",
+      "rooms": 16,
+      "students": 633
+    },
+    {
+      "day": "周三",
+      "building": "B 栋",
+      "period": "第9-10节",
+      "rooms": 8,
+      "students": 572
+    },
+    {
+      "day": "周三",
+      "building": "B 栋",
+      "period": "第11-12节",
+      "rooms": 2,
+      "students": 76
+    },
+    {
+      "day": "周三",
+      "building": "C 栋",
+      "period": "第1-2节",
+      "rooms": 17,
+      "students": 1285
+    },
+    {
+      "day": "周三",
+      "building": "C 栋",
+      "period": "第3-4节",
+      "rooms": 18,
+      "students": 935
+    },
+    {
+      "day": "周三",
+      "building": "C 栋",
+      "period": "第9-10节",
+      "rooms": 2,
+      "students": 171
+    },
+    {
+      "day": "周三",
+      "building": "D 栋",
+      "period": "第3-4节",
+      "rooms": 4,
+      "students": 103
+    },
+    {
+      "day": "周三",
+      "building": "D 栋",
+      "period": "第1-2节",
+      "rooms": 2,
+      "students": 59
+    },
+    {
+      "day": "周三",
+      "building": "E 栋",
+      "period": "第3-4节",
+      "rooms": 27,
+      "students": 1108
+    },
+    {
+      "day": "周三",
+      "building": "E 栋",
+      "period": "第1-2节",
+      "rooms": 21,
+      "students": 1039
+    },
+    {
+      "day": "周三",
+      "building": "E 栋",
+      "period": "第9-10节",
+      "rooms": 5,
+      "students": 394
+    },
+    {
+      "day": "周三",
+      "building": "F 栋",
+      "period": "第3-4节",
+      "rooms": 28,
+      "students": 2176
+    },
+    {
+      "day": "周三",
+      "building": "F 栋",
+      "period": "第1-2节",
+      "rooms": 23,
+      "students": 2060
+    },
+    {
+      "day": "周三",
+      "building": "F 栋",
+      "period": "第5-6节",
+      "rooms": 2,
+      "students": 989
+    },
+    {
+      "day": "周三",
+      "building": "F 栋",
+      "period": "第9-10节",
+      "rooms": 7,
+      "students": 1014
+    },
+    {
+      "day": "周三",
+      "building": "G 栋",
+      "period": "第1-2节",
+      "rooms": 10,
+      "students": 409
+    },
+    {
+      "day": "周三",
+      "building": "G 栋",
+      "period": "第3-4节",
+      "rooms": 10,
+      "students": 416
+    },
+    {
+      "day": "周三",
+      "building": "G 栋",
+      "period": "第9-10节",
+      "rooms": 2,
+      "students": 67
+    },
+    {
+      "day": "周三",
+      "building": "H 栋",
+      "period": "第11-12节",
+      "rooms": 1,
+      "students": 315
+    },
+    {
+      "day": "周三",
+      "building": "H 栋",
+      "period": "第9-10节",
+      "rooms": 16,
+      "students": 2740
+    },
+    {
+      "day": "周三",
+      "building": "H 栋",
+      "period": "第3-4节",
+      "rooms": 20,
+      "students": 1272
+    },
+    {
+      "day": "周三",
+      "building": "H 栋",
+      "period": "第1-2节",
+      "rooms": 17,
+      "students": 1080
+    },
+    {
+      "day": "周三",
+      "building": "H 栋",
+      "period": "第5-6节",
+      "rooms": 2,
+      "students": 1737
+    },
+    {
+      "day": "周三",
+      "building": "H 栋",
+      "period": "第7-8节",
+      "rooms": 2,
+      "students": 1737
+    },
+    {
+      "day": "周三",
+      "building": "W 栋",
+      "period": "第5-6节",
+      "rooms": 2,
+      "students": 54
+    },
+    {
+      "day": "周三",
+      "building": "W 栋",
+      "period": "第7-8节",
+      "rooms": 2,
+      "students": 54
+    },
+    {
+      "day": "周四",
+      "building": "A 栋",
+      "period": "第1-2节",
+      "rooms": 26,
+      "students": 1456
+    },
+    {
+      "day": "周四",
+      "building": "A 栋",
+      "period": "第3-4节",
+      "rooms": 27,
+      "students": 1001
+    },
+    {
+      "day": "周四",
+      "building": "A 栋",
+      "period": "第7-8节",
+      "rooms": 5,
+      "students": 164
+    },
+    {
+      "day": "周四",
+      "building": "A 栋",
+      "period": "第5-6节",
+      "rooms": 4,
+      "students": 133
+    },
+    {
+      "day": "周四",
+      "building": "A 栋",
+      "period": "第9-10节",
+      "rooms": 1,
+      "students": 32
+    },
+    {
+      "day": "周四",
+      "building": "B 栋",
+      "period": "第1-2节",
+      "rooms": 17,
+      "students": 930
+    },
+    {
+      "day": "周四",
+      "building": "B 栋",
+      "period": "第3-4节",
+      "rooms": 16,
+      "students": 961
+    },
+    {
+      "day": "周四",
+      "building": "B 栋",
+      "period": "第7-8节",
+      "rooms": 3,
+      "students": 187
+    },
+    {
+      "day": "周四",
+      "building": "B 栋",
+      "period": "第5-6节",
+      "rooms": 1,
+      "students": 37
+    },
+    {
+      "day": "周四",
+      "building": "C 栋",
+      "period": "第1-2节",
+      "rooms": 16,
+      "students": 1180
+    },
+    {
+      "day": "周四",
+      "building": "C 栋",
+      "period": "第3-4节",
+      "rooms": 15,
+      "students": 840
+    },
+    {
+      "day": "周四",
+      "building": "C 栋",
+      "period": "第9-10节",
+      "rooms": 2,
+      "students": 491
+    },
+    {
+      "day": "周四",
+      "building": "C 栋",
+      "period": "第7-8节",
+      "rooms": 6,
+      "students": 485
+    },
+    {
+      "day": "周四",
+      "building": "C 栋",
+      "period": "第5-6节",
+      "rooms": 4,
+      "students": 121
+    },
+    {
+      "day": "周四",
+      "building": "D 栋",
+      "period": "第7-8节",
+      "rooms": 1,
+      "students": 18
+    },
+    {
+      "day": "周四",
+      "building": "D 栋",
+      "period": "第5-6节",
+      "rooms": 1,
+      "students": 18
+    },
+    {
+      "day": "周四",
+      "building": "D 栋",
+      "period": "第1-2节",
+      "rooms": 1,
+      "students": 24
+    },
+    {
+      "day": "周四",
+      "building": "E 栋",
+      "period": "第5-6节",
+      "rooms": 8,
+      "students": 443
+    },
+    {
+      "day": "周四",
+      "building": "E 栋",
+      "period": "第7-8节",
+      "rooms": 8,
+      "students": 503
+    },
+    {
+      "day": "周四",
+      "building": "E 栋",
+      "period": "第1-2节",
+      "rooms": 18,
+      "students": 1040
+    },
+    {
+      "day": "周四",
+      "building": "E 栋",
+      "period": "第3-4节",
+      "rooms": 25,
+      "students": 1426
+    },
+    {
+      "day": "周四",
+      "building": "E 栋",
+      "period": "第9-10节",
+      "rooms": 3,
+      "students": 215
+    },
+    {
+      "day": "周四",
+      "building": "F 栋",
+      "period": "第3-4节",
+      "rooms": 30,
+      "students": 2465
+    },
+    {
+      "day": "周四",
+      "building": "F 栋",
+      "period": "第1-2节",
+      "rooms": 26,
+      "students": 1653
+    },
+    {
+      "day": "周四",
+      "building": "F 栋",
+      "period": "第9-10节",
+      "rooms": 5,
+      "students": 643
+    },
+    {
+      "day": "周四",
+      "building": "F 栋",
+      "period": "第5-6节",
+      "rooms": 17,
+      "students": 1709
+    },
+    {
+      "day": "周四",
+      "building": "F 栋",
+      "period": "第7-8节",
+      "rooms": 16,
+      "students": 2317
+    },
+    {
+      "day": "周四",
+      "building": "G 栋",
+      "period": "第1-2节",
+      "rooms": 7,
+      "students": 306
+    },
+    {
+      "day": "周四",
+      "building": "G 栋",
+      "period": "第3-4节",
+      "rooms": 5,
+      "students": 162
+    },
+    {
+      "day": "周四",
+      "building": "G 栋",
+      "period": "第7-8节",
+      "rooms": 5,
+      "students": 152
+    },
+    {
+      "day": "周四",
+      "building": "G 栋",
+      "period": "第5-6节",
+      "rooms": 3,
+      "students": 87
+    },
+    {
+      "day": "周四",
+      "building": "G 栋",
+      "period": "第9-10节",
+      "rooms": 1,
+      "students": 40
+    },
+    {
+      "day": "周四",
+      "building": "H 栋",
+      "period": "第1-2节",
+      "rooms": 19,
+      "students": 1198
+    },
+    {
+      "day": "周四",
+      "building": "H 栋",
+      "period": "第3-4节",
+      "rooms": 21,
+      "students": 1055
+    },
+    {
+      "day": "周四",
+      "building": "H 栋",
+      "period": "第5-6节",
+      "rooms": 3,
+      "students": 909
+    },
+    {
+      "day": "周四",
+      "building": "H 栋",
+      "period": "第9-10节",
+      "rooms": 6,
+      "students": 887
+    },
+    {
+      "day": "周四",
+      "building": "H 栋",
+      "period": "第7-8节",
+      "rooms": 3,
+      "students": 204
+    },
+    {
+      "day": "周四",
+      "building": "H 栋",
+      "period": "第11-12节",
+      "rooms": 1,
+      "students": 146
+    },
+    {
+      "day": "周五",
+      "building": "A 栋",
+      "period": "第3-4节",
+      "rooms": 21,
+      "students": 948
+    },
+    {
+      "day": "周五",
+      "building": "A 栋",
+      "period": "第7-8节",
+      "rooms": 16,
+      "students": 660
+    },
+    {
+      "day": "周五",
+      "building": "A 栋",
+      "period": "第1-2节",
+      "rooms": 21,
+      "students": 963
+    },
+    {
+      "day": "周五",
+      "building": "A 栋",
+      "period": "第5-6节",
+      "rooms": 23,
+      "students": 948
+    },
+    {
+      "day": "周五",
+      "building": "B 栋",
+      "period": "第3-4节",
+      "rooms": 18,
+      "students": 1255
+    },
+    {
+      "day": "周五",
+      "building": "B 栋",
+      "period": "第5-6节",
+      "rooms": 16,
+      "students": 1035
+    },
+    {
+      "day": "周五",
+      "building": "B 栋",
+      "period": "第1-2节",
+      "rooms": 9,
+      "students": 619
+    },
+    {
+      "day": "周五",
+      "building": "B 栋",
+      "period": "第7-8节",
+      "rooms": 9,
+      "students": 423
+    },
+    {
+      "day": "周五",
+      "building": "C 栋",
+      "period": "第1-2节",
+      "rooms": 20,
+      "students": 1072
+    },
+    {
+      "day": "周五",
+      "building": "C 栋",
+      "period": "第3-4节",
+      "rooms": 21,
+      "students": 1165
+    },
+    {
+      "day": "周五",
+      "building": "C 栋",
+      "period": "第5-6节",
+      "rooms": 11,
+      "students": 538
+    },
+    {
+      "day": "周五",
+      "building": "C 栋",
+      "period": "第7-8节",
+      "rooms": 8,
+      "students": 344
+    },
+    {
+      "day": "周五",
+      "building": "D 栋",
+      "period": "第1-2节",
+      "rooms": 1,
+      "students": 38
+    },
+    {
+      "day": "周五",
+      "building": "D 栋",
+      "period": "第3-4节",
+      "rooms": 4,
+      "students": 110
+    },
+    {
+      "day": "周五",
+      "building": "D 栋",
+      "period": "第5-6节",
+      "rooms": 1,
+      "students": 39
+    },
+    {
+      "day": "周五",
+      "building": "E 栋",
+      "period": "第7-8节",
+      "rooms": 3,
+      "students": 362
+    },
+    {
+      "day": "周五",
+      "building": "E 栋",
+      "period": "第5-6节",
+      "rooms": 9,
+      "students": 508
+    },
+    {
+      "day": "周五",
+      "building": "E 栋",
+      "period": "第1-2节",
+      "rooms": 13,
+      "students": 699
+    },
+    {
+      "day": "周五",
+      "building": "E 栋",
+      "period": "第3-4节",
+      "rooms": 16,
+      "students": 641
+    },
+    {
+      "day": "周五",
+      "building": "F 栋",
+      "period": "第5-6节",
+      "rooms": 15,
+      "students": 1631
+    },
+    {
+      "day": "周五",
+      "building": "F 栋",
+      "period": "第3-4节",
+      "rooms": 15,
+      "students": 1328
+    },
+    {
+      "day": "周五",
+      "building": "F 栋",
+      "period": "第1-2节",
+      "rooms": 13,
+      "students": 1174
+    },
+    {
+      "day": "周五",
+      "building": "F 栋",
+      "period": "第7-8节",
+      "rooms": 6,
+      "students": 647
+    },
+    {
+      "day": "周五",
+      "building": "G 栋",
+      "period": "第1-2节",
+      "rooms": 9,
+      "students": 453
+    },
+    {
+      "day": "周五",
+      "building": "G 栋",
+      "period": "第5-6节",
+      "rooms": 9,
+      "students": 507
+    },
+    {
+      "day": "周五",
+      "building": "G 栋",
+      "period": "第3-4节",
+      "rooms": 9,
+      "students": 313
+    },
+    {
+      "day": "周五",
+      "building": "G 栋",
+      "period": "第7-8节",
+      "rooms": 7,
+      "students": 333
+    },
+    {
+      "day": "周五",
+      "building": "H 栋",
+      "period": "第3-4节",
+      "rooms": 19,
+      "students": 1161
+    },
+    {
+      "day": "周五",
+      "building": "H 栋",
+      "period": "第1-2节",
+      "rooms": 15,
+      "students": 1211
+    },
+    {
+      "day": "周五",
+      "building": "H 栋",
+      "period": "第5-6节",
+      "rooms": 13,
+      "students": 1149
+    },
+    {
+      "day": "周五",
+      "building": "H 栋",
+      "period": "第7-8节",
+      "rooms": 18,
+      "students": 2419
+    }
+  ]
+}
