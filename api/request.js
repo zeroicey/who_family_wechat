@@ -26,7 +26,6 @@ const requestInterceptor = (config) => {
 // 用于存储正在进行的登录请求，避免重复登录
 let isRefreshing = false;
 let failedQueue = [];
-const getUserStore = () => useUserStore(pinia);
 
 // 处理队列中的请求
 const processQueue = (error, token = null) => {
@@ -60,7 +59,7 @@ const responseInterceptor = async (response, originalConfig) => {
 
     try {
       // 使用store中的wechat_login action进行登录
-      const userStore = getUserStore();
+      const userStore = useUserStore(pinia);
       await userStore.wechat_login();
       
       // 获取新的token
