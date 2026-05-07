@@ -2,7 +2,7 @@
 	<view class="service-closed-overlay">
 		<view class="service-closed-modal">
 			<view class="modal-icon">
-				<text class="icon">🚫</text>
+				<uni-icons type="info-filled" size="34" color="#6D4AFF"></uni-icons>
 			</view>
 			<view class="modal-title">打印服务暂未开启</view>
 			<view class="modal-content">
@@ -10,7 +10,7 @@
 				<text class="service-note">请在服务时间内使用打印功能</text>
 			</view>
 			<view class="modal-actions">
-				<button class="back-home-btn" @click="goToHome">返回主页</button>
+				<button class="back-home-btn" @click="goToHome">返回服务主页</button>
 			</view>
 		</view>
 	</view>
@@ -31,69 +31,69 @@ const goToHome = () => {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(24, 33, 49, 0.35);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	z-index: 9999;
+	backdrop-filter: blur(8rpx);
 }
 
 .service-closed-modal {
 	background-color: #ffffff;
-	border-radius: 16rpx;
-	padding: 60rpx 40rpx;
+	border-radius: 28rpx;
+	padding: 52rpx 40rpx;
 	margin: 0 40rpx;
 	text-align: center;
-	box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+	box-shadow: 0 20rpx 60rpx rgba(24, 33, 49, 0.14);
 }
 
 .modal-icon {
-	margin-bottom: 30rpx;
-}
-
-.modal-icon .icon {
-	font-size: 80rpx;
+	width: 88rpx;
+	height: 88rpx;
+	margin: 0 auto 24rpx;
+	border-radius: 28rpx;
+	background: rgba(109, 74, 255, 0.1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .modal-title {
-	font-size: 36rpx;
-	font-weight: bold;
-	color: #333333;
-	margin-bottom: 30rpx;
+	font-size: 34rpx;
+	font-weight: 700;
+	color: var(--text-primary);
+	margin-bottom: 24rpx;
 }
 
 .modal-content {
-	margin-bottom: 40rpx;
+	margin-bottom: 32rpx;
+}
+
+.service-time,
+.service-note {
+	display: block;
 }
 
 .service-time {
-	display: block;
-	font-size: 28rpx;
-	color: #666666;
-	margin-bottom: 16rpx;
+	font-size: 26rpx;
+	color: var(--text-primary);
+	margin-bottom: 12rpx;
 }
 
 .service-note {
-	display: block;
-	font-size: 24rpx;
-	color: #999999;
-}
-
-.modal-actions {
-	margin-top: 40rpx;
+	font-size: 22rpx;
+	line-height: 1.6;
+	color: var(--text-tertiary);
 }
 
 .back-home-btn {
-	background-color: #007aff;
+	background: linear-gradient(135deg, #6d4aff, #8d6bff);
 	color: #ffffff;
 	border: none;
-	border-radius: 8rpx;
+	border-radius: 999rpx;
 	padding: 24rpx 60rpx;
-	font-size: 32rpx;
-	font-weight: bold;
-}
-
-.back-home-btn:active {
-	background-color: #0056cc;
+	font-size: 28rpx;
+	font-weight: 700;
 }
 </style>

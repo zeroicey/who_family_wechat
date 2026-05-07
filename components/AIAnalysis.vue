@@ -205,14 +205,14 @@ defineExpose({
 .ai-float-btn {
 	position: fixed;
 	right: 30rpx;
-	bottom: 100rpx;
+	bottom: 120rpx;
 	display: flex;
 	align-items: center;
 	gap: 10rpx;
 	padding: 20rpx 24rpx;
-	background-color: #007aff;
+	background: linear-gradient(135deg, #6d4aff, #8d6bff);
 	border-radius: 50rpx;
-	box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.25);
+	box-shadow: 0 16rpx 32rpx rgba(109, 74, 255, 0.22);
 	pointer-events: auto;
 	z-index: 1001;
 	transition: all 300ms ease;
@@ -235,7 +235,7 @@ defineExpose({
 
 @keyframes pulse {
 	0%, 100% {
-		box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.25);
+		box-shadow: 0 16rpx 32rpx rgba(109, 74, 255, 0.22);
 	}
 	50% {
 		box-shadow: 0 4rpx 24rpx rgba(0, 122, 255, 0.4);

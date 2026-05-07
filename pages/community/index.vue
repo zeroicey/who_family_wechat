@@ -1,36 +1,42 @@
 <template>
-  <view class="community-container">
-    <!-- 顶部导航栏 -->
-    <view class="nav-bar">
-      <view
-        v-for="tab in tabs"
-        :key="tab.value"
-        class="nav-item"
-        :class="{ active: currentTab === tab.value }"
-        @click="switchTab(tab.value)"
-      >
-        <image
-          class="nav-icon"
-          :class="{ 'icon-large': tab.value === 'errand' || tab.value === 'secondhand' }"
-          :src="tab.icon"
-          mode="aspectFit"
-        />
-        <text class="nav-text">{{ tab.label }}</text>
-        <view v-if="currentTab === tab.value" class="nav-indicator"></view>
+  <view class="community-shell">
+    <view class="community-hero">
+      <view class="hero-copy">
+        <text class="hero-kicker">社区</text>
+        <text class="hero-title">服务优先，但交流与互助仍然保留强入口</text>
+        <text class="hero-desc">动态、跑腿、二手和评分继续独立存在，只把表达方式变得更清楚、更成熟。</text>
+      </view>
+      <view class="hero-side">
+        <view class="hero-badge">
+          <text class="badge-value">4</text>
+          <text class="badge-label">个频道</text>
+        </view>
       </view>
     </view>
 
-    <!-- 内容区域 -->
-    <view class="content-wrapper">
-      <dynamic v-if="currentTab === 'dynamic'" />
-      <errand v-else-if="currentTab === 'errand'" />
-      <second-hand v-else-if="currentTab === 'secondhand'" />
-      <rating v-else-if="currentTab === 'rating'" />
+    <view class="channel-bar">
+      <view
+        v-for="tab in tabs"
+        :key="tab.value"
+        class="channel-pill"
+        :class="{ active: currentTab === tab.value }"
+        @click="switchTab(tab.value)"
+      >
+        <text class="channel-label">{{ tab.label }}</text>
+        <text class="channel-subtitle">{{ tab.subtitle }}</text>
+      </view>
     </view>
 
-    <!-- 悬浮发布按钮 -->
-    <view class="float-btn" @click="onPublish" @longpress="onPublishLongPress">
-      <view class="publish-icon">+</view>
+    <view class="content-shell">
+      <Dynamic v-if="currentTab === 'dynamic'" />
+      <Errand v-else-if="currentTab === 'errand'" />
+      <SecondHand v-else-if="currentTab === 'secondhand'" />
+      <Rating v-else-if="currentTab === 'rating'" />
+    </view>
+
+    <view class="publish-fab" @click="onPublish" @longpress="onPublishLongPress">
+      <text class="fab-plus">＋</text>
+      <text class="fab-text">发布</text>
     </view>
   </view>
 </template>
@@ -41,45 +47,39 @@ import Dynamic from "@/components/community/Dynamic.vue";
 import Errand from "@/components/community/Errand.vue";
 import SecondHand from "@/components/community/SecondHand.vue";
 import Rating from "@/components/community/Rating.vue";
-import { onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app';
-import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app'
+import { onReachBottom, onPullDownRefresh, onShareAppMessage, onShareTimeline } from "@dcloudio/uni-app";
+import { useCommunityStore } from "@/stores/community";
+
+const currentTab = ref("dynamic");
+const communityStore = useCommunityStore();
+
+const tabs = [
+  { label: "动态", value: "dynamic", subtitle: "最新校园分享" },
+  { label: "跑腿", value: "errand", subtitle: "即时互助需求" },
+  { label: "二手", value: "secondhand", subtitle: "闲置交换" },
+  { label: "评分", value: "rating", subtitle: "体验参考" }
+];
+
+const isLongPress = ref(false);
+let longPressTimer = null;
 
 onShareAppMessage(() => {
   return {
-    title: '互成一家小程序',
-    path: '/pages/home/index',
-    imageUrl: '/static/images/logo.png'
-  }
-})
+    title: "互成一家｜校园社区",
+    path: "/pages/community/index",
+    imageUrl: "/static/images/logo.png"
+  };
+});
 
 onShareTimeline(() => ({
-  title: '互成一家小程序',
-  imageUrl: '/static/images/logo.png'
-}))
+  title: "互成一家｜校园社区",
+  imageUrl: "/static/images/logo.png"
+}));
 
-// 当前选中的标签
-const currentTab = ref('dynamic');
-import { useCommunityStore } from "@/stores/community";
-const communityStore = useCommunityStore();
-
-// 标签列表
-const tabs = [
-  { label: '动态', value: 'dynamic', icon: '/static/images/community/dynamic.svg' },
-  { label: '跑腿', value: 'errand', icon: '/static/images/community/errand.svg' },
-  { label: '二手', value: 'secondhand', icon: '/static/images/community/secondhand.svg' },
-  { label: '评分', value: 'rating', icon: '/static/images/community/rating.svg' }
-];
-
-// 下拉刷新与加载更多状态
-const isLongPress = ref(false); // 用于区分长按和单击
-let longPressTimer = null; // 用于长按后的延迟重置isLongPress
-
-// 切换标签
 const switchTab = (tab) => {
   currentTab.value = tab;
 };
 
-// 组件卸载时清理定时器
 onUnmounted(() => {
   if (longPressTimer) {
     clearTimeout(longPressTimer);
@@ -87,7 +87,6 @@ onUnmounted(() => {
   }
 });
 
-// 组件挂载后初始化数据
 onMounted(async () => {
   await communityStore.fetch_post_types();
 });
@@ -98,40 +97,35 @@ onPullDownRefresh(async () => {
     uni.stopPullDownRefresh();
   }, 1000);
 });
+
 onReachBottom(async () => {
   await communityStore.fetch_more_posts();
 });
 
-// 发布新帖子 - 长按事件
 const onPublishLongPress = () => {
   isLongPress.value = true;
   uni.navigateTo({
-    url: "/pages/community/publish",
+    url: "/pages/community/publish"
   });
-  // 延迟重置长按标志，以避免立即触发单击事件
   if (longPressTimer) {
     clearTimeout(longPressTimer);
   }
   longPressTimer = setTimeout(() => {
     isLongPress.value = false;
     longPressTimer = null;
-  }, 200); // 200ms 延迟，可以根据实际情况调整
+  }, 200);
 };
 
-// 发布新帖子 - 单击事件
 const onPublish = () => {
   if (isLongPress.value) {
-    // 如果是长按触发的，则单击事件不执行
-    // isLongPress.value = false; // 在 longPress 事件中重置
     return;
   }
-  // 清除可能存在的长按延迟重置，以防单击过快
   if (longPressTimer) {
     clearTimeout(longPressTimer);
     longPressTimer = null;
   }
   uni.chooseImage({
-    count: 4, // 最多可以选择4张图片，与 publish.vue 保持一致
+    count: 4,
     sizeType: ["compressed"],
     sourceType: ["album", "camera"],
     success: (res) => {
@@ -142,117 +136,162 @@ const onPublish = () => {
         url = `/pages/community/publish?images=${imageQuery}`;
       }
       uni.navigateTo({
-        url: url,
+        url
       });
     },
-    fail: (err) => {
-      // 即使用户取消选择图片，也跳转到发布页面
-      console.log('用户取消选择图片');
+    fail: () => {
+      console.log("用户取消选择图片");
     }
   });
 };
 </script>
 
 <style scoped>
-/* 整体容器 */
-.community-container {
-  background-color: #f8f8f8;
+.community-shell {
   min-height: 100vh;
+  background: linear-gradient(180deg, #f7f4ff 0%, #f5f7fb 32%, #f5f7fb 100%);
   position: relative;
 }
 
-/* 顶部导航栏 */
-.nav-bar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background-color: #fff;
+.community-hero {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 20rpx 0;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24rpx;
+  padding: 32rpx 32rpx 24rpx;
 }
 
-.nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 10rpx 0;
-  cursor: pointer;
-  gap: 8rpx;
+.hero-copy,
+.hero-side {
+  min-width: 0;
 }
 
-.nav-icon {
-  width: 44rpx;
-  height: 44rpx;
-  transition: transform 0.3s;
+.hero-kicker,
+.hero-title,
+.hero-desc,
+.badge-value,
+.badge-label,
+.channel-label,
+.channel-subtitle,
+.fab-plus,
+.fab-text {
+  display: block;
 }
 
-.nav-icon.icon-large {
-  width: 54rpx;
-  height: 54rpx;
-}
-
-.nav-item.active .nav-icon {
-  transform: scale(1.1);
-}
-
-.nav-text {
-  font-size: 24rpx;
-  color: #666;
-  transition: color 0.3s;
-}
-
-.nav-item.active .nav-text {
-  color: #00cc6a;
+.hero-kicker {
+  margin-bottom: 10rpx;
+  font-size: 22rpx;
   font-weight: 600;
+  color: #6d4aff;
 }
 
-.nav-indicator {
-  position: absolute;
-  bottom: 0;
-  width: 40rpx;
-  height: 6rpx;
-  background: linear-gradient(135deg, #00ff88, #00cc6a);
-  border-radius: 3rpx;
+.hero-title {
+  margin-bottom: 12rpx;
+  font-size: 38rpx;
+  line-height: 1.35;
+  font-weight: 700;
+  color: #182131;
 }
 
-/* 内容区域 */
-.content-wrapper {
-  min-height: calc(100vh - 100rpx);
+.hero-desc {
+  max-width: 520rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #5b6475;
 }
 
-/* 悬浮发布按钮 */
-.float-btn {
-  position: fixed;
-  right: 20px;
-  bottom: 80px;
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, #00ff88, #00cc6a);
-  border-radius: 50%;
+.hero-badge {
+  padding: 20rpx 22rpx;
+  border-radius: 24rpx;
+  background: rgba(109, 74, 255, 0.1);
+  border: 1rpx solid rgba(109, 74, 255, 0.12);
+}
+
+.badge-value {
+  margin-bottom: 6rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #6d4aff;
+  text-align: center;
+}
+
+.badge-label {
+  font-size: 22rpx;
+  color: #6a7385;
+  text-align: center;
+}
+
+.channel-bar {
+  padding: 0 32rpx 22rpx;
   display: flex;
-  justify-content: center;
+  gap: 16rpx;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.channel-pill {
+  min-width: 184rpx;
+  padding: 18rpx 22rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1rpx solid #e5e9f2;
+}
+
+.channel-pill.active {
+  background: #6d4aff;
+  border-color: #6d4aff;
+  box-shadow: 0 12rpx 28rpx rgba(109, 74, 255, 0.2);
+}
+
+.channel-label {
+  margin-bottom: 6rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #182131;
+}
+
+.channel-subtitle {
+  font-size: 20rpx;
+  line-height: 1.4;
+  color: #7b8496;
+}
+
+.channel-pill.active .channel-label,
+.channel-pill.active .channel-subtitle {
+  color: #ffffff;
+}
+
+.content-shell {
+  min-height: calc(100vh - 250rpx);
+}
+
+.publish-fab {
+  position: fixed;
+  right: 28rpx;
+  bottom: 170rpx;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #6d4aff, #8d6bff);
+  box-shadow: 0 18rpx 36rpx rgba(109, 74, 255, 0.28);
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  justify-content: center;
   z-index: 99;
 }
 
-.publish-icon {
-  color: white;
-  font-size: 28px;
-  font-weight: bold;
-  line-height: 28px;
-  height: 28px;
-  text-align: center;
-  margin-top: -2px;
-  /* 微调位置使其完美居中 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.fab-plus {
+  font-size: 34rpx;
+  line-height: 1;
+  color: #fff;
+  font-weight: 700;
+}
+
+.fab-text {
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 600;
 }
 </style>

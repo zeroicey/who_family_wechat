@@ -1,19 +1,16 @@
 <template>
 	<view class="grade-page">
-		<!-- 顶部标题区域 -->
 		<view class="header-section">
 			<view class="header-content">
-				<uni-icons type="medal" size="36" color="#fff"></uni-icons>
-				<view class="header-text">
+				<view class="header-copy">
+					<text class="header-kicker">服务</text>
 					<text class="title">成绩查询</text>
-					<text class="subtitle">查看您的学习成果与学业表现</text>
+					<text class="subtitle">把登录、学期选择、统计和成绩列表放进同一套教务服务模板里。</text>
 				</view>
-			</view>
-			<!-- 装饰元素 -->
-			<view class="header-decoration">
-				<view class="decoration-circle circle-1"></view>
-				<view class="decoration-circle circle-2"></view>
-				<view class="decoration-circle circle-3"></view>
+				<view class="header-badge">
+					<uni-icons type="medal" size="22" color="#6D4AFF"></uni-icons>
+					<text>成绩服务</text>
+				</view>
 			</view>
 		</view>
 
@@ -25,7 +22,7 @@
 				</view>
 				<view class="header-text-wrapper">
 					<text class="card-title">教务系统登录</text>
-					<text class="card-subtitle">请输入您的学号和密码查询成绩</text>
+					<text class="card-subtitle">统一服务页模板 · 学习结果查询</text>
 				</view>
 			</view>
 
@@ -1063,4 +1060,117 @@ const handleAnalyze = (type) => {
 		gap: 20rpx;
 	}
 }
+
+
+// ===== Phase 4 service-shell overrides =====
+.grade-page {
+	background: linear-gradient(180deg, #f7f4ff 0%, #f5f7fb 32%, #f5f7fb 100%);
+	padding: 24rpx;
+}
+
+.header-section {
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 237, 255, 0.98) 100%);
+	box-shadow: var(--shadow-soft);
+	padding: 30rpx;
+
+	.header-content {
+		justify-content: space-between;
+		gap: 20rpx;
+	}
+
+	.header-copy {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.header-kicker,
+	.title,
+	.subtitle,
+	.header-badge text {
+		display: block;
+	}
+
+	.header-kicker {
+		margin-bottom: 10rpx;
+		font-size: 22rpx;
+		font-weight: 600;
+		color: var(--brand-primary);
+	}
+
+	.header-text,
+	.header-decoration {
+		display: none;
+	}
+
+	.header-copy .title {
+		font-size: 38rpx;
+		font-weight: 700;
+		color: var(--text-primary);
+	}
+
+	.header-copy .subtitle {
+		margin-top: 10rpx;
+		font-size: 24rpx;
+		line-height: 1.6;
+		color: var(--text-secondary);
+	}
+
+	.header-badge {
+		padding: 14rpx 18rpx;
+		border-radius: 20rpx;
+		background: rgba(109, 74, 255, 0.1);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 8rpx;
+	}
+
+	.header-badge text {
+		font-size: 20rpx;
+		font-weight: 600;
+		color: var(--brand-primary);
+	}
+}
+
+.form-card,
+.grades-header-card,
+.stats-card,
+.grade-item,
+.empty-state,
+.action-bar .secondary-button {
+	box-shadow: var(--shadow-soft);
+}
+
+.form-card {
+	background: #ffffff;
+
+	.card-title {
+		color: var(--text-primary);
+	}
+
+	.card-subtitle {
+		color: var(--text-tertiary);
+	}
+
+	.form-input,
+	.form-picker {
+		background: #f8faff;
+	}
+
+	.login-button {
+		background: linear-gradient(135deg, #6d4aff, #8d6bff);
+		box-shadow: 0 16rpx 32rpx rgba(109, 74, 255, 0.18);
+	}
+}
+
+.stats-card {
+	background: #ffffff;
+}
+
+.action-bar .secondary-button {
+	border-color: #6d4aff;
+	color: #6d4aff;
+}
+
 </style>

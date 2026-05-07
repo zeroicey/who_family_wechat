@@ -1498,4 +1498,46 @@ $card-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.06);
 		letter-spacing: 1rpx;
 	}
 }
+
+
+// ===== Phase 4 service-shell overrides =====
+.monitor-page {
+	background: linear-gradient(180deg, #f7f4ff 0%, #f5f7fb 34%, #f5f7fb 100%);
+}
+
+.header-card {
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 237, 255, 0.98) 100%);
+	box-shadow: var(--shadow-soft);
+
+	.header-bg {
+		display: none;
+	}
+
+	 .header-title,
+	 .header-subtitle {
+		color: var(--text-primary);
+	 }
+
+	 .header-subtitle {
+		margin-top: 10rpx;
+		font-size: 24rpx;
+		color: var(--text-secondary);
+	 }
+
+	 .header-badge {
+		background: rgba(109, 74, 255, 0.1);
+	 }
+
+	 .live-text {
+		color: var(--brand-primary);
+	 }
+}
+
+.segment-control,
+.location-switcher,
+.crowd-card,
+.weather-card {
+	box-shadow: var(--shadow-soft);
+}
+
 </style>

@@ -3,7 +3,7 @@
     {
       "path": "pages/home/index",
       "style": {
-        "navigationBarTitleText": "首页"
+        "navigationBarTitleText": "服务"
       }
     },
     {
@@ -96,7 +96,7 @@
     {
       "path": "pages/knowledge/index",
       "style": {
-        "navigationBarTitleText": "知识"
+        "navigationBarTitleText": "发现"
       }
     },
     {
@@ -170,20 +170,21 @@
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarTitleText": "互成一家",
+    "navigationBarBackgroundColor": "#F5F7FB",
+    "backgroundColor": "#F5F7FB"
   },
   "tabBar": {
-    "color": "#999",
-    "selectedColor": "#07c160",
-    "backgroundColor": "#fff",
+    "color": "#8A93A5",
+    "selectedColor": "#6D4AFF",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/home/index",
-        "iconPath": "/static/images/tabbar/home.png",
-        "selectedIconPath": "/static/images/tabbar/home.png",
-        "text": "首页"
+        "iconPath": "/static/images/tabbar/service.png",
+        "selectedIconPath": "/static/images/tabbar/service.png",
+        "text": "服务"
       },
       {
         "pagePath": "pages/community/index",
@@ -201,7 +202,7 @@
         "pagePath": "pages/knowledge/index",
         "iconPath": "/static/images/tabbar/knowledge.png",
         "selectedIconPath": "/static/images/tabbar/knowledge.png",
-        "text": "知识"
+        "text": "发现"
       },
       {
         "pagePath": "pages/me/index",

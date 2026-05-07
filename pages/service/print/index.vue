@@ -3,8 +3,17 @@
 		<!-- 服务未开启遮罩 -->
 		<ServiceClosedModal v-if="isServiceOpen === false" @go-home="goToHome" />
 
-		<!-- 原有内容 -->
 		<view v-else class="content">
+			<view class="service-hero">
+				<view>
+					<text class="hero-kicker">服务</text>
+					<text class="hero-title">校园打印服务</text>
+					<text class="hero-desc">上传文件、选择服务方式、确认地址与份数，保持流程不变，只统一成一套服务页表达。</text>
+				</view>
+				<view class="hero-badge">
+					<text>打印</text>
+				</view>
+			</view>
 			<image class="service-image" src="https://api.hcyj.xyz/images/dnfw.png" mode="aspectFill"></image>
 
 			<!-- 服务介绍卡片 -->
@@ -124,18 +133,71 @@ defineExpose({
 <style lang="scss" scoped>
 .print-details-page {
 	min-height: 100vh;
-	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	background: linear-gradient(180deg, #f7f4ff 0%, #f5f7fb 34%, #f5f7fb 100%);
 	position: relative;
 
 	.content {
-		padding-bottom: 40rpx;
+		padding: 24rpx 0 40rpx;
+	}
+
+	.service-hero {
+		margin: 0 30rpx 20rpx;
+		padding: 28rpx;
+		border-radius: 28rpx;
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 237, 255, 0.98) 100%);
+		box-shadow: var(--shadow-soft);
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 20rpx;
+	}
+
+	.hero-kicker,
+	.hero-title,
+	.hero-desc,
+	.hero-badge text {
+		display: block;
+	}
+
+	.hero-kicker {
+		margin-bottom: 10rpx;
+		font-size: 22rpx;
+		font-weight: 600;
+		color: var(--brand-primary);
+	}
+
+	.hero-title {
+		font-size: 38rpx;
+		font-weight: 700;
+		color: var(--text-primary);
+	}
+
+	.hero-desc {
+		max-width: 520rpx;
+		margin-top: 10rpx;
+		font-size: 24rpx;
+		line-height: 1.6;
+		color: var(--text-secondary);
+	}
+
+	.hero-badge {
+		padding: 14rpx 18rpx;
+		border-radius: 20rpx;
+		background: rgba(109, 74, 255, 0.1);
+	}
+
+	.hero-badge text {
+		font-size: 20rpx;
+		font-weight: 600;
+		color: var(--brand-primary);
 	}
 
 	.service-image {
-		width: 100%;
-		height: 400rpx;
-		border-radius: 0 0 40rpx 40rpx;
-		box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+		width: calc(100% - 60rpx);
+		margin: 0 30rpx;
+		height: 320rpx;
+		border-radius: 28rpx;
+		box-shadow: var(--shadow-soft);
 	}
 }
 </style>

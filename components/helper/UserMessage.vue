@@ -7,36 +7,35 @@
 </template>
 
 <script setup>
-// 定义props
 defineProps({
   content: {
     type: String,
     required: true,
-    default: ''
+    default: ""
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
 .user-message-container {
   display: flex;
   justify-content: flex-end;
-  margin: 20rpx 30rpx;
+  margin: 20rpx 24rpx;
+}
 
-  .message-bubble {
-    max-width: 70%;
-    background: #4A8BFF;
-    border-radius: 20rpx 20rpx 8rpx 20rpx;
-    padding: 20rpx 24rpx;
-    position: relative;
+.message-bubble {
+  max-width: 72%;
+  padding: 20rpx 24rpx;
+  border-radius: 24rpx 24rpx 10rpx 24rpx;
+  background: linear-gradient(135deg, #6d4aff, #8d6bff);
+  box-shadow: 0 14rpx 30rpx rgba(109, 74, 255, 0.18);
+}
 
-    .message-text {
-      color: #ffffff;
-      font-size: 26rpx;
-      line-height: 1.4;
-      word-wrap: break-word;
-      word-break: break-all;
-    }
-  }
+.message-text {
+  color: #ffffff;
+  font-size: 26rpx;
+  line-height: 1.55;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
 	<view class="schedule-page">
-		<!-- 页面头部 - Glassmorphism 风格 -->
 		<view class="header-section">
-			<view class="header-bg-pattern"></view>
 			<view class="header-content">
-				<view class="header-icon-wrap">
-					<uni-icons type="calendar-filled" size="28" color="#fff"></uni-icons>
+				<view class="header-copy">
+					<text class="header-kicker">服务</text>
+					<text class="title">课程表查询</text>
+					<text class="subtitle">把登录、周次切换和课表结果放进统一的服务页模板里。</text>
 				</view>
-				<view class="header-text">
-					<text class="title">课程表</text>
-					<text class="subtitle">查看您的课程安排</text>
+				<view class="header-badge">
+					<uni-icons type="calendar-filled" size="22" color="#6D4AFF"></uni-icons>
+					<text>教务服务</text>
 				</view>
 			</view>
 		</view>
@@ -21,7 +21,7 @@
 				<view class="header-accent-bar"></view>
 				<view class="header-title-group">
 					<text class="card-title">教务系统登录</text>
-					<text class="card-subtitle">ACADEMIC SYSTEM</text>
+					<text class="card-subtitle">统一服务页模板 · 教务能力</text>
 				</view>
 			</view>
 
@@ -78,7 +78,7 @@
 				</view>
 
 				<button class="login-button" @click="handleLogin" :loading="loading">
-					<text>查询课表</text>
+					<text>{{ loading ? '查询中...' : '查询课表' }}</text>
 				</button>
 			</view>
 		</view>
@@ -99,8 +99,8 @@
 				</view>
 				<view class="stepper-divider"></view>
 				<view class="refresh-btn" @click="resetForm">
-					<uni-icons type="refresh" size="18" color="#5AC8FA"></uni-icons>
-					<text class="refresh-text">重新查询</text>
+					<uni-icons type="refresh" size="18" color="#6D4AFF"></uni-icons>
+					<text class="refresh-text">重置条件</text>
 				</view>
 			</view>
 		</view>
@@ -1476,4 +1476,144 @@ $accent-9: #8E8E93;
 		opacity: 1;
 	}
 }
+
+
+// ===== Phase 4 service-shell overrides =====
+.schedule-page {
+	background: linear-gradient(180deg, #f7f4ff 0%, #f5f7fb 32%, #f5f7fb 100%);
+	padding: 24rpx 24rpx calc(env(safe-area-inset-bottom) + 32rpx);
+}
+
+.header-section {
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(241, 237, 255, 0.98) 100%);
+	box-shadow: var(--shadow-soft);
+	padding: 30rpx;
+
+	.header-content {
+		justify-content: space-between;
+		gap: 20rpx;
+	}
+
+	.header-copy {
+		flex: 1;
+		min-width: 0;
+	}
+
+	 .header-kicker,
+	 .title,
+	 .subtitle,
+	 .header-badge text {
+		display: block;
+	 }
+
+	.header-kicker {
+		margin-bottom: 10rpx;
+		font-size: 22rpx;
+		font-weight: 600;
+		color: var(--brand-primary);
+	}
+
+	.header-text,
+	.header-bg-pattern,
+	.header-icon-wrap {
+		margin-left: 0;
+		display: none;
+	}
+
+	.header-copy .title {
+		font-size: 38rpx;
+		font-weight: 700;
+		color: var(--text-primary);
+		letter-spacing: 0;
+	}
+
+	.header-copy .subtitle {
+		margin-top: 10rpx;
+		font-size: 24rpx;
+		line-height: 1.6;
+		color: var(--text-secondary);
+	}
+
+	.header-badge {
+		padding: 14rpx 18rpx;
+		border-radius: 20rpx;
+		background: rgba(109, 74, 255, 0.1);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 8rpx;
+		flex-shrink: 0;
+	}
+
+	.header-badge text {
+		font-size: 20rpx;
+		font-weight: 600;
+		color: var(--brand-primary);
+	}
+}
+
+.form-card,
+.week-selector,
+.schedule-card,
+.empty-state {
+	box-shadow: var(--shadow-soft);
+	border: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+.form-card {
+	background: #ffffff;
+
+	.card-glass-bg {
+		display: none;
+	}
+
+	.card-title {
+		color: var(--text-primary);
+	}
+
+	.card-subtitle {
+		color: var(--text-tertiary);
+		letter-spacing: 0;
+		text-transform: none;
+	}
+
+	.form-input,
+	.form-picker {
+		background: #f8faff;
+	}
+
+	.form-item {
+		border-bottom: 1rpx solid #eef2f7;
+	}
+
+	.login-button {
+		background: linear-gradient(135deg, #6d4aff, #8d6bff);
+		box-shadow: 0 16rpx 32rpx rgba(109, 74, 255, 0.18);
+	}
+}
+
+.week-selector {
+	background: #ffffff;
+}
+
+.week-stepper {
+	background: #ffffff;
+	box-shadow: none;
+}
+
+.refresh-btn {
+	background: rgba(109, 74, 255, 0.08);
+}
+
+.refresh-text {
+	color: var(--brand-primary);
+}
+
+.empty-state .empty-icon {
+	font-size: 56rpx;
+}
+
 </style>

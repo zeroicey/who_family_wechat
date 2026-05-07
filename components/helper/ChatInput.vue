@@ -1,115 +1,92 @@
 <template>
   <view class="chat-input-container">
     <view class="input-wrapper">
-      <input 
-        class="message-input" 
-        type="text" 
+      <input
+        class="message-input"
+        type="text"
         :value="inputValue"
         @input="onInput"
-        placeholder="请输入消息..."
+        placeholder="输入你的校园问题..."
         :adjust-position="true"
         :hold-keyboard="true"
       />
       <view class="send-btn" @tap="onSend">
-        <uni-icons type="paperplane-filled" size="20" color="#4A8BFF"></uni-icons>
+        <uni-icons type="paperplane-filled" size="18" color="#FFFFFF"></uni-icons>
       </view>
     </view>
   </view>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch } from "vue";
 
-// 定义props
 const props = defineProps({
   value: {
     type: String,
-    default: ''
+    default: ""
   }
-})
+});
 
-// 定义emits
-const emit = defineEmits(['input', 'send'])
+const emit = defineEmits(["input", "send"]);
+const inputValue = ref(props.value);
 
-// 响应式数据
-const inputValue = ref(props.value)
-
-// 监听props变化
 watch(() => props.value, (newVal) => {
-  inputValue.value = newVal
-})
+  inputValue.value = newVal;
+});
 
-// 方法
 const onInput = (e) => {
-  inputValue.value = e.detail.value
-  emit('input', e.detail.value)
-}
+  inputValue.value = e.detail.value;
+  emit("input", e.detail.value);
+};
 
 const onSend = () => {
   if (inputValue.value.trim()) {
-    emit('send', inputValue.value.trim())
-    inputValue.value = ''
-    emit('input', '')
+    emit("send", inputValue.value.trim());
+    inputValue.value = "";
+    emit("input", "");
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
 .chat-input-container {
   position: fixed;
-  bottom: 0; // 改为贴底显示
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 999;
-  padding: 10rpx 15rpx 10rpx 15rpx; // 添加内边距
-  background: rgba(245, 245, 247, 0.95); // 添加背景色，避免透明导致的视觉问题
-  backdrop-filter: blur(10px);
-  
-  .input-wrapper {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border-radius: 8px;
-    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    padding: 15rpx;
-    
-    .message-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      font-size: 26rpx;
-      color: #333;
-      padding: 10rpx 15rpx;
-      min-height: 60rpx;
-      
-      &::placeholder {
-        color: #999;
-      }
-    }
-    
-    .send-btn {
-      width: 60rpx;
-      height: 60rpx;
-      border-radius: 50%;
-      background: #f0f2f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-left: 15rpx;
-      transition: all 0.2s ease;
-      
-      &:active {
-        background: #e6e8eb;
-        transform: scale(0.95);
-      }
-    }
-  }
+  padding: 16rpx 20rpx 18rpx;
+  background: rgba(245, 247, 251, 0.95);
+  backdrop-filter: blur(12px);
 }
 
-/* 键盘弹出时的适配 */
-.chat-input-container.keyboard-show {
-  bottom: 0;
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 14rpx;
+  border-radius: 28rpx;
+  background: #ffffff;
+  box-shadow: var(--shadow-soft);
+}
+
+.message-input {
+  flex: 1;
+  min-height: 60rpx;
+  padding: 10rpx 18rpx;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 26rpx;
+  color: var(--text-primary);
+}
+
+.send-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, #6d4aff, #8d6bff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

@@ -1,194 +1,190 @@
 <template>
-  <view class="home-header">
-    <!-- 欢迎语 -->
-    <view class="welcome-section">
-      <view class="welcome-text">
-        <text class="greeting">{{ greeting }}，</text>
-        <text class="username">{{ username }}</text>
+  <view class="service-hero">
+    <view class="hero-top">
+      <view>
+        <text class="eyebrow">互成一家</text>
+        <view class="greeting-row">
+          <text class="greeting">{{ greeting }}，</text>
+          <text class="username">{{ username }}</text>
+        </view>
+        <text class="hero-title">今天先处理哪件校园小事？</text>
       </view>
-      <view class="date-info">
-        <text class="date">{{ dateText }}</text>
+      <view class="date-pill">
+        <text>{{ dateText }}</text>
       </view>
     </view>
 
-    <!-- 轮播图 -->
-    <view class="banner-container">
-      <swiper class="banner-swiper" circular :indicator-dots="true" :autoplay="true" :interval="3000" :duration="500"
-        :indicator-color="'rgba(255, 255, 255, 0.5)'" :indicator-active-color="'#ffffff'">
-        <swiper-item v-for="(item, index) in bannerList" :key="index">
-          <view class="banner-item">
-            <image class="banner-image" :src="item.imageUrl" mode="aspectFill"></image>
-            <view class="banner-text">
-              <text class="banner-title">{{ item.title }}</text>
-              <text class="banner-desc" v-if="item.description">{{ item.description }}</text>
-            </view>
-          </view>
-        </swiper-item>
-      </swiper>
+    <view class="hero-panel">
+      <view class="panel-copy">
+        <text class="panel-title">校园服务入口</text>
+        <text class="panel-desc">把课表、成绩、打印、任务与常用信息放回第一视线，少一点装饰，多一点直达。</text>
+      </view>
+      <view class="panel-stats">
+        <view class="stat-item" v-for="item in summaryStats" :key="item.label">
+          <text class="stat-value">{{ item.value }}</text>
+          <text class="stat-label">{{ item.label }}</text>
+        </view>
+      </view>
     </view>
   </view>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from "vue";
 import { useUserStore } from "@/stores/user";
+
 const userStore = useUserStore();
 
-// 初始化 store
-
-// 用户名
 const username = computed(() => {
   const userInfo = userStore.get_user_info;
-  return userInfo?.name || '同学';
+  return userInfo?.name || "同学";
 });
 
-// 问候语
 const greeting = computed(() => {
   const hour = new Date().getHours();
-  if (hour < 6) return '凌晨好';
-  if (hour < 9) return '早上好';
-  if (hour < 12) return '上午好';
-  if (hour < 14) return '中午好';
-  if (hour < 18) return '下午好';
-  if (hour < 22) return '晚上好';
-  return '夜深了';
+  if (hour < 6) return "凌晨好";
+  if (hour < 9) return "早上好";
+  if (hour < 12) return "上午好";
+  if (hour < 14) return "中午好";
+  if (hour < 18) return "下午好";
+  if (hour < 22) return "晚上好";
+  return "夜深了";
 });
 
-// 日期文本
 const dateText = computed(() => {
   const date = new Date();
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  const weekDay = ['日', '一', '二', '三', '四', '五', '六'][date.getDay()];
+  const weekDay = ["日", "一", "二", "三", "四", "五", "六"][date.getDay()];
   return `${month}.${day} · 星期${weekDay}`;
 });
 
-// 轮播图数据
-const bannerList = ref([
-  {
-    id: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop',
-    linkUrl: '/pages/community/index',
-    title: '校园社区动态',
-    description: '了解最新校园活动与社区资讯'
-  },
-  {
-    id: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop',
-    linkUrl: '/pages/club/index',
-    title: '社团活动招新',
-    description: '丰富多彩的社团等你加入'
-  },
-  {
-    id: 3,
-    imageUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=800&auto=format&fit=crop',
-    linkUrl: '/pages/service/index',
-    title: '校园互助服务',
-    description: '便捷的校园生活服务平台'
-  },
-  {
-    id: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1600267175161-cfaa711b4a81?q=80&w=2070&auto=format&fit=crop',
-    linkUrl: '/pages/learning/index',
-    title: '学习资源共享',
-    description: '优质学习资源一站获取'
-  }
-]);
+const summaryStats = [
+  { label: "高频服务", value: "6+" },
+  { label: "社区频道", value: "4" },
+  { label: "常用入口", value: "1 步直达" }
+];
 </script>
 
 <style lang="scss" scoped>
-.home-header {
-  width: 100%;
+.service-hero {
+  padding: 36rpx var(--content-gutter) 24rpx;
 
-  .welcome-section {
-    padding: 0 5vw 4vw;
+  .hero-top {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
+    gap: 24rpx;
+    margin-bottom: 28rpx;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    margin-bottom: 12rpx;
+    padding: 8rpx 18rpx;
+    border-radius: var(--radius-pill);
+    background: rgba(109, 74, 255, 0.1);
+    color: var(--brand-primary);
+    font-size: 22rpx;
+    font-weight: 600;
+    letter-spacing: 1rpx;
+  }
+
+  .greeting-row {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 8rpx;
+    margin-bottom: 10rpx;
+  }
 
-    .welcome-text {
-      .greeting {
-        font-size: 5vw;
-        font-weight: 500;
-        color: #333;
-        letter-spacing: 0.05em;
-      }
+  .greeting,
+  .username {
+    font-size: 46rpx;
+    line-height: 1.15;
+    color: var(--text-primary);
+    font-weight: 700;
+  }
 
-      .username {
-        font-size: 5vw;
-        font-weight: 600;
-        color: #07c160;
-        letter-spacing: 0.05em;
-        position: relative;
-        text-shadow: 0 1px 2px rgba(7, 193, 96, 0.2);
-      }
-    }
+  .username {
+    color: var(--brand-primary);
+  }
 
-    .date-info {
-      .date {
-        font-size: 3.2vw;
-        color: #666;
-        background-color: #f5f5f5;
-        padding: 1vw 3vw;
-        border-radius: 4vw;
-        letter-spacing: 0.5px;
-      }
+  .hero-title {
+    display: block;
+    max-width: 520rpx;
+    color: var(--text-secondary);
+    font-size: 28rpx;
+    line-height: 1.5;
+  }
+
+  .date-pill {
+    flex-shrink: 0;
+    padding: 14rpx 20rpx;
+    border: 1rpx solid rgba(109, 74, 255, 0.12);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: var(--shadow-soft);
+
+    text {
+      color: var(--text-secondary);
+      font-size: 24rpx;
+      font-weight: 500;
     }
   }
 
-  .banner-container {
-    padding: 0 5vw;
-    margin-bottom: 4vw;
+  .hero-panel {
+    padding: 30rpx;
+    border-radius: 32rpx;
+    background: linear-gradient(135deg, #6d4aff 0%, #8d6bff 58%, #a78bfa 100%);
+    box-shadow: var(--shadow-strong);
+    color: #fff;
+  }
 
-    .banner-swiper {
-      width: 100%;
-      height: 45vw;
-      border-radius: 4vw;
-      overflow: hidden;
-      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  .panel-copy {
+    margin-bottom: 28rpx;
+  }
 
-      .banner-item {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+  .panel-title {
+    display: block;
+    margin-bottom: 12rpx;
+    font-size: 36rpx;
+    font-weight: 700;
+  }
 
-        .banner-image {
-          width: 100%;
-          height: 100%;
-          transition: transform 0.3s;
+  .panel-desc {
+    display: block;
+    font-size: 26rpx;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.88);
+  }
 
-          &:hover {
-            transform: scale(1.05);
-          }
-        }
+  .panel-stats {
+    display: flex;
+    gap: 20rpx;
+  }
 
-        .banner-text {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          padding: 4vw;
-          background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  .stat-item {
+    flex: 1;
+    min-width: 0;
+    padding: 22rpx 20rpx;
+    border-radius: 24rpx;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1rpx solid rgba(255, 255, 255, 0.18);
+  }
 
-          .banner-title {
-            font-size: 4.5vw;
-            font-weight: 600;
-            color: #fff;
-            display: block;
-            margin-bottom: 1vw;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-          }
+  .stat-value {
+    display: block;
+    margin-bottom: 8rpx;
+    font-size: 34rpx;
+    font-weight: 700;
+  }
 
-          .banner-desc {
-            font-size: 3.2vw;
-            color: rgba(255, 255, 255, 0.9);
-            display: block;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-          }
-        }
-      }
-    }
+  .stat-label {
+    display: block;
+    font-size: 22rpx;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.82);
   }
 }
 </style>

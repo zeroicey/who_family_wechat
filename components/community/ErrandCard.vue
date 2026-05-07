@@ -80,175 +80,125 @@ const statusClass = computed(() => {
 <style scoped>
 .errand-card {
   background-color: #ffffff;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 10px;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: var(--shadow-soft);
 }
 
-/* 第一行：类型标签 + 内容 */
 .card-header {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  gap: 10rpx;
+  margin-bottom: 14rpx;
 }
 
 .type-tag {
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-right: 8px;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
   flex-shrink: 0;
-  border: 1px solid;
+  border: 1rpx solid;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .type-text {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 20rpx;
+  font-weight: 600;
   text-align: center;
 }
 
-.type-green {
-  border-color: #00cc6a;
-}
-
-.type-green .type-text {
-  color: #00cc6a;
-}
-
-.type-orange {
-  border-color: #ff9500;
-}
-
-.type-orange .type-text {
-  color: #ff9500;
-}
-
-.type-blue {
-  border-color: #007AFF;
-}
-
-.type-blue .type-text {
-  color: #007AFF;
-}
-
-.type-red {
-  border-color: #ff6b6b;
-}
-
-.type-red .type-text {
-  color: #ff6b6b;
-}
-
-.type-purple {
-  border-color: #5856d6;
-}
-
-.type-purple .type-text {
-  color: #5856d6;
-}
-
-.type-yellow {
-  border-color: #ffcc00;
-}
-
-.type-yellow .type-text {
-  color: #ffcc00;
-}
-
-.type-gray {
-  border-color: #999999;
-}
-
-.type-gray .type-text {
-  color: #999999;
-}
+.type-green { border-color: #22c55e; }
+.type-green .type-text { color: #22c55e; }
+.type-orange { border-color: #f59e0b; }
+.type-orange .type-text { color: #f59e0b; }
+.type-blue { border-color: #3b82f6; }
+.type-blue .type-text { color: #3b82f6; }
+.type-red { border-color: #ef4444; }
+.type-red .type-text { color: #ef4444; }
+.type-purple { border-color: #8b5cf6; }
+.type-purple .type-text { color: #8b5cf6; }
+.type-yellow { border-color: #eab308; }
+.type-yellow .type-text { color: #eab308; }
+.type-gray { border-color: #94a3b8; }
+.type-gray .type-text { color: #94a3b8; }
 
 .content-text {
-  font-size: 15px;
-  color: #333333;
-  line-height: 1.4;
+  font-size: 26rpx;
+  color: var(--text-primary);
+  line-height: 1.5;
   flex: 1;
 }
 
-/* 第二行：位置信息 */
 .location-row {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
-  background-color: #f5f5f5;
-  padding: 8px 12px;
-  border-radius: 4px;
+  margin-bottom: 14rpx;
+  background-color: #f8faff;
+  padding: 12rpx 14rpx;
+  border-radius: 16rpx;
 }
 
 .icon {
-  width: 16px;
-  height: 16px;
+  width: 32rpx;
+  height: 32rpx;
 }
 
 .position-icon {
-  margin-right: 6px;
+  margin-right: 8rpx;
 }
 
 .location-text {
-  font-size: 14px;
-  color: #666666;
+  font-size: 24rpx;
+  color: var(--text-secondary);
 }
 
-/* 第三行：价格 + 状态 */
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.price-section {
-  display: flex;
-  align-items: center;
-}
-
-.yuan-icon {
-  margin-right: 4px;
-}
-
-.price-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: #ff9500;
-}
-
+.price-section,
 .status-section {
   display: flex;
   align-items: center;
-  gap: 8px;
+}
+
+.price-section { gap: 6rpx; }
+.status-section { gap: 10rpx; }
+
+.price-text {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #f59e0b;
 }
 
 .status-text {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 500;
+  font-size: 20rpx;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  font-weight: 600;
 }
 
 .status-pending {
-  color: #ff9500;
-  background-color: rgba(255, 149, 0, 0.1);
+  color: #f59e0b;
+  background-color: rgba(245, 158, 11, 0.1);
 }
 
 .status-completed {
-  color: #00cc6a;
-  background-color: rgba(0, 204, 106, 0.1);
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.1);
 }
 
 .status-cancelled {
-  color: #999999;
-  background-color: rgba(153, 153, 153, 0.1);
+  color: #94a3b8;
+  background-color: rgba(148, 163, 184, 0.12);
 }
 
 .more-icon {
-  width: 20px;
-  height: 20px;
+  width: 28rpx;
+  height: 28rpx;
   opacity: 0.6;
 }
 </style>

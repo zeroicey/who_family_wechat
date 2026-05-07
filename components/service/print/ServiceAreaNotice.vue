@@ -1,42 +1,71 @@
 <template>
 	<view class="service-area-notice">
 		<view class="notice-header">
-			<uni-icons type="info-filled" size="20" color="#ff6b35"></uni-icons>
-			<text class="notice-title">服务范围说明</text>
+			<view class="notice-icon">
+				<uni-icons type="info-filled" size="16" color="#F59E0B"></uni-icons>
+			</view>
+			<view>
+				<text class="notice-kicker">服务范围</text>
+				<text class="notice-title">当前配送与下单说明</text>
+			</view>
 		</view>
-		<text class="notice-text">仅限南海大学城区域内下单，超出范围无法提供相应服务请谅解，配送仅限广东东软学院校内以及小镇宿舍</text>
+		<text class="notice-text">仅限南海大学城区域内下单，超出范围无法提供相应服务；配送仅限广东东软学院校内以及小镇宿舍。</text>
 	</view>
 </template>
 
 <script setup>
-// 无需额外逻辑，纯展示组件
 </script>
 
 <style lang="scss" scoped>
 .service-area-notice {
-	background-color: #fff8f0;
-	border: 1rpx solid #ff6b35;
+	background: #fffaf0;
+	border: 1rpx solid rgba(245, 158, 11, 0.18);
 	margin: 20rpx 30rpx;
-	padding: 20rpx;
-	border-radius: 12rpx;
+	padding: 24rpx;
+	border-radius: 24rpx;
+	box-shadow: var(--shadow-soft);
+}
 
-	.notice-header {
-		display: flex;
-		align-items: center;
-		margin-bottom: 10rpx;
+.notice-header {
+	display: flex;
+	align-items: center;
+	gap: 16rpx;
+	margin-bottom: 12rpx;
+}
 
-		.notice-title {
-			font-size: 28rpx;
-			font-weight: bold;
-			color: #ff6b35;
-			margin-left: 8rpx;
-		}
-	}
+.notice-icon {
+	width: 48rpx;
+	height: 48rpx;
+	border-radius: 16rpx;
+	background: rgba(245, 158, 11, 0.12);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
 
-	.notice-text {
-		font-size: 24rpx;
-		color: #666;
-		line-height: 1.4;
-	}
+.notice-kicker,
+.notice-title,
+.notice-text {
+	display: block;
+}
+
+.notice-kicker {
+	margin-bottom: 6rpx;
+	font-size: 20rpx;
+	font-weight: 600;
+	color: #d97706;
+}
+
+.notice-title {
+	font-size: 28rpx;
+	font-weight: 700;
+	color: var(--text-primary);
+}
+
+.notice-text {
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: var(--text-secondary);
 }
 </style>

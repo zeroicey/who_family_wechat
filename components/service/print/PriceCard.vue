@@ -1,8 +1,13 @@
 <template>
 	<view class="price-card">
 		<view class="card-header">
-			<uni-icons type="wallet" size="24" color="#ffc107"></uni-icons>
-			<text class="card-title">打印价格</text>
+			<view class="title-group">
+				<text class="card-kicker">价格说明</text>
+				<text class="card-title">打印价格</text>
+			</view>
+			<view class="header-icon">
+				<uni-icons type="wallet" size="18" color="#6D4AFF"></uni-icons>
+			</view>
 		</view>
 		<view class="price-content">
 			<text v-if="priceText" class="price-text">{{ priceText }}</text>
@@ -23,41 +28,67 @@ const priceLoading = computed(() => printStore.get_price_loading);
 
 <style lang="scss" scoped>
 .price-card {
-	background-color: #ffffff;
+	background: #ffffff;
 	margin: 20rpx 30rpx;
-	padding: 30rpx;
-	border-radius: 20rpx;
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+	padding: 28rpx;
+	border-radius: 24rpx;
+	box-shadow: var(--shadow-soft);
+}
 
-	.card-header {
-		display: flex;
-		align-items: center;
-		margin-bottom: 20rpx;
+.card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 18rpx;
+}
 
-		.card-title {
-			font-size: 32rpx;
-			font-weight: bold;
-			color: #333;
-			margin-left: 10rpx;
-		}
-	}
+.card-kicker,
+.card-title,
+.price-text,
+.loading-text,
+.error-text {
+	display: block;
+}
 
-	.price-content {
-		.price-text {
-			font-size: 28rpx;
-			color: #333;
-			line-height: 1.4;
-		}
+.card-kicker {
+	margin-bottom: 8rpx;
+	font-size: 22rpx;
+	font-weight: 600;
+	color: var(--brand-primary);
+}
 
-		.loading-text {
-			font-size: 28rpx;
-			color: #999;
-		}
+.card-title {
+	font-size: 30rpx;
+	font-weight: 700;
+	color: var(--text-primary);
+}
 
-		.error-text {
-			font-size: 28rpx;
-			color: #dc3545;
-		}
-	}
+.header-icon {
+	width: 56rpx;
+	height: 56rpx;
+	border-radius: 18rpx;
+	background: rgba(109, 74, 255, 0.1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.price-text,
+.loading-text,
+.error-text {
+	font-size: 24rpx;
+	line-height: 1.6;
+}
+
+.price-text {
+	color: var(--text-primary);
+}
+
+.loading-text {
+	color: var(--text-tertiary);
+}
+
+.error-text {
+	color: #dc3545;
 }
 </style>

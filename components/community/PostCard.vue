@@ -262,128 +262,107 @@ const userBrand = computed(() => {
 <style scoped>
 .post-card {
   background-color: #ffffff;
-  padding: 16px 16px 8px;
-  margin: 0;
-  position: relative;
-  overflow: hidden;
+  padding: 24rpx;
+  border-radius: 28rpx;
+  box-shadow: var(--shadow-soft);
 }
 
-/* 用户信息样式 */
 .post-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 16rpx;
+  gap: 16rpx;
 }
 
 .user-info {
   display: flex;
   align-items: center;
+  gap: 16rpx;
+  min-width: 0;
+  flex: 1;
 }
 
 .avatar-wrapper {
   position: relative;
-  margin-right: 10px;
+  flex-shrink: 0;
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 28rpx;
   overflow: hidden;
-  /* 新增，确保图片不超出圆形边界 */
+  background: #eef2f7;
 }
 
 .avatar-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  /* 确保图片覆盖整个区域 */
 }
 
-.avatar-text {
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
+.user-brand {
+  position: absolute;
+  left: 8rpx;
+  bottom: -10rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 999rpx;
+  background: rgba(109, 74, 255, 0.12);
+}
+
+.brand-text,
+.username,
+.post-time,
+.follow-text,
+.view-more-text,
+.action-text {
+  display: block;
+}
+
+.brand-text {
+  font-size: 18rpx;
+  font-weight: 700;
+  color: var(--brand-primary);
 }
 
 .user-details {
-  display: flex;
-  flex-direction: column;
+  min-width: 0;
+  flex: 1;
 }
 
 .username {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 2px;
+  margin-bottom: 8rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .post-time {
-  font-size: 12px;
-  color: #999;
+  font-size: 22rpx;
+  color: var(--text-tertiary);
 }
 
-/* 用户标签样式 */
-.user-brand {
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-8deg);
-  background-color: #ff9a56;
-  padding: 2px 8px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  z-index: 1;
-}
-
-.brand-text {
-  font-size: 10px;
-  color: #fff;
-  font-weight: 600;
-  line-height: 1;
-}
-
-/* 关注按钮样式 */
 .follow-btn {
-  background-color: #fff;
-  border: 1px solid #00cc6a;
-  padding: 6px 16px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 12rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(109, 74, 255, 0.1);
+  flex-shrink: 0;
 }
 
 .follow-text {
-  font-size: 13px;
-  color: #00cc6a;
-  font-weight: 500;
-}
-
-.brand-text {
-  font-size: 11px;
-  color: #fff;
+  font-size: 22rpx;
   font-weight: 600;
-  line-height: 1;
+  color: var(--brand-primary);
 }
 
-/* 内容样式 */
 .post-content {
-  margin-bottom: 12px;
+  margin-bottom: 16rpx;
 }
 
 .content-text {
-  font-size: 15px;
-  line-height: 1.5;
-  color: #333;
+  font-size: 26rpx;
+  line-height: 1.65;
+  color: var(--text-primary);
   word-break: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 5;
@@ -393,130 +372,39 @@ const userBrand = computed(() => {
 }
 
 .view-more-text {
-  font-size: 13px;
-  color: #007AFF;
-  margin-top: 4px;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: var(--brand-primary);
 }
 
-/* 图片区域样式 */
 .image-container {
-  margin: 10px 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  /* 使用gap替代margin，更精确控制间距 */
+  margin-bottom: 18rpx;
 }
 
-.image-item {
-  position: relative;
-  overflow: hidden;
-  border-radius: 6px;
-  /* 添加圆角，更符合微信设计 */
-}
-
-.post-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.image-placeholder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f5f5f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-}
-
-.placeholder-image {
-  width: 30px;
-  height: 30px;
-  opacity: 0.5;
-}
-
-/* 单图样式 - 参考微信朋友圈，最大宽度约为屏幕的60%，高度自适应但有最大限制 */
-.image-single .image-item {
-  width: 200px;
-  /* 固定宽度，约为手机屏幕的60% */
-  height: 200px;
-  /* 正方形显示，更紧凑 */
-  max-width: 60vw;
-  /* 响应式最大宽度 */
-  max-height: 300px;
-  /* 最大高度限制 */
-}
-
-/* 双图样式 - 每张图片稍小一些 */
-.image-double .image-item {
-  width: calc(50% - 1.5px);
-  /* 减去gap的一半 */
-  height: 120px;
-  /* 固定高度，更紧凑 */
-}
-
-/* 三图样式 - 第一张图片占一行，下面两张并排 */
-.image-triple .image-item:first-child {
-  width: 100%;
-  height: 120px;
-  margin-bottom: 3px;
-}
-
-.image-triple .image-item:not(:first-child) {
-  width: calc(50% - 1.5px);
-  height: 120px;
-}
-
-/* 四图及以上网格样式 - 2x2网格 */
-.image-grid .image-item {
-  width: calc(50% - 1.5px);
-  height: 100px;
-  /* 减小高度，更紧凑 */
-}
-
-/* 底部操作区域样式 */
 .post-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 8px;
 }
 
-.footer-left {
-  display: flex;
-  align-items: center;
-}
-
-.footer-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background-color: #f5f5f5;
-  padding: 6px 12px;
-  border-radius: 16px;
-}
-
+.footer-left,
+.footer-right,
 .action-group {
   display: flex;
   align-items: center;
 }
 
-.action-icon {
-  margin-right: 4px;
-  display: flex;
-  align-items: center;
+.footer-right {
+  gap: 18rpx;
+}
+
+.action-group,
+.footer-left {
+  gap: 8rpx;
 }
 
 .action-text {
-  font-size: 14px;
-  color: #999;
-  line-height: 1;
+  font-size: 22rpx;
+  color: var(--text-tertiary);
 }
 </style>

@@ -1,20 +1,21 @@
 <template>
 	<view class="service-info-card">
-		<text class="card-title">服务信息</text>
+		<text class="card-kicker">服务信息</text>
+		<text class="card-title">{{ serviceType === 'pickup' ? '取件安排' : '配送安排' }}</text>
 		<view class="info-item" v-if="serviceType === 'pickup'">
-			<text class="info-label">上门取件地址：</text>
-			<text class="info-value">广东东软学院图书馆4楼sovo互成一家工位</text>
+			<text class="info-label">取件地址</text>
+			<text class="info-value">广东东软学院图书馆4楼 sovo 互成一家工位</text>
 		</view>
 		<view class="info-item" v-if="serviceType === 'delivery'">
-			<text class="info-label">送货上门地址：</text>
+			<text class="info-label">配送地址</text>
 			<text class="info-value">{{ selectedAddress ? selectedAddress.fullAddress : '请先选择收货地址' }}</text>
 		</view>
 		<view class="info-item" v-if="serviceType === 'pickup'">
-			<text class="info-label">营业时间：</text>
+			<text class="info-label">营业时间</text>
 			<text class="info-value">周一至周日 9:00-21:00</text>
 		</view>
 		<view class="info-item" v-if="serviceType === 'delivery'">
-			<text class="info-label">配送时间：</text>
+			<text class="info-label">配送时间</text>
 			<text class="info-value">工作日 10:00-18:00（节假日顺延）</text>
 		</view>
 	</view>
@@ -25,7 +26,6 @@ import { computed } from 'vue';
 import { useAddressStore } from "@/stores/address";
 const addressStore = useAddressStore();
 
-// Props
 const props = defineProps({
 	serviceType: {
 		type: String,
@@ -33,48 +33,58 @@ const props = defineProps({
 	}
 });
 
-// 计算属性
 const selectedAddress = computed(() => addressStore.get_default_address);
 </script>
 
 <style lang="scss" scoped>
 .service-info-card {
-	background-color: #ffffff;
+	background: #ffffff;
 	margin: 20rpx 30rpx;
-	padding: 30rpx;
-	border-radius: 20rpx;
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+	padding: 28rpx;
+	border-radius: 24rpx;
+	box-shadow: var(--shadow-soft);
+}
 
-	.card-title {
-		font-size: 32rpx;
-		font-weight: bold;
-		color: #333;
-		margin-bottom: 20rpx;
-		display: block;
+.card-kicker,
+.card-title,
+.info-label,
+.info-value {
+	display: block;
+}
+
+.card-kicker {
+	margin-bottom: 8rpx;
+	font-size: 22rpx;
+	font-weight: 600;
+	color: var(--brand-primary);
+}
+
+.card-title {
+	margin-bottom: 20rpx;
+	font-size: 30rpx;
+	font-weight: 700;
+	color: var(--text-primary);
+}
+
+.info-item {
+	padding: 18rpx 0;
+	border-bottom: 1rpx solid #eef2f7;
+
+	&:last-child {
+		padding-bottom: 0;
+		border-bottom: none;
 	}
+}
 
-	.info-item {
-		display: flex;
-		margin-bottom: 15rpx;
-		align-items: flex-start;
+.info-label {
+	margin-bottom: 8rpx;
+	font-size: 22rpx;
+	color: var(--text-tertiary);
+}
 
-		&:last-child {
-			margin-bottom: 0;
-		}
-
-		.info-label {
-			font-size: 28rpx;
-			color: #666;
-			width: 160rpx;
-			flex-shrink: 0;
-		}
-
-		.info-value {
-			font-size: 28rpx;
-			color: #333;
-			flex: 1;
-			line-height: 1.4;
-		}
-	}
+.info-value {
+	font-size: 26rpx;
+	line-height: 1.6;
+	color: var(--text-primary);
 }
 </style>

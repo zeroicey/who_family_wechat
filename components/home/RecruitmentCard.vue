@@ -1,292 +1,168 @@
 <template>
-    <view class="recruitment-container">
-        <view class="section-header">
-            <text class="title">近期招聘</text>
-            <text class="more" @click="navigateToMore">查看更多</text>
-        </view>
-
-        <view class="recruitment-list">
-            <!-- 没有数据时显示空状态 -->
-            <view class="empty-state" v-if="recruits.length == 0">
-                <text class="empty-text">暂无招聘信息</text>
-            </view>
-
-            <!-- 加载中状态 -->
-            <view class="loading-state" v-else-if="loading">
-                <view class="loading-animation"></view>
-                <text class="loading-text">正在加载...</text>
-            </view>
-
-            <!-- 招聘列表 -->
-            <view class="recruitment-item" v-for="(item, index) in recruits" :key="index" @click="viewDetail(item)"
-                v-else>
-                <view class="recruitment-info">
-                    <view class="recruitment-title">{{ item.name }}</view>
-                    <view class="recruitment-tags">
-                        <text class="tag type-default">{{ item.type }}</text> <!-- 使用默认的 type-default 样式 -->
-                        <view class="recruitment-org">{{ item.organizationName }}</view>
-                        <text v-if="item.endTime" class="deadline">截止: {{ item.endTime }}</text>
-                    </view>
-                </view>
-                <view class="recruitment-right">
-                    <text class="arrow">›</text>
-                </view>
-            </view>
-        </view>
+  <view class="discovery-section">
+    <view class="section-head">
+      <view>
+        <text class="section-kicker">发现内容</text>
+        <text class="section-title">招聘退到第二层，但仍能快速找到</text>
+      </view>
+      <text class="more" @click="navigateToMore">进入发现</text>
     </view>
+
+    <view class="recruitment-list">
+      <view class="recruitment-item" v-for="item in recruits" :key="item.id" @click="viewDetail(item)">
+        <view class="item-main">
+          <text class="item-title">{{ item.name }}</text>
+          <view class="item-meta">
+            <text class="type-tag">{{ item.type }}</text>
+            <text class="org-name">{{ item.organizationName }}</text>
+          </view>
+        </view>
+        <text class="item-arrow">查看</text>
+      </view>
+
+      <view class="empty-state" v-if="recruits.length === 0">
+        <text>暂无招聘信息</text>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { computed, onMounted } from "vue";
 import { useRecruitStore } from "@/stores/recruit";
+
 const recruitStore = useRecruitStore();
 
-// 加载状态
-const loading = ref(false);
-
-// 招聘数据
 const recruits = computed(() => {
-    const allRecruits = recruitStore.get_recruits;
-    return allRecruits && allRecruits.length > 5 ? allRecruits.slice(0, 5) : allRecruits;
+  const allRecruits = recruitStore.get_recruits || [];
+  return allRecruits.slice(0, 3);
 });
 
 onMounted(async () => {
-    if (!recruits.value || recruits.value.length === 0) {
-        await recruitStore.fetch_first_recruits();
-    }
-})
+  if (!recruits.value.length) {
+    await recruitStore.fetch_first_recruits();
+  }
+});
 
-// 查看更多
 const navigateToMore = () => {
-    uni.navigateTo({
-        url: '/pages/recruit/index'
-    });
+  uni.switchTab({
+    url: "/pages/knowledge/index"
+  });
 };
 
-// 查看详情
 const viewDetail = (item) => {
-    uni.navigateTo({
-        url: `/pages/recruit/detail?id=${item.id}`
-    });
+  uni.navigateTo({
+    url: `/pages/recruit/detail?id=${item.id}`
+  });
 };
 </script>
 
 <style lang="scss" scoped>
-.recruitment-container {
-    margin: 5vw 5vw;
-    padding: 4vw;
-    background-color: #ffffff;
-    border-radius: 4vw;
-    box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.06);
+.discovery-section {
+  margin: 28rpx var(--content-gutter) 0;
+  padding: 28rpx;
+  border-radius: 28rpx;
+  background: var(--surface-card);
+  box-shadow: var(--shadow-soft);
 
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 4vw;
-        position: relative;
-        padding-left: 3vw;
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20rpx;
+    margin-bottom: 20rpx;
+  }
 
-        &::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 1vw;
-            height: 5vw;
-            background: linear-gradient(to bottom, #1890ff, #36a6ff);
-            border-radius: 0.6vw;
-        }
+  .section-kicker,
+  .section-title,
+  .more,
+  .item-title,
+  .empty-state text {
+    display: block;
+  }
 
-        .title {
-            font-size: 4.2vw;
-            font-weight: 600;
-            color: #333;
-            letter-spacing: 0.2vw;
-        }
+  .section-kicker {
+    margin-bottom: 10rpx;
+    font-size: 22rpx;
+    font-weight: 600;
+    color: var(--brand-primary);
+  }
 
-        .more {
-            font-size: 3.2vw;
-            color: #1890ff;
-            padding: 1vw 2vw;
-            background-color: rgba(24, 144, 255, 0.08);
-            border-radius: 5vw;
-            transition: all 0.3s;
+  .section-title {
+    font-size: 32rpx;
+    line-height: 1.4;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
 
-            &:active {
-                background-color: rgba(24, 144, 255, 0.15);
-            }
-        }
+  .more {
+    flex-shrink: 0;
+    font-size: 24rpx;
+    color: var(--brand-primary);
+    font-weight: 600;
+  }
+
+  .recruitment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18rpx;
+    padding: 22rpx 0;
+    border-bottom: 1rpx solid var(--border-soft);
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
     }
+  }
 
-    .recruitment-list {
+  .item-main {
+    min-width: 0;
+    flex: 1;
+  }
 
-        // 空状态样式
-        .empty-state {
-            padding: 10vw 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+  .item-title {
+    margin-bottom: 10rpx;
+    font-size: 28rpx;
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
 
-            .empty-text {
-                font-size: 3.5vw;
-                color: #aaa;
-                margin-top: 3vw;
-            }
-        }
+  .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 12rpx;
+    flex-wrap: wrap;
+  }
 
-        // 加载中状态
-        .loading-state {
-            padding: 6vw 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+  .type-tag {
+    padding: 6rpx 14rpx;
+    border-radius: 999rpx;
+    background: rgba(109, 74, 255, 0.1);
+    color: var(--brand-primary);
+    font-size: 22rpx;
+    font-weight: 600;
+  }
 
-            .loading-animation {
-                width: 6vw;
-                height: 6vw;
-                border: 0.5vw solid #f0f0f0;
-                border-top: 0.5vw solid #1890ff;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-            }
+  .org-name {
+    font-size: 22rpx;
+    color: var(--text-tertiary);
+  }
 
-            .loading-text {
-                font-size: 3.2vw;
-                color: #999;
-                margin-top: 2vw;
-            }
+  .item-arrow {
+    flex-shrink: 0;
+    font-size: 24rpx;
+    color: var(--text-secondary);
+  }
 
-            @keyframes spin {
-                0% {
-                    transform: rotate(0deg);
-                }
+  .empty-state {
+    padding: 12rpx 0 4rpx;
 
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
-        }
-
-        .recruitment-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5vw 1vw;
-            border-bottom: 1px dashed #f0f0f0;
-            margin-bottom: 1vw;
-            border-radius: 2vw;
-            transition: all 0.3s;
-
-            &:active {
-                background-color: #f9fafc;
-                transform: scale(0.98);
-            }
-
-            &:last-child {
-                border-bottom: none;
-                margin-bottom: 0;
-            }
-
-            .recruitment-info {
-                flex: 1;
-
-                .recruitment-title {
-                    font-size: 4vw;
-                    font-weight: 600;
-                    color: #333;
-                    margin-bottom: 2vw;
-                    line-height: 1.4;
-                }
-
-                .recruitment-tags {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 2vw;
-
-                    .tag {
-                        font-size: 2.8vw;
-                        padding: 0.8vw 2vw;
-                        border-radius: 3vw;
-                        margin-right: 3vw;
-                        font-weight: 500;
-                    }
-
-                    .type-default {
-                        background-color: #e6f7ff;
-                        /* 默认背景色 */
-                        color: #1890ff;
-                        /* 默认文字颜色 */
-                    }
-
-                    /* 保留其他特定类型样式，如果将来需要可以取消注释 */
-                    /* .type-campus {
-                        background-color: #e6f7ff;
-                        color: #1890ff;
-                    }
-
-                    .type-volunteer {
-                        background-color: #f6ffed;
-                        color: #52c41a;
-                    }
-
-                    .type-club {
-                        background-color: #f9f0ff;
-                        color: #722ed1;
-                    } */
-
-                    .deadline {
-                        font-size: 2.8vw;
-                        color: #fa8c16;
-                        font-weight: 500;
-                    }
-                }
-
-                .recruitment-org {
-                    font-size: 3vw;
-                    color: #666;
-                    background-color: #f5f7fa;
-                    display: inline-block;
-                    padding: 0.5vw 2vw;
-                    border-radius: 3vw;
-                }
-            }
-
-            .recruitment-right {
-                display: flex;
-                align-items: center;
-
-                /* .status {
-                    font-size: 3vw;
-                    color: #52c41a;
-                    margin-right: 2vw;
-                    font-weight: 500;
-                    background-color: rgba(82, 196, 26, 0.1);
-                    padding: 0.8vw 2vw;
-                    border-radius: 3vw;
-                }
-
-                .status-urgent {
-                    color: #f5222d;
-                    background-color: rgba(245, 34, 45, 0.1);
-                } */
-
-                .arrow {
-                    font-size: 5vw;
-                    color: #bfbfbf;
-                    width: 6vw;
-                    height: 6vw;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border-radius: 50%;
-                    background-color: #f5f7fa;
-                }
-            }
-        }
+    text {
+      font-size: 24rpx;
+      color: var(--text-tertiary);
     }
+  }
 }
 </style>

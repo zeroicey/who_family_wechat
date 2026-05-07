@@ -1,8 +1,7 @@
 <template>
   <view class="errand-container">
-    <!-- 跑腿任务列表 -->
     <view v-if="errandTasks.length > 0" class="tasks-container">
-      <errand-card
+      <ErrandCard
         v-for="task in errandTasks"
         :key="task.id"
         :task="task"
@@ -10,39 +9,37 @@
       />
     </view>
 
-    <!-- 空状态 -->
     <view v-else class="empty-state">
-      <text>暂无跑腿任务</text>
+      <text class="empty-title">暂无跑腿任务</text>
+      <text class="empty-desc">新的互助需求会出现在这里，先保留频道位置与入口强度。</text>
     </view>
   </view>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
-import ErrandCard from './ErrandCard.vue';
+import { computed, onMounted } from "vue";
+import ErrandCard from "./ErrandCard.vue";
 import { useErrandStore } from "@/stores/errand";
+
 const errandStore = useErrandStore();
 
-// 获取跑腿任务列表，添加防御性代码
 const errandTasks = computed(() => {
   const tasks = errandStore.get_tasks;
-  console.log('[Errand.vue] getter返回值:', tasks);
+  console.log("[Errand.vue] getter返回值:", tasks);
   return tasks || [];
 });
 
-// 处理任务卡片点击
 const handleTaskClick = (task) => {
-  console.log('点击跑腿任务:', task);
+  console.log("点击跑腿任务:", task);
 };
 
-// 组件挂载时加载任务数据
 onMounted(async () => {
-  console.log('[Errand.vue] 组件挂载，开始加载任务');
+  console.log("[Errand.vue] 组件挂载，开始加载任务");
   try {
     await errandStore.fetch_tasks();
-    console.log('[Errand.vue] 任务加载完成');
+    console.log("[Errand.vue] 任务加载完成");
   } catch (error) {
-    console.error('[Errand.vue] 任务加载失败:', error);
+    console.error("[Errand.vue] 任务加载失败:", error);
   }
 });
 </script>
@@ -50,21 +47,39 @@ onMounted(async () => {
 <style scoped>
 .errand-container {
   min-height: 100vh;
-  background-color: #f8f8f8;
-  /* padding: 16px; */
+  padding: 0 24rpx 140rpx;
 }
 
 .tasks-container {
   display: flex;
   flex-direction: column;
+  gap: 16rpx;
 }
 
 .empty-state {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 100rpx 0;
-  color: #999;
-  font-size: 28rpx;
+  margin: 0 8rpx;
+  padding: 72rpx 32rpx;
+  border-radius: 28rpx;
+  background: #ffffff;
+  box-shadow: 0 10rpx 30rpx rgba(24, 33, 49, 0.06);
+  text-align: center;
+}
+
+.empty-title,
+.empty-desc {
+  display: block;
+}
+
+.empty-title {
+  margin-bottom: 12rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #182131;
+}
+
+.empty-desc {
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #7b8496;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<view class="service-intro-card">
-		<text class="title">校园打印服务 | 便捷文印助手</text>
-		<text class="subtitle">快速便民，打印服务触手可及！</text>
+		<text class="title">校园打印服务</text>
+		<text class="subtitle">保留原有下单流程，但用更清楚的服务结构来承载它。</text>
 		<view class="tags">
 			<text class="tag">快速出稿</text>
 			<text class="tag">多点可取</text>
@@ -11,44 +11,50 @@
 </template>
 
 <script setup>
-// 无需额外逻辑，纯展示组件
 </script>
 
 <style lang="scss" scoped>
 .service-intro-card {
-	background-color: #ffffff;
-	margin: -60rpx 30rpx 20rpx;
-	padding: 30rpx;
-	border-radius: 20rpx;
-	box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
-	position: relative;
+	background: #ffffff;
+	margin: 20rpx 30rpx;
+	padding: 28rpx;
+	border-radius: 24rpx;
+	box-shadow: var(--shadow-soft);
 	display: flex;
 	flex-direction: column;
+}
 
-	.title {
-		font-size: 36rpx;
-		font-weight: bold;
-		color: #333;
-	}
+.title,
+.subtitle {
+	display: block;
+}
 
-	.subtitle {
-		font-size: 26rpx;
-		color: #666;
-		margin-top: 15rpx;
-	}
+.title {
+	font-size: 34rpx;
+	font-weight: 700;
+	color: var(--text-primary);
+}
 
-	.tags {
-		display: flex;
-		margin-top: 25rpx;
+.subtitle {
+	margin-top: 12rpx;
+	font-size: 24rpx;
+	line-height: 1.6;
+	color: var(--text-secondary);
+}
 
-		.tag {
-			background-color: #e8f4ff;
-			color: #007aff;
-			padding: 8rpx 16rpx;
-			border-radius: 20rpx;
-			font-size: 22rpx;
-			margin-right: 15rpx;
-		}
-	}
+.tags {
+	display: flex;
+	gap: 12rpx;
+	flex-wrap: wrap;
+	margin-top: 20rpx;
+}
+
+.tag {
+	background: rgba(109, 74, 255, 0.1);
+	color: var(--brand-primary);
+	padding: 8rpx 16rpx;
+	border-radius: 999rpx;
+	font-size: 22rpx;
+	font-weight: 600;
 }
 </style>

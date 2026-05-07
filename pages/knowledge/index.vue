@@ -1,129 +1,153 @@
 <template>
-  <view class="knowledge-page">
-    <view class="tabs-container">
-      <v-tabs
-        v-model="activeTab"
-        :tabs="knowledgeTabs"
-        :pills="true"
-        line-height="0"
-        active-color="#fff"
-        pills-color="#2979ff"
-        pills-border-radius="20rpx"
-        color="#2979ff"
-        font-size="28rpx"
-        height="80rpx"
-        padding-item="0 20rpx"
-        bg-color="#f5f5f5"
-        @change="changeTab"
-      ></v-tabs>
+  <view class="discover-page">
+    <view class="discover-hero">
+      <view>
+        <text class="hero-kicker">发现</text>
+        <text class="hero-title">把知识、招聘和校园信息放进同一个次级频道</text>
+      </view>
+      <text class="hero-desc">服务之外，你还可以在这里继续浏览内容与机会。</text>
     </view>
 
-    <scroll-view class="knowledge-list" scroll-y="true">
-      <view class="list-container">
-        <view
-          v-for="item in currentKnowledgeList"
-          :key="item.id"
-          class="knowledge-card"
-          @click="viewDetail(item)"
-        >
-          <!-- 卡片头部 -->
-          <view class="card-header">
-            <view class="header-left">
-              <!-- 推荐标识 -->
-              <view v-if="item.isRecommended" class="recommended-badge">
-                <text class="badge-text">推荐</text>
+    <view class="discover-tabs">
+      <view
+        v-for="tab in tabs"
+        :key="tab.value"
+        class="discover-tab"
+        :class="{ active: activeTab === tab.value }"
+        @click="activeTab = tab.value"
+      >
+        <text>{{ tab.label }}</text>
+      </view>
+    </view>
+
+    <scroll-view class="discover-scroll" scroll-y="true">
+      <view class="discover-content">
+        <template v-if="activeTab === 'knowledge'">
+          <view class="section-card section-card--highlight">
+            <text class="section-title">知识精选</text>
+            <text class="section-subtitle">保留原有知识内容，但换成更统一的发现结构。</text>
+          </view>
+
+          <view
+            v-for="item in currentKnowledgeList"
+            :key="item.id"
+            class="content-card"
+            @click="viewDetail(item)"
+          >
+            <view class="content-head">
+              <view class="content-badges">
+                <text v-if="item.isRecommended" class="badge badge--primary">推荐</text>
+                <text class="badge badge--muted">{{ item.level }}</text>
               </view>
-              <text class="card-title">{{ item.title }}</text>
+              <text class="content-stat">{{ formatNumber(item.views) }} 阅读</text>
             </view>
-            <!-- 难度标签 -->
-            <view class="level-badge" :class="getLevelClass(item.level)">
-              <text class="level-text">{{ item.level }}</text>
+            <text class="content-title">{{ item.title }}</text>
+            <text class="content-desc">{{ item.description }}</text>
+            <view class="content-tags">
+              <text v-for="tag in item.tags.slice(0, 3)" :key="tag" class="tag">{{ tag }}</text>
+            </view>
+            <view class="content-footer">
+              <text>{{ item.author }}</text>
+              <text>{{ item.readTime }}</text>
             </view>
           </view>
+        </template>
 
-          <!-- 描述 -->
-          <text class="card-desc">{{ item.description }}</text>
-
-          <!-- 标签 -->
-          <view class="card-tags">
-            <text
-              v-for="(tag, index) in item.tags"
-              :key="index"
-              class="mini-tag"
-            >{{ tag }}</text>
+        <template v-else-if="activeTab === 'recruit'">
+          <view class="section-card section-card--highlight">
+            <text class="section-title">招聘机会</text>
+            <text class="section-subtitle">招聘退到第二层，但仍然是一个易找、可浏览的频道。</text>
           </view>
 
-          <!-- 作者信息 -->
-          <view class="author-info">
-            <image
-              class="author-avatar"
-              :src="getAvatarUrl(item.author)"
-            ></image>
-            <text class="author-name">{{ item.author }}</text>
-            <text class="publish-date">{{ item.publishDate }}</text>
-          </view>
-
-          <!-- 底部信息 -->
-          <view class="card-footer">
-            <view class="read-info">
-              <text class="read-item">⏱ {{ item.readTime }}</text>
-              <text class="read-item">📄 {{ item.wordCount }}字</text>
-            </view>
-            <view class="stats-info">
-              <view class="stat-item">
-                <text class="stat-icon">👁</text>
-                <text class="stat-text">{{ formatNumber(item.views) }}</text>
+          <view
+            v-for="recruit in recruitList"
+            :key="recruit.id"
+            class="content-card"
+            @click="goRecruitDetail(recruit.id)"
+          >
+            <view class="content-head">
+              <view class="content-badges">
+                <text class="badge badge--primary">招聘</text>
+                <text v-if="recruit.isCollect === 1" class="badge badge--muted">已收藏</text>
               </view>
-              <view class="stat-item">
-                <text class="stat-icon">👍</text>
-                <text class="stat-text">{{ formatNumber(item.likes) }}</text>
-              </view>
+              <text class="content-stat">查看详情</text>
+            </view>
+            <text class="content-title">{{ recruit.name }}</text>
+            <text class="content-desc">{{ recruit.description || '查看岗位详情、组织介绍与投递要求。' }}</text>
+            <view class="content-footer">
+              <text>{{ recruit.organizationName || '校内组织' }}</text>
+              <text>{{ recruit.endTime || '长期有效' }}</text>
             </view>
           </view>
-        </view>
+
+          <view class="action-row">
+            <view class="action-pill" @click="goRecruitList">进入完整招聘列表</view>
+          </view>
+        </template>
+
+        <template v-else>
+          <view class="section-card section-card--highlight">
+            <text class="section-title">校园资讯</text>
+            <text class="section-subtitle">这一层先作为“发现”频道说明与后续校园内容承接位。</text>
+          </view>
+
+          <view class="info-card" v-for="item in infoCards" :key="item.title">
+            <text class="info-title">{{ item.title }}</text>
+            <text class="info-desc">{{ item.desc }}</text>
+          </view>
+        </template>
       </view>
     </scroll-view>
   </view>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app';
-import { knowledgeData, knowledgeTabs } from '@/static/mock/knowledge/index.js';
-import { getRandomAvatarUrl } from '@/utils/randomData.js';
+import { computed, onMounted, ref } from "vue";
+import { onShareAppMessage, onShareTimeline } from "@dcloudio/uni-app";
+import { knowledgeData } from "@/static/mock/knowledge/index.js";
+import { useRecruitStore } from "@/stores/recruit";
+
+const recruitStore = useRecruitStore();
+const activeTab = ref("knowledge");
+
+const tabs = [
+  { label: "知识", value: "knowledge" },
+  { label: "招聘", value: "recruit" },
+  { label: "资讯", value: "info" }
+];
+
+const currentKnowledgeList = computed(() => knowledgeData[0] || []);
+const recruitList = computed(() => (recruitStore.get_recruits || []).slice(0, 6));
+
+const infoCards = [
+  {
+    title: "为什么把知识和招聘放进发现？",
+    desc: "因为新版主轴已经切到服务入口，知识与招聘更适合作为可浏览、可探索的次级内容能力。"
+  },
+  {
+    title: "这不是阉割，而是重新归位",
+    desc: "你依然能快速找到招聘与知识，只是不再和首页高频服务抢首屏优先级。"
+  }
+];
+
+onMounted(async () => {
+  if (!recruitList.value.length) {
+    await recruitStore.fetch_first_recruits();
+  }
+});
 
 onShareAppMessage(() => {
   return {
-    title: '互成一家小程序',
-    path: '/pages/home/index',
-    imageUrl: '/static/images/logo.png'
-  }
-})
-
-onShareTimeline(() => ({
-  title: '互成一家小程序',
-  imageUrl: '/static/images/logo.png'
-}))
-
-const activeTab = ref(0);
-
-const currentKnowledgeList = computed(() => {
-  return knowledgeData[activeTab.value] || [];
+    title: "互成一家｜发现更多校园内容",
+    path: "/pages/knowledge/index",
+    imageUrl: "/static/images/logo.png"
+  };
 });
 
-const getLevelClass = (level) => {
-  const levelMap = {
-    '初级': 'tag-beginner',
-    '中级': 'tag-intermediate',
-    '高级': 'tag-advanced'
-  };
-  return levelMap[level] || 'tag-beginner';
-};
-
-const changeTab = (index) => {
-  console.log('切换到分类:', knowledgeTabs[index]);
-  activeTab.value = index;
-};
+onShareTimeline(() => ({
+  title: "互成一家｜发现更多校园内容",
+  imageUrl: "/static/images/logo.png"
+}));
 
 const viewDetail = (item) => {
   uni.navigateTo({
@@ -131,214 +155,254 @@ const viewDetail = (item) => {
   });
 };
 
-const formatNumber = (num) => {
-  if (num >= 10000) {
-    return (num / 10000).toFixed(1) + 'w';
-  } else if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'k';
-  }
-  return num.toString();
+const goRecruitList = () => {
+  uni.navigateTo({
+    url: "/pages/recruit/index"
+  });
 };
 
-const getAvatarUrl = (author) => {
-  return getRandomAvatarUrl(author);
+const goRecruitDetail = (id) => {
+  uni.navigateTo({
+    url: `/pages/recruit/detail?id=${id}`
+  });
+};
+
+const formatNumber = (num) => {
+  if (num >= 10000) {
+    return `${(num / 10000).toFixed(1)}w`;
+  }
+  if (num >= 1000) {
+    return `${(num / 1000).toFixed(1)}k`;
+  }
+  return String(num);
 };
 </script>
 
 <style scoped>
-.knowledge-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #f5f5f5;
+.discover-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8f6ff 0%, #f5f7fb 34%, #f5f7fb 100%);
 }
 
-.tabs-container {
-  background-color: #fff;
-  border-bottom: 1rpx solid #e5e5e5;
-  padding: 0 10rpx;
-}
-
-.knowledge-list {
-  flex: 1;
-  height: 0;
-}
-
-.list-container {
-  padding: 24rpx;
-}
-
-.knowledge-card {
-  background-color: #fff;
-  border-radius: 20rpx;
-  margin-bottom: 24rpx;
-  padding: 28rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.knowledge-card:active {
-  transform: scale(0.98);
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.08);
-}
-
-/* 卡片头部 */
-.card-header {
+.discover-hero {
+  padding: 32rpx;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16rpx;
+  align-items: flex-start;
+  gap: 24rpx;
 }
 
-.header-left {
-  flex: 1;
+.hero-kicker,
+.hero-title,
+.hero-desc,
+.section-title,
+.section-subtitle,
+.content-title,
+.content-desc,
+.content-footer text,
+.info-title,
+.info-desc {
+  display: block;
+}
+
+.hero-kicker {
+  margin-bottom: 10rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #6d4aff;
+}
+
+.hero-title {
+  max-width: 500rpx;
+  font-size: 38rpx;
+  line-height: 1.35;
+  font-weight: 700;
+  color: #182131;
+}
+
+.hero-desc {
+  max-width: 180rpx;
+  font-size: 22rpx;
+  line-height: 1.5;
+  text-align: right;
+  color: #8a93a5;
+}
+
+.discover-tabs {
+  padding: 0 32rpx 20rpx;
   display: flex;
-  align-items: center;
-  gap: 12rpx;
-  flex-wrap: wrap;
+  gap: 16rpx;
 }
 
-.recommended-badge {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-  padding: 6rpx 14rpx;
-  border-radius: 8rpx;
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 36rpx;
+.discover-tab {
+  padding: 16rpx 28rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1rpx solid #e5e9f2;
 }
 
-.badge-text {
+.discover-tab text {
+  font-size: 26rpx;
+  color: #5b6475;
+  font-weight: 600;
+}
+
+.discover-tab.active {
+  background: #6d4aff;
+  border-color: #6d4aff;
+}
+
+.discover-tab.active text {
   color: #fff;
-  font-size: 20rpx;
-  font-weight: bold;
-  line-height: 1;
 }
 
-.card-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #1a1a1a;
-  line-height: 1.4;
-  flex: 1;
+.discover-scroll {
+  height: calc(100vh - 220rpx);
 }
 
-.level-badge {
-  padding: 8rpx 20rpx;
-  border-radius: 20rpx;
-  font-size: 22rpx;
-  font-weight: bold;
-  flex-shrink: 0;
+.discover-content {
+  padding: 0 32rpx 40rpx;
 }
 
-.tag-beginner {
-  background-color: #e8f5e3;
-  color: #4caf50;
+.section-card,
+.content-card,
+.info-card {
+  background: #fff;
+  border-radius: 28rpx;
+  box-shadow: 0 10rpx 30rpx rgba(24, 33, 49, 0.06);
 }
 
-.tag-intermediate {
-  background-color: #fff3e0;
-  color: #ff9800;
-}
-
-.tag-advanced {
-  background-color: #ffebee;
-  color: #f44336;
-}
-
-/* 描述 */
-.card-desc {
-  font-size: 26rpx;
-  color: #666;
-  line-height: 1.6;
-  margin-bottom: 16rpx;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* 标签 */
-.card-tags {
-  display: flex;
-  gap: 12rpx;
-  flex-wrap: wrap;
+.section-card {
+  padding: 26rpx;
   margin-bottom: 20rpx;
 }
 
-.mini-tag {
-  background-color: #f0f2f5;
-  color: #5a6c7d;
-  font-size: 22rpx;
-  padding: 8rpx 16rpx;
-  border-radius: 8rpx;
-  font-weight: 500;
+.section-card--highlight {
+  background: linear-gradient(135deg, rgba(109, 74, 255, 0.12), rgba(255, 255, 255, 0.98));
 }
 
-/* 作者信息 */
-.author-info {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-  margin-bottom: 20rpx;
-  padding-bottom: 16rpx;
-  border-bottom: 1rpx solid #f0f0f0;
+.section-title {
+  margin-bottom: 10rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #182131;
 }
 
-.author-avatar {
-  width: 48rpx;
-  height: 48rpx;
-  border-radius: 50%;
-  background-color: #e0e0e0;
-}
-
-.author-name {
+.section-subtitle {
   font-size: 24rpx;
-  color: #333;
-  font-weight: 500;
+  line-height: 1.55;
+  color: #5b6475;
 }
 
-.publish-date {
-  font-size: 22rpx;
-  color: #999;
-  margin-left: auto;
+.content-card {
+  padding: 24rpx;
+  margin-bottom: 18rpx;
 }
 
-/* 底部信息 */
-.card-footer {
+.content-head,
+.content-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16rpx;
 }
 
-.read-info {
+.content-head {
+  margin-bottom: 14rpx;
+}
+
+.content-badges {
   display: flex;
-  gap: 20rpx;
+  gap: 12rpx;
+  flex-wrap: wrap;
 }
 
-.read-item {
+.badge {
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
   font-size: 22rpx;
-  color: #999;
+  font-weight: 600;
 }
 
-.stats-info {
+.badge--primary {
+  background: rgba(109, 74, 255, 0.12);
+  color: #6d4aff;
+}
+
+.badge--muted {
+  background: #eef2f7;
+  color: #5b6475;
+}
+
+.content-stat {
+  font-size: 22rpx;
+  color: #8a93a5;
+}
+
+.content-title {
+  margin-bottom: 12rpx;
+  font-size: 30rpx;
+  line-height: 1.45;
+  font-weight: 700;
+  color: #182131;
+}
+
+.content-desc {
+  margin-bottom: 16rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #5b6475;
+}
+
+.content-tags {
   display: flex;
-  gap: 20rpx;
+  gap: 10rpx;
+  flex-wrap: wrap;
+  margin-bottom: 16rpx;
 }
 
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 6rpx;
+.tag {
+  padding: 6rpx 12rpx;
+  border-radius: 999rpx;
+  background: #f5f7fb;
+  font-size: 22rpx;
+  color: #6a7385;
 }
 
-.stat-icon {
+.content-footer text {
+  font-size: 22rpx;
+  color: #8a93a5;
+}
+
+.action-row {
+  padding-top: 8rpx;
+}
+
+.action-pill {
+  display: inline-flex;
+  padding: 18rpx 24rpx;
+  border-radius: 999rpx;
+  background: #6d4aff;
+  color: #fff;
   font-size: 26rpx;
+  font-weight: 600;
 }
 
-.stat-text {
-  font-size: 22rpx;
-  color: #999;
+.info-card {
+  padding: 24rpx;
+  margin-bottom: 18rpx;
+}
+
+.info-title {
+  margin-bottom: 10rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #182131;
+}
+
+.info-desc {
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #5b6475;
 }
 </style>

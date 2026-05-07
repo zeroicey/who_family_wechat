@@ -1,10 +1,11 @@
 <template>
   <view class="dynamic-container">
     <view v-if="posts && posts.length > 0" class="posts-container">
-      <post-card v-for="post in posts" :key="post.id" :post="post" @click="viewPostDetail(post.id)" />
+      <PostCard v-for="post in posts" :key="post.id" :post="post" @click="viewPostDetail(post.id)" />
     </view>
     <view v-else class="empty-state">
-      <text>暂无动态</text>
+      <text class="empty-title">还没有社区动态</text>
+      <text class="empty-desc">试试发布第一条校园分享，或者下拉刷新看看新内容。</text>
     </view>
   </view>
 </template>
@@ -13,23 +14,19 @@
 import { computed, onMounted } from "vue";
 import PostCard from "@/components/community/PostCard.vue";
 import { useCommunityStore } from "@/stores/community";
-const communityStore = useCommunityStore();
 
-// 获取帖子数据
+const communityStore = useCommunityStore();
 const posts = computed(() => communityStore.get_posts);
 
-// 组件挂载后检查帖子是否为空
 onMounted(async () => {
   if (!posts.value || posts.value.length === 0) {
     await communityStore.fetch_first_posts();
   }
 });
 
-// 查看帖子详情
 const viewPostDetail = (id) => {
-  console.log("Viewing post detail:", id);
   uni.navigateTo({
-    url: `/pages/community/detail?id=${id}`,
+    url: `/pages/community/detail?id=${id}`
   });
 };
 </script>
@@ -37,20 +34,39 @@ const viewPostDetail = (id) => {
 <style scoped>
 .dynamic-container {
   min-height: 100vh;
+  padding: 0 24rpx 140rpx;
 }
 
 .posts-container {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 16rpx;
 }
 
 .empty-state {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 100rpx 0;
-  color: #999;
-  font-size: 28rpx;
+  margin: 0 8rpx;
+  padding: 72rpx 32rpx;
+  border-radius: 28rpx;
+  background: #ffffff;
+  box-shadow: 0 10rpx 30rpx rgba(24, 33, 49, 0.06);
+  text-align: center;
+}
+
+.empty-title,
+.empty-desc {
+  display: block;
+}
+
+.empty-title {
+  margin-bottom: 12rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #182131;
+}
+
+.empty-desc {
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #7b8496;
 }
 </style>
