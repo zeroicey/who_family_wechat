@@ -8,3 +8,6 @@ manifest.json
 api/env.js
 node_modules/
 CLAUDE.mdgit
+.gitnexus
+__pycache__/
+*.pyc
